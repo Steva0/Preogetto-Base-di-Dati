@@ -5,21 +5,24 @@ Membri del gruppo:
 - Stevanin Michele 2101741
 
 # Abstract
-Questo lavoro sviluppa una base di dati progettata per gestire in modo strutturato e
-coerente le informazioni relative alle crociere, ai loro passeggeri, allo staff e
-agli eventi organizzati. L’obiettivo principale è fornire un sistema che permetta agli organizzatori delle crociere 
-di gestire in maniera ottimale l'organizzazioni dei viaggi, garantendo un accesso organizzato ai dati e facilitando la loro analisi.
-Nel constesto delle crociere il database distingue tra le varie `compagnie` che dispongono di `navi` da crociera tenendo traccia delle varie `tappe`(città), data di partenza e di arrivo, monitorando le varie `persone` partecipanto ad ogni viaggio, le quali a loro volta si possono distinguere tra membri dell'`equipaggio` e `passeggeri`. Equipaggio di cui fanno parte anche `Capitano` e gli `animatori`. Il sistema tiene memoria degli `eventi` organizzati durante il ogni crociera con i suoi animatori, il numero di partecipanti e l'orario di inizio e fine.
-Sono presenti inoltre le `classi` suddivise per fasce di prezzo. 
+Il presente progetto propone la progettazione di una base di dati dedicata alla gestione delle crociere organizzate da compagnie marittime. L'obiettivo del sistema è quello di fornire una struttura chiara, coerente e relazionale per rappresentare tutte le informazioni chiave legate all’organizzazione e alla gestione di viaggi crocieristici. La base di dati consente di monitorare le compagnie crocieristiche, ciascuna delle quali gestisce diverse crociere, definite da itinerari, città di partenza e arrivo, date e caratteristiche operative della nave.
+Ogni crociera prevede tappe intermedie nei porti, ed è popolata da persone, distinte tra passeggeri e membri dell’equipaggio. Quest’ultima categoria comprende anche figure specifiche come il capitano e gli animatori, modellate tramite generalizzazioni tra le entità. Il sistema gestisce inoltre le cabine, divise per classi di servizio, e gli eventi organizzati a bordo, con relativi animatori, orari, partecipanti e dettagli logistici.
+Il progetto adotta un approccio modulare e normalizzato, con particolare attenzione alla rappresentazione gerarchica delle persone e all’ottimizzazione dell'accesso ai dati, facilitando l’analisi e l’elaborazione delle informazioni utili alla gestione delle attività crocieristiche.
 
 # Analisi dei Requisiti
 Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 
-**Crociera**. Ogni crociera è identificato dal prioprio codice `IMO` (International Maritime Organization) e le seguenti informazioni:
-    - **Imo** che distingue in modo univoco ogni crociera
+**Compagnia**. Entità che rappresenta le aziende crocieristiche:
+    - **Partita Iva Compagnia** (PK)
+    - **Nome**
+    - **Sede**
+    - **Contatto** 
+
+**Crociera**. Identificata in modo univoco dal codice IMO, include:
+    - **IMO** (PK)
     - **Nome nave**
-    - **Referente compagnia**
-    - **Capitano**
+    - **IDCompagnia** (FK)
+    - **Capitano**    (FK su Equipaggio)
     - **Numero minimo membri equipaggio**
     - **Città di Partenza**
     - **Città di Fine**
@@ -28,46 +31,54 @@ Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
     - **Numero di passeggeri max**
     - **Età barca**
     - **Ultima ristutturazione**
-    - **Categoria crociera** transatlantica, mediterranea, fluviale.
+    - **Categoria crociera** transatlantica, mediterranea, fluviale
 
-**Porti**. Ogni porto è identificato dalla sua città. 
-    - **Nome città**
+**Porti**. Ogni porto è identificato dalla sua città: 
+    - **Nome città** (PK)
 
-**Tappa**. Ogni tappa è caratterizzata da data e orario di arrivo e partenza.
+**Tappa**. Ogni tappa rappresenta una sosta della crociera in un porto:
+    - **IMO** (FK)
+    - **NomeCittà** (FK)
     - **Data e ora di arrivo**
     - **Data e ora di partenza**
 
-**Classi**. Ogni classe è caratterizzata dal suo livello e dai vantiggi di quella classe.
-    - **Livello classe** economy, business...
-    - **Vantaggi**
+**Classi**. Ogni classe è caratterizzata dal suo livello e dai vantiggi di quella classe:
+    - **Livello classe** economy, business...     (PK)
+    - **Vantaggi**                                (PK)
     
-**Cabine**. Ogni cabina è caratterizzata da un costo e dal numero di posti dispobibili.
+**Cabine**. Ogni cabina è caratterizzata da un costo e dal numero di posti dispobibili:
+    - **IMO** (FK)
+    - **LivelloClasse** (FK)
+    - **Vantaggi** (FK)
     - **Costo crociera**
     - **Numero posti**
 
-**Persone**. CF
-    - **CF**
+**Persone**. 
+    - **CF** (PK)
     - **Nome**
     - **Cognome**
     - **Sesso**
 
 Le persone possono far parte dell'`equipaggio`.
 
-**Equipaggio**. Ogni equipaggio ha il proprio stipendio, numero identificativo, anni di servizio, lingue parlate.
+**Equipaggio**. Ogni equipaggio ha il proprio stipendio, numero identificativo, anni di servizio, lingue parlate:
+    - **IDEquipaggio** (PK)
+    - **CF** (FK)
     - **Lingue parlate**
     - **Stipendio**
-    - **ID**
     - **Anni di servizio**
 
 Un mebro dell'equipaggio può essere `animatore`.
 
-**Animatore**. Ogni animatore ha una o più abilità.
+**Animatore**. Ogni animatore ha una o più abilità:
+    - **IDEquipaggio** (FK)
     - **Abilità**
 
 **Eventi**. Ogni evento è caratterizzato dal nome dell'evento, tipo di evento, data e ora, luogo, età consigliata, durata, numero di animatori minimo, numero massimo partecipanti.
-    - **Nome evento**
+    - **IMO** (FK)
+    - **Nome evento** (PK)
+    - **Data e ora** (PK)
     - **Tipo evento**
-    - **Data e ora**
     - **Luogo**
     - **Età consigliata**
     - **Durata**
