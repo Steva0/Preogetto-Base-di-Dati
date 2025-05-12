@@ -13,74 +13,64 @@ Il progetto adotta un approccio modulare e normalizzato, con particolare attenzi
 Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 
 **Compagnia**. Entità che rappresenta le aziende crocieristiche:
-    - **Partita Iva Compagnia** (PK)
-    - **Nome**
-    - **Sede**
-    - **Contatto** 
+- **Partita Iva Compagnia** (PK)
+- **Nome**
+- **Sede**
+- **Contatto** 
 
 **Crociera**. Identificata in modo univoco dal codice IMO, include:
-    - **IMO** (PK)
-    - **Nome nave**
-    - **IDCompagnia** (FK)
-    - **Capitano**    (FK su Equipaggio)
-    - **Numero minimo membri equipaggio**
-    - **Città di Partenza**
-    - **Città di Fine**
-    - **Data e orario di partenza**
-    - **Durata in giorni**
-    - **Numero di passeggeri max**
-    - **Età barca**
-    - **Ultima ristutturazione**
-    - **Categoria crociera** transatlantica, mediterranea, fluviale
+- **IMO** (PK)
+- **Nome nave**
+- **Numero minimo membri equipaggio**
+- **Città di Partenza**
+- **Città di Fine**
+- **Data e orario di partenza**
+- **Durata in giorni**
+- **Numero di passeggeri max**
+- **Età barca**
+- **Ultima ristutturazione**
+- **Categoria crociera** transatlantica, mediterranea, fluviale
 
 **Porti**. Ogni porto è identificato dalla sua città: 
-    - **Nome città** (PK)
+- **Nome città** (PK)
 
 **Tappa**. Ogni tappa rappresenta una sosta della crociera in un porto:
-    - **IMO** (FK)
-    - **NomeCittà** (FK)
-    - **Data e ora di arrivo**
-    - **Data e ora di partenza**
+- **Data e ora di arrivo**
+- **Data e ora di partenza**
 
 **Classi**. Ogni classe è caratterizzata dal suo livello e dai vantiggi di quella classe:
-    - **Livello classe** economy, business...     (PK)
-    - **Vantaggi**                                (PK)
+- **Livello classe** economy, business...     (PK)
+- **Vantaggi**                                (PK)
     
 **Cabine**. Ogni cabina è caratterizzata da un costo e dal numero di posti dispobibili:
-    - **IMO** (FK)
-    - **LivelloClasse** (FK)
-    - **Vantaggi** (FK)
-    - **Costo crociera**
-    - **Numero posti**
+- **Costo crociera** (PK)
+- **Numero posti** (PK)
 
 **Persone**. 
-    - **CF** (PK)
-    - **Nome**
-    - **Cognome**
-    - **Sesso**
+- **CF** (PK)
+- **Nome**
+- **Cognome**
+- **Sesso**
 
 Le persone possono far parte dell'`equipaggio`.
 
 **Equipaggio**. Ogni equipaggio ha il proprio stipendio, numero identificativo, anni di servizio, lingue parlate:
-    - **IDEquipaggio** (PK)
-    - **CF** (FK)
-    - **Lingue parlate**
-    - **Stipendio**
-    - **Anni di servizio**
+- **IDEquipaggio**
+- **Lingue parlate**
+- **Stipendio**
+- **Anni di servizio**
 
 Un mebro dell'equipaggio può essere `animatore`.
 
 **Animatore**. Ogni animatore ha una o più abilità:
-    - **IDEquipaggio** (FK)
-    - **Abilità**
+- **Abilità**
 
 **Eventi**. Ogni evento è caratterizzato dal nome dell'evento, tipo di evento, data e ora, luogo, età consigliata, durata, numero di animatori minimo, numero massimo partecipanti.
-    - **IMO** (FK)
-    - **Nome evento** (PK)
-    - **Data e ora** (PK)
-    - **Tipo evento**
-    - **Luogo**
-    - **Età consigliata**
-    - **Durata**
-    - **Numero minimo animatori**
-    - **Numero massimo partecipanti**
+- **Nome evento** (PK)
+- **Data e ora** (PK)
+- **Tipo evento**
+- **Luogo**
+- **Età consigliata**
+- **Durata**
+- **Numero minimo animatori**
+- **Numero massimo partecipanti**
