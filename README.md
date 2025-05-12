@@ -29,7 +29,7 @@ Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 - **Numero di passeggeri max**
 - **Età barca**
 - **Ultima ristutturazione**
-- **Categoria crociera** transatlantica, mediterranea, fluviale
+- **Tipologia crociera** transatlantica, mediterranea, fluviale
 
 **Porti**. Ogni porto è identificato dalla sua città: 
 - **Nome città** (PK)
