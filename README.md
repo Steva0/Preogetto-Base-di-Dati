@@ -17,7 +17,6 @@ Ogni compagnia è identificata da una partita IVA univoca e include le seguenti 
 - Nome
 - Sede
 - Recapito
-
 Le compagnie possiedono una o più crociere.
 
 **Crociere**
@@ -32,54 +31,49 @@ Ogni crociera è identificata dal codice IMO e registra:
 - Numero minimo di membri dell’equipaggio
 - Numero massimo di passeggeri
 - Tipologia (es. mediterranea, fluviale, transatlantica)
-
 Ogni crociera può avere più tappe intermedie e prevede eventi a bordo.
 
-Porti
-Ogni porto è identificato dalla città in cui si trova:
--Nome della città (PK)
+**Porti**
 
+Ogni porto è identificato dalla città in cui si trova:
+- Nome della città (PK)
 Una crociera può prevedere soste in più porti (tappe).
 
-Tappe
+**Tappe**
 Le tappe rappresentano le fermate della crociera nei porti e includono:
 - Data e ora di arrivo
 - Data e ora di partenza
-
 Ogni tappa è collegata a un porto e a una specifica crociera.
 
-Persone
+**Persone**
 Tutti gli individui a bordo (sia personale che ospiti) sono entità del tipo "Persona", identificata tramite:
 - Codice Fiscale (PK)
 - Nome
 - Cognome
 - Sesso
-
 Una persona può essere un ospite o un membro dell’equipaggio.
 
-Equipaggio
+**Equipaggio**
 L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associato a:
 - Stipendio
 - Anni di servizio
 - Lingue parlate
-
 Un membro dell’equipaggio può essere designato come capitano o come animatore.
 
-Capitano
+**Capitano**
 Ogni crociera è diretta da un capitano, che è un membro dell’equipaggio.
 
-Animatori
+**Animatori**
 Gli animatori sono una specializzazione dell’equipaggio e dispongono di una o più abilità:
 - Abilità specifiche (es. ballo, canto, giochi)
 
-Eventi
+**Eventi**
 Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 - Nome dell’evento (PK)
 - Tipo di evento (PK)
 - Età consigliata
 - Numero minimo di animatori
 - Numero consigliato di partecipanti
-
 Ogni evento è gestito da uno o più animatori e può essere frequentato da più ospiti.
 
 
