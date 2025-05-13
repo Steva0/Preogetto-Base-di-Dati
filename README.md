@@ -179,7 +179,15 @@ Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in c
 
 - **Porto**(<ins>Città</ins>)
 - **Tappa**(<ins>Località</ins>, <ins>Codice</ins>, Data_Ora_Partenza, Data_Ora_Arrivo)
-- **Crociera**(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Prenotazioni, Data_Ora_Partenza, Porto_Partenza, Porto_Finale, Durata)
-- **Proprietà**(<ins>Codice_Nave</ins>, <ins>Codice_Compagnia</ins>)
+  - Tappa.Località -> Porto.Città
+  - Tappa.Codice -> Crociera.IMO
+- **Crociera**(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni*, Data_Ora_Partenza*, Porto_Partenza*, Porto_Finale*, Durata*)
 - **Compagnia**(<ins>PI_Compagnia</ins>, Nome_Compagnia, Sede, Recapito)
-- 
+- **Passeggero**(<ins>Persona</ins>, <ins>Costo</ins>)
+  - Passeggero.Persona -> Persona.CF
+- **Persona**(<ins>CF</ins>, Nome, Cognome, Sesso)
+- **Equipaggio**(<ins>Persona</ins>, ID_Equipaggio, Lingue, Stipendio, Anni_Servizio)
+  - Equipaggio.Persona -> Persona.CF
+- **Animatore**(<ins>Persona</ins>, Abilità)
+  - Animatore.Persona -> Equipaggio.Persona
+- **Evento**(<ins>Nome_Evento</ins>, <ins>Tipo</ins>, Num_Cons_Partecipanti, Età_Min_Cons, Num_Min_Animatori)
