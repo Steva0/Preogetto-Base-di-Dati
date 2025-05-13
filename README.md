@@ -4,12 +4,12 @@ Membri del gruppo:
 - Ghiraldin Mirco 2102505
 - Stevanin Michele 2101741
 
-# Abstract
+# 1 Abstract
 Il presente progetto propone la progettazione di una base di dati dedicata alla gestione delle crociere organizzate da compagnie marittime. L'obiettivo del sistema è quello di fornire una struttura chiara, coerente e relazionale per rappresentare tutte le informazioni chiave legate all’organizzazione e alla gestione di viaggi crocieristici. La base di dati consente di monitorare le compagnie crocieristiche, ciascuna delle quali gestisce diverse crociere, definite da itinerari, città di partenza e arrivo, date e caratteristiche operative della nave.
 Ogni crociera prevede tappe intermedie nei porti, ed è popolata da persone, distinte tra passeggeri e membri dell’equipaggio. Quest’ultima categoria comprende anche figure specifiche come il capitano e gli animatori, modellate tramite generalizzazioni tra le entità. Il sistema gestisce inoltre le cabine, divise per classi di servizio, e gli eventi organizzati a bordo, con relativi animatori, orari, partecipanti e dettagli logistici.
 Il progetto adotta un approccio modulare e normalizzato, con particolare attenzione alla rappresentazione gerarchica delle persone e all’ottimizzazione dell'accesso ai dati, facilitando l’analisi e l’elaborazione delle informazioni utili alla gestione delle attività crocieristiche.
 
-# Analisi dei Requisiti
+# 2 Analisi dei Requisiti
 
 **Compagnie Marittime**
 
@@ -86,4 +86,17 @@ Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 
 Ogni evento è gestito da uno o più animatori e può essere frequentato da più ospiti.
 
+# 3 Progettazione Concettuale
+La Figura ?? riporta il diagramma Entità–Relazione (E–R) che riassume i requisiti descritti nella sezione 2.
 
+Nel modello la progettazione concettuale si è basata su una visione gerarchica del personale di bordo, dove la generalizzazione rappresenta il fatto che tutti i membri dell’equipaggio e gli ospiti condividono un insieme comune di attributi base, ma possono essere specializzati in ruoli specifici.
+
+Ogni crociera è organizzata da una compagnia marittima e ha una propria identità definita dal codice IMO. Le crociere sono associate a uno o più porti attraverso una relazione Tappa, che rappresenta gli scali effettuati durante il viaggio. Ogni tappa è caratterizzata da una data e ora di arrivo e partenza, ed è sempre riferita a un porto e a una crociera specifici.
+
+Le persone imbarcate sono suddivise in Equipaggio mediante una generalizzazione parziale. Il personale di bordo può ricoprire ruoli specializzati: ad esempio gli Animatori, sottoinsieme dell’equipaggio, sono incaricati dell’organizzazione e conduzione degli eventi.
+
+Gli Eventi sono attività previste a bordo della crociera. Ogni evento può essere gestito da uno o più animatori (tramite la relazione Gestione). Gli eventi sono identificati in modo univoco dalla combinazione tra nome e tipologia e presentano attributi come età consigliata e limiti sulla partecipazione.
+
+La generalizzazione tra Equipaggio e la specializzazione Animatore è modellata come parziale: non tutti i membri dell’equipaggio sono necessariamente animatori.
+
+Tabella ?? riassume le entità e relazioni individuate nella progettazione concettuale, riportando per ciascuna gli attributi rilevanti e l’identificatore scelto. Per le entità derivate da generalizzazione viene anche specificato il tipo di specializzazione utilizzato.
