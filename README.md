@@ -21,7 +21,7 @@ Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 **Crociera**. Identificata in modo univoco dal codice IMO, include:
 - **IMO** (PK)
 - **Nome nave**
-- - **Città di Partenza**
+- **Città di Partenza**
 - **Città di Fine**
 - **Data e orario di partenza**
 - **Durata in giorni**
