@@ -27,8 +27,6 @@ Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 - **Data e orario di partenza**
 - **Durata in giorni**
 - **Numero di passeggeri max**
-- **Età barca**
-- **Ultima ristutturazione**
 - **Tipologia crociera** transatlantica, mediterranea, fluviale
 
 **Porti**. Ogni porto è identificato dalla sua città: 
