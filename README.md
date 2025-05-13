@@ -191,4 +191,5 @@ Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in c
   - Equipaggio.Persona -> Persona.CF
 - **Animatore**(<ins>Persona</ins>, Abilità)
   - Animatore.Persona -> Equipaggio.Persona
-- **Evento**(<ins>Nome_Evento</ins>, <ins>Tipo</ins>, Num_Cons_Partecipanti, Età_Min_Cons, Num_Min_Animatori)
+- **Evento**(<ins>Nome_Evento</ins>, <ins>Tipo</ins>, <ins>Codice_Nave</ins>, Num_Cons_Partecipanti, Età_Min_Cons, Num_Min_Animatori)
+  - Evento.Codice_Nave -> Crociera.IMO
