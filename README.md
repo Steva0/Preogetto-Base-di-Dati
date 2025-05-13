@@ -70,10 +70,6 @@ L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associ
 
 Un membro dell’equipaggio può essere designato come capitano o come animatore.
 
-**Capitano**
-
-Ogni crociera è diretta da un capitano, che è un membro dell’equipaggio.
-
 **Animatori**
 
 Gli animatori sono una specializzazione dell’equipaggio e dispongono di una o più abilità:
