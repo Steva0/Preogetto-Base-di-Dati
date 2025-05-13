@@ -160,4 +160,19 @@ Costo Totale = 400x2x2 + 5001x24 = 121624
 
 L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando così il numero di accessi.
 
+# 4.2 Eliminazioni delle Generalizzazioni
+Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
 
+**PERSONA**. La generalizzazione parziale PERSONA viene sostituita con la relazione IS-EQUIP (vedi Figura ??).
+Questa scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici di EQUIPAGGIO (come Stipendio, Anni_Di_Servizio, Lingue_Parlate).
+Separando le informazioni tramite relazioni specializzate, si garantisce che ogni entità contenga esclusivamente gli attributi rilevanti per il proprio ruolo. In accordo con la metodologia vista a lezione, l’identificatore della relazione Equipaggio coincide con quello della corrispondente persona.
+Poiché la generalizzazione è parziale (non tutte le persone fanno parte dell’equipaggio), la rimozione dell’entità padre PERSONA non sarebbe corretta.
+
+**EQUIPAGGIO**. Analogamente, la generalizzazione parziale EQUIPAGGIO viene sostituita con la relazione IS-ANIM (vedi Figura ??).
+Anche in questo caso, la ristrutturazione consente di evitare valori nulli, in quanto non tutti i membri dell’equipaggio svolgono il ruolo di Animatore.
+Essendo la generalizzazione parziale, l’eliminazione dell’entità padre EQUIPAGGIO risulterebbe nuovamente scorretta.
+
+Il diagramma E–R ristrutturato, riportato in Figura ??, riflette tali modifiche rispetto alla versione originale presentata in Figura ??.
+
+# 4.3 Schema Relazionale
+Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
