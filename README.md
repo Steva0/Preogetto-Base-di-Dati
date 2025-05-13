@@ -36,14 +36,6 @@ Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 - **Data e ora di arrivo**
 - **Data e ora di partenza**
 
-**Classi**. Ogni classe è caratterizzata dal suo livello e dai vantiggi di quella classe:
-- **Livello classe** economy, business...     (PK)
-- **Vantaggi**                                (PK)
-    
-**Cabine**. Ogni cabina è caratterizzata da un costo e dal numero di posti dispobibili:
-- **Costo crociera** (PK)
-- **Numero posti** (PK)
-
 **Persone**. 
 - **CF** (PK)
 - **Nome**
