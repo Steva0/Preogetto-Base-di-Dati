@@ -21,11 +21,11 @@ Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
 **Crociera**. Identificata in modo univoco dal codice IMO, include:
 - **IMO** (PK)
 - **Nome nave**
-- **Numero minimo membri equipaggio**
-- **Città di Partenza**
+- - **Città di Partenza**
 - **Città di Fine**
 - **Data e orario di partenza**
 - **Durata in giorni**
+- **Numero minimo membri equipaggio**
 - **Numero di passeggeri max**
 - **Tipologia crociera** transatlantica, mediterranea, fluviale
 
