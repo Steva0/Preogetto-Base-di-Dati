@@ -100,3 +100,9 @@ Gli Eventi sono attività previste a bordo della crociera. Ogni evento può esse
 La generalizzazione tra Equipaggio e la specializzazione Animatore è modellata come parziale: non tutti i membri dell’equipaggio sono necessariamente animatori.
 
 Tabella ?? riassume le entità e relazioni individuate nella progettazione concettuale, riportando per ciascuna gli attributi rilevanti e l’identificatore scelto. Per le entità derivate da generalizzazione viene anche specificato il tipo di specializzazione utilizzato.
+
+# 4 Progettazione Logica
+In questa sezione viene illustrato il processo di “traduzione” dello schema concettuale in uno schema logico, con l’obiettivo di rappresentare i dati in modo preciso
+ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
+con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma
+ristrutturato, con una descrizione delle modifiche apportate.
