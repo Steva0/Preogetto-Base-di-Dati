@@ -10,54 +10,74 @@ Ogni crociera prevede tappe intermedie nei porti, ed è popolata da persone, dis
 Il progetto adotta un approccio modulare e normalizzato, con particolare attenzione alla rappresentazione gerarchica delle persone e all’ottimizzazione dell'accesso ai dati, facilitando l’analisi e l’elaborazione delle informazioni utili alla gestione delle attività crocieristiche.
 
 # Analisi dei Requisiti
-Questa sezione riassume i requisiti a cui deve sottostare la base di dati.
+Compagnie Marittime
+Ogni compagnia è identificata da una partita IVA univoca e include le seguenti informazioni:
+- Partita IVA (PK)
+- Nome
+- Sede
+- Recapito
 
-**Compagnia**. Entità che rappresenta le aziende crocieristiche:
-- **Partita Iva Compagnia** (PK)
-- **Nome**
-- **Sede**
-- **Contatto** 
+Le compagnie possiedono una o più crociere.
 
-**Crociera**. Identificata in modo univoco dal codice IMO, include:
-- **IMO** (PK)
-- **Nome nave**
-- **Città di Partenza**
-- **Città di Fine**
-- **Data e orario di partenza**
-- **Durata in giorni**
-- **Numero minimo membri equipaggio**
-- **Numero di passeggeri max**
-- **Tipologia crociera** transatlantica, mediterranea, fluviale
+Crociere
+Ogni crociera è identificata dal codice IMO e registra:
+- Codice IMO (PK)
+- Nome della nave
+- Porto di partenza
+- Porto di arrivo
+- Data e ora di partenza
+- Durata (in giorni)
+- Numero minimo di membri dell’equipaggio
+- Numero massimo di passeggeri
+- Tipologia (es. mediterranea, fluviale, transatlantica)
 
-**Porti**. Ogni porto è identificato dalla sua città: 
-- **Nome città** (PK)
+Ogni crociera può avere più tappe intermedie e prevede eventi a bordo.
 
-**Tappa**. Ogni tappa rappresenta una sosta della crociera in un porto:
-- **Data e ora di arrivo**
-- **Data e ora di partenza**
+Porti
+Ogni porto è identificato dalla città in cui si trova:
+-Nome della città (PK)
 
-**Persone**. 
-- **CF** (PK)
-- **Nome**
-- **Cognome**
-- **Sesso**
+Una crociera può prevedere soste in più porti (tappe).
 
-Le persone possono far parte dell'`equipaggio`.
+Tappe
+Le tappe rappresentano le fermate della crociera nei porti e includono:
+- Data e ora di arrivo
+- Data e ora di partenza
 
-**Equipaggio**. Ogni equipaggio ha il proprio stipendio, numero identificativo, anni di servizio, lingue parlate:
-- **IDEquipaggio**
-- **Lingue parlate**
-- **Stipendio**
-- **Anni di servizio**
+Ogni tappa è collegata a un porto e a una specifica crociera.
 
-Un mebro dell'equipaggio può essere `animatore`.
+Persone
+Tutti gli individui a bordo (sia personale che ospiti) sono entità del tipo "Persona", identificata tramite:
+- Codice Fiscale (PK)
+- Nome
+- Cognome
+- Sesso
 
-**Animatore**. Ogni animatore ha una o più abilità:
-- **Abilità**
+Una persona può essere un ospite o un membro dell’equipaggio.
 
-**Eventi**. Ogni evento è caratterizzato dal nome dell'evento, tipo di evento, data e ora, luogo, età consigliata, durata, numero di animatori minimo, numero massimo partecipanti.
-- **Nome evento** (PK)
-- **Tipo evento** (PK)
-- **Età consigliata**
-- **Numero minimo animatori**
-- **Numero consigliato partecipanti**
+Equipaggio
+L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associato a:
+- Stipendio
+- Anni di servizio
+- Lingue parlate
+
+Un membro dell’equipaggio può essere designato come capitano o come animatore.
+
+Capitano
+Ogni crociera è diretta da un capitano, che è un membro dell’equipaggio.
+
+Animatori
+Gli animatori sono una specializzazione dell’equipaggio e dispongono di una o più abilità:
+- Abilità specifiche (es. ballo, canto, giochi)
+
+Eventi
+Durante le crociere vengono organizzati eventi, ciascuno identificato da:
+- Nome dell’evento (PK)
+- Tipo di evento (PK)
+- Età consigliata
+- Numero minimo di animatori
+- Numero consigliato di partecipanti
+
+Ogni evento è gestito da uno o più animatori e può essere frequentato da più ospiti.
+
+
