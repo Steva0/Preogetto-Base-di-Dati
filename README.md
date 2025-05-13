@@ -178,5 +178,8 @@ Il diagramma E–R ristrutturato, riportato in Figura ??, riflette tali modifich
 Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
 
 - **Porto**(<ins>Città</ins>)
-- **Tappa**(<ins>Città</ins>, <ins>IMO</ins>, Data_Ora_Partenza, Data_Ora_Arrivo)
+- **Tappa**(<ins>Località</ins>, <ins>Codice</ins>, Data_Ora_Partenza, Data_Ora_Arrivo)
 - **Crociera**(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Prenotazioni, Data_Ora_Partenza, Porto_Partenza, Porto_Finale, Durata)
+- **Proprietà**(<ins>Codice_Nave</ins>, <ins>Codice_Compagnia</ins>)
+- **Compagnia**(<ins>PI_Compagnia</ins>, Nome_Compagnia, Sede, Recapito)
+- 
