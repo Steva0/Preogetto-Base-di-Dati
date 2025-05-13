@@ -40,6 +40,7 @@ Ogni crociera può avere più tappe intermedie e prevede eventi a bordo.
 
 Ogni porto è identificato dalla città in cui si trova:
 - Nome della città (PK)
+- Numero massimo di navi
 
 Una crociera può prevedere soste in più porti (tappe).
 
@@ -177,7 +178,7 @@ Il diagramma E–R ristrutturato, riportato in Figura ??, riflette tali modifich
 # 4.3 Schema Relazionale
 Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
 
-- **Porto**(<ins>Città</ins>)
+- **Porto**(<ins>Città</ins>, Posti_Barche)
 - **Tappa**(<ins>Località</ins>, <ins>Codice</ins>, Data_Ora_Partenza, Data_Ora_Arrivo)
   - Tappa.Località -> Porto.Città
   - Tappa.Codice -> Crociera.IMO
