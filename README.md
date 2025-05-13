@@ -106,3 +106,58 @@ In questa sezione viene illustrato il processo di “traduzione” dello schema 
 ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
 con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma
 ristrutturato, con una descrizione delle modifiche apportate.
+
+# 4.1 Analisi delle ridondanze
+L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
+contando il numero di passeggeri attivi per quella crociera tramite la relazione PARTECIPANTE.
+Questo attributo viene modificato ogni volta che si aggiunge una nuova persona alla crociera (circa 400 persone nuove al giorno tra tutte le crociere) e viene visualizzato ogni ora del giorno per monitorare il numero di posti rimanenti. Questo si riassume nelle seguenti due operazioni:
+
+- Operazione 1 (400 al giorno): memorizza una nuova prenotazione in relativa crociera.
+- Operazione 2 (24 al giorno): visualizza il numero di prenotazioni attuali in una crociera.
+
+Assumendo i seguenti volumi nella base di dati:
+
+| Concetto | Costrutto | Volume|
+|----------|-----------|-------|
+| CROCIERA | E | 30 |
+| PARTECIPANTE | R | 150000 |
+| PASSEGGERO | E | 150000 |
+
+la seguente analisi serve per stabilire se sia utile o meno tenere l’attributo ridondante Persone_Prenotate in CROCIERA.
+
+**CON RIDONDANZA** Analizziamo prima il costo totale con ridondanza.
+- Operazione 1:
+  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+  |---------|-----------|---------|------|-------------|
+  |PASSEGGERO | E | 1 | S | × 400 |
+  |PARTECIPANTE | R | 1 | S | × 400 |
+  |CROCIERA | E | 1 | L | × 400 |
+  |CROCIERA | E | 1 | S | × 400 |
+- Operazione2:
+  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+  |---------|-----------|---------|------|-------------|
+  |Crociera | E | 1 | L | × 24 |
+
+Assumendo costo doppio per gli accessi in scrittura:
+
+Costo Totale = 400x3x2 + 400 + 24 = 2824
+
+**SENZA RIDONDANZA** Analizziamo il costo totale senza ridondanza.
+- Operazione 1:
+  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+  |---------|-----------|---------|------|-------------|
+  |PASSEGGERO | E | 1 | S | × 400 |
+  |PARTECIPANTE | R | 1 | S | × 400 |
+- Operazione 2 (con circa 150000/30 = 5000 passeggeri al giorno)
+  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+  |---------|-----------|---------|------|-------------|
+  |CROCIERA | E | 1 | L | × 24 |
+  |PARTECIPANTE | R | 5000 | L | × 24 |
+
+Assumendo costo doppio per gli accessi in scrittura:
+
+Costo Totale = 400x2x2 + 5001x24 = 121624
+
+L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando così il numero di accessi.
+
+
