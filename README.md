@@ -57,10 +57,7 @@ Un mebro dell'equipaggio può essere `animatore`.
 
 **Eventi**. Ogni evento è caratterizzato dal nome dell'evento, tipo di evento, data e ora, luogo, età consigliata, durata, numero di animatori minimo, numero massimo partecipanti.
 - **Nome evento** (PK)
-- **Data e ora** (PK)
-- **Tipo evento**
-- **Luogo**
+- **Tipo evento** (PK)
 - **Età consigliata**
-- **Durata**
 - **Numero minimo animatori**
-- **Numero massimo partecipanti**
+- **Numero consigliato partecipanti**
