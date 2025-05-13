@@ -10,7 +10,8 @@ Ogni crociera prevede tappe intermedie nei porti, ed è popolata da persone, dis
 Il progetto adotta un approccio modulare e normalizzato, con particolare attenzione alla rappresentazione gerarchica delle persone e all’ottimizzazione dell'accesso ai dati, facilitando l’analisi e l’elaborazione delle informazioni utili alla gestione delle attività crocieristiche.
 
 # Analisi dei Requisiti
-Compagnie Marittime
+**Compagnie Marittime**
+
 Ogni compagnia è identificata da una partita IVA univoca e include le seguenti informazioni:
 - Partita IVA (PK)
 - Nome
@@ -19,7 +20,8 @@ Ogni compagnia è identificata da una partita IVA univoca e include le seguenti 
 
 Le compagnie possiedono una o più crociere.
 
-Crociere
+**Crociere**
+
 Ogni crociera è identificata dal codice IMO e registra:
 - Codice IMO (PK)
 - Nome della nave
