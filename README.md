@@ -171,10 +171,11 @@ L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando c
 # 4.2 Eliminazioni delle Generalizzazioni
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
 
-**PERSONA**. La generalizzazione parziale PERSONA viene sostituita con la relazione IS-EQUIP (vedi Figura ??).
-Questa scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici di EQUIPAGGIO (come Stipendio, Anni_Di_Servizio, Lingue_Parlate).
-Separando le informazioni tramite relazioni specializzate, si garantisce che ogni entità contenga esclusivamente gli attributi rilevanti per il proprio ruolo. In accordo con la metodologia vista a lezione, l’identificatore della relazione Equipaggio coincide con quello della corrispondente persona.
-Poiché la generalizzazione è parziale (non tutte le persone fanno parte dell’equipaggio), la rimozione dell’entità padre PERSONA non sarebbe corretta.
+**PERSONA**. La generalizzazione parziale PERSONA viene sostituita con la relazione IS-OSPITE (vedi Figura ??), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
+Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGIERO).
+Separando le informazioni tramite relazioni specializzate, si garantisce che ciascuna entità contenga soltanto gli attributi rilevanti per il proprio ruolo.
+In linea con la metodologia adottata a lezione, l’identificatore di EQUIPAGGIO e di PASSEGGIERO coincide con quello della rispettiva PERSONA.
+Poiché la generalizzazione è parziale da entrambe le parti (non tutte le persone sono membri dell’equipaggio né passeggeri), l’eliminazione dell’entità padre PERSONA non è corretta. Essa viene mantenuta per rappresentare tutte le informazioni comuni (come Nome, Cognome, Data_Nascita), mentre le informazioni specifiche sono distribuite nelle entità figlie.
 
 **EQUIPAGGIO**. Analogamente, la generalizzazione parziale EQUIPAGGIO viene sostituita con la relazione IS-ANIM (vedi Figura ??).
 Anche in questo caso, la ristrutturazione consente di evitare valori nulli, in quanto non tutti i membri dell’equipaggio svolgono il ruolo di Animatore.
