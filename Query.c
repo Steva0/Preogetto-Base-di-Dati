@@ -29,7 +29,7 @@ void esegui_query(PGconn *conn, const char *query) {
 }
 
 int main() {
-    const char *conninfo = "dbname=TUO_DATABASE user=TUO_UTENTE password=TUAPASSWORD hostaddr=127.0.0.1 port=5432";
+    const char *conninfo = "user=USERNAME password=PASSWORD dbname=DBNAME hostaddr=127.0.0.1 port=5432";
     PGconn *conn = PQconnectdb(conninfo);
 
     if (PQstatus(conn) != CONNECTION_OK) {
