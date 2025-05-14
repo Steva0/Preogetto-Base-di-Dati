@@ -110,12 +110,10 @@ GROUP BY C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale
 HAVING COUNT(DISTINCT T.Città) > 3
 ORDER BY Numero_Tappe DESC;
 
--- QUERY 2 – Trovare per ogni città (porto), quante crociere partono da lì e la media del numero di prenotazioni
-SELECT p.Città, COUNT(c.IMO) AS Numero_Crociere, AVG(c.Num_Prenotazioni) AS Media_Prenotazioni
-FROM Porto p
-JOIN Crociera c ON p.Città = c.Porto_Partenza
-GROUP BY p.Città
-ORDER BY Numero_Crociere DESC;
+-- QUERY 2 – Visualizzare tutte le crociere in partenza da una città inserita dall’utente
+SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
+FROM Crociera c
+WHERE c.Porto_Partenza = '<CITTÀ>';
 
 -- Query 3 – Trovare le crociere che hanno una media del costo dei biglietti superiore a 500 euro
 SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo
