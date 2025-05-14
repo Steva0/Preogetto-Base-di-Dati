@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <libpq-fe.h>
 
 void checkConn(PGconn *conn) {
@@ -8,6 +9,57 @@ void checkConn(PGconn *conn) {
         PQfinish(conn);
         exit(1);
     }
+}
+
+int checkDatabaseExistence(PGconn *conn, const char *dbname) {
+    // Controlliamo se il database esiste provando a eseguire una query su di esso
+    PGresult *res = PQexec(conn, "SELECT 1;");
+    if (PQresultStatus(res) == PGRES_TUPLES_OK) {
+        PQclear(res);
+        return 1; // Il database esiste
+    } else {
+        PQclear(res);
+        return 0; // Il database non esiste
+    }
+}
+
+void createDatabaseIfNotExists(PGconn *conn, const char *dbname) {
+    // Proviamo a connetterci al database, se fallisce lo creiamo
+    char query[256];
+    snprintf(query, sizeof(query), "CREATE DATABASE %s;", dbname);
+    
+    PGresult *res = PQexec(conn, query);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        fprintf(stderr, "Errore nella creazione del database: %s", PQerrorMessage(conn));
+        PQclear(res);
+        exit(1);
+    }
+
+    PQclear(res);
+    printf("Database '%s' creato con successo.\n", dbname);
+}
+
+int checkScriptExecution() {
+    // Esegui il comando psql e cattura l'output
+    FILE *fp = popen("psql -U postgres -d crociere -f Crociere.sql", "r");
+    if (fp == NULL) {
+        fprintf(stderr, "Errore nell'aprire il comando psql.\n");
+        return 0;  // Errore nell'aprire il comando
+    }
+
+    // Leggi l'output del comando psql e verifica se ci sono errori
+    char buffer[256];
+    int success = 1;
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        if (strstr(buffer, "ERROR") != NULL) {
+            fprintf(stderr, "Errore nell'esecuzione dello script SQL: %s", buffer);
+            success = 0;  // C'è stato un errore
+            break;
+        }
+    }
+
+    fclose(fp);
+    return success;
 }
 
 void checkResult(PGresult *res, PGconn *conn) {
@@ -44,22 +96,36 @@ void esegui_query(PGconn *conn, const char *query) {
 }
 
 int main() {
-    // === 1. Popola il database all'avvio ===
-    printf("Esecuzione script SQL per popolare il database...\n");
-    int result = system("psql -U postgres -d crociere -f Crociere.sql");
-
-    if (result != 0) {
-        fprintf(stderr, "Errore durante l'esecuzione dello script SQL.\n");
+    const char *conninfo = "user=postgres host=localhost port=5432";
+    PGconn *conn = PQconnectdb(conninfo);
+    
+    if (PQstatus(conn) != CONNECTION_OK) {
+        fprintf(stderr, "Connessione al server di database fallita: %s\n", PQerrorMessage(conn));
+        PQfinish(conn);
         return 1;
     }
 
-    // === 2. Connessione al database ===
-    const char *conninfo = "host=localhost dbname=crociere user=postgres";
-    PGconn *conn = PQconnectdb(conninfo);
-    checkConn(conn);
-    printf("Connessione al database riuscita.\n");
+    // Controlla se il database esiste, se non esiste lo crea
+    if (!checkDatabaseExistence(conn, "crociere")) {
+        printf("Il database 'crociere' non esiste. Creazione in corso...\n");
+        createDatabaseIfNotExists(conn, "crociere");
+    }
 
-    // === 3. Menu interattivo per l'esecuzione delle query ===
+    // Dopo aver creato o verificato il database, prova a connetterti di nuovo
+    PQfinish(conn); // Chiudiamo la connessione al server di gestione per creare il database
+    conn = PQconnectdb("user=postgres dbname=crociere host=localhost port=5432");
+    checkConn(conn);
+
+    // Esegui lo script SQL per popolare il database
+    printf("Esecuzione dello script SQL per popolare il database...\n");
+    if (!checkScriptExecution()) {
+        fprintf(stderr, "Errore durante l'esecuzione dello script SQL.\n");
+        PQfinish(conn);
+        return 1;
+    }
+    printf("Script SQL eseguito correttamente.\n");
+
+    // Menu interattivo per l'esecuzione delle query 
     int scelta;
     while (1) {
         printf("\nMenu - Seleziona una query da eseguire:\n");
@@ -137,5 +203,6 @@ int main() {
         }
     }
 
+    PQfinish(conn);
     return 0;
 }
