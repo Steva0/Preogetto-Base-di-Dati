@@ -16,9 +16,9 @@ CREATE TABLE Porto (
 CREATE TABLE Crociera (
     IMO CHAR(10) PRIMARY KEY,              -- IMO (International Maritime Organization number) della crociera
     Nome_Nave VARCHAR(100) NOT NULL,       -- Nome della nave
-    Min_Equipaggio INT,                    -- Numero minimo di equipaggio
-    Max_Passeggeri INT,                    -- Numero massimo di passeggeri
-    Num_Prenotazioni INT,                  -- Numero di prenotazioni attive
+    Min_Equipaggio INT NOT NULL,                    -- Numero minimo di equipaggio
+    Max_Passeggeri INT NOT NULL,                    -- Numero massimo di passeggeri
+    Num_Prenotazioni INT NOT NULL,                  -- Numero di prenotazioni attive
     Porto_Partenza VARCHAR(100),          -- Porto di partenza
     Porto_Finale VARCHAR(100),            -- Porto finale
     Data_Ora_Partenza DATETIME,           -- Data e ora di partenza
@@ -34,7 +34,7 @@ CREATE TABLE Tappa (
     IMO CHAR(10),                          -- IMO della crociera
     Città VARCHAR(100),                    -- Città della tappa
     Data_Ora_Partenza DATETIME,            -- Data e ora di partenza della tappa
-    Data_Ora_Arrivo DATETIME,              -- Data e ora di arrivo della tappa
+    Data_Ora_Arrivo DATETIME NOT NULL,              -- Data e ora di arrivo della tappa
     PRIMARY KEY (IMO, Città, Data_Ora_Partenza), -- Chiave primaria composta
     FOREIGN KEY (IMO) REFERENCES Crociera(IMO),
     FOREIGN KEY (Città) REFERENCES Porto(Città)
@@ -61,13 +61,12 @@ CREATE TABLE Ospite (
 -- Tabella Equipaggio
 CREATE TABLE Equipaggio (
     CF CHAR(16),                           -- Codice fiscale dell'equipaggio
-    IDequipaggio INT PRIMARY KEY,           -- ID univoco per l'equipaggio
+    IDequipaggio CHAR(10) PRIMARY KEY,     -- ID univoco per l'equipaggio
     Lingue_Parlate VARCHAR(100),           -- Lingue parlate
     Stipendio DECIMAL(10, 2),               -- Stipendio dell'equipaggio
     Anni_Servizio INT,                     -- Anni di servizio
     IMO_Crociera CHAR(10),                  -- IMO della crociera
-    FOREIGN KEY (CF) REFERENCES Persona(CF),
-    FOREIGN KEY (IMO_Crociera) REFERENCES Crociera(IMO)
+    FOREIGN KEY (CF) REFERENCES Persona(CF)
 );
 
 -- Tabella Animatore
