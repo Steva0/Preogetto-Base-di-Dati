@@ -2,22 +2,37 @@
 #include <stdlib.h>
 #include <libpq-fe.h>
 
+void checkConn(PGconn *conn) {
+    if (PQstatus(conn) != CONNECTION_OK) {
+        fprintf(stderr, "Errore di connessione: %s\n", PQerrorMessage(conn));
+        PQfinish(conn);
+        exit(1);
+    }
+}
+
+void checkResult(PGresult *res, PGconn *conn) {
+    if (PQresultStatus(res) != PGRES_TUPLES_OK && PQresultStatus(res) != PGRES_COMMAND_OK) {
+        fprintf(stderr, "Errore nell'esecuzione della query: %s\n", PQerrorMessage(conn));
+        PQclear(res);
+        PQfinish(conn);
+        exit(1);
+    }
+}
+
 void esegui_query(PGconn *conn, const char *query) {
     PGresult *res = PQexec(conn, query);
-    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-        fprintf(stderr, "Errore nella query: %s\n", PQerrorMessage(conn));
-        PQclear(res);
-        return;
-    }
+    checkResult(res, conn);
 
     int n_rows = PQntuples(res);
     int n_fields = PQnfields(res);
 
+    // Stampa intestazioni
     for (int i = 0; i < n_fields; i++) {
         printf("%-25s", PQfname(res, i));
     }
     printf("\n");
 
+    // Stampa dati
     for (int i = 0; i < n_rows; i++) {
         for (int j = 0; j < n_fields; j++) {
             printf("%-25s", PQgetvalue(res, i, j));
@@ -29,15 +44,22 @@ void esegui_query(PGconn *conn, const char *query) {
 }
 
 int main() {
-    const char *conninfo = "user=USERNAME password=PASSWORD dbname=DBNAME hostaddr=127.0.0.1 port=5432";
-    PGconn *conn = PQconnectdb(conninfo);
+    // === 1. Popola il database all'avvio ===
+    printf("Esecuzione script SQL per popolare il database...\n");
+    int result = system("psql -U postgres -d crociere -f Crociere.sql");
 
-    if (PQstatus(conn) != CONNECTION_OK) {
-        fprintf(stderr, "Errore di connessione: %s\n", PQerrorMessage(conn));
-        PQfinish(conn);
-        exit(1);
+    if (result != 0) {
+        fprintf(stderr, "Errore durante l'esecuzione dello script SQL.\n");
+        return 1;
     }
 
+    // === 2. Connessione al database ===
+    const char *conninfo = "host=localhost dbname=crociere user=postgres";
+    PGconn *conn = PQconnectdb(conninfo);
+    checkConn(conn);
+    printf("Connessione al database riuscita.\n");
+
+    // === 3. Menu interattivo per l'esecuzione delle query ===
     int scelta;
     while (1) {
         printf("\nMenu - Seleziona una query da eseguire:\n");
