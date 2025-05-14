@@ -115,7 +115,7 @@ ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze
 con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma
 ristrutturato, con una descrizione delle modifiche apportate.
 
-# 4.1 Analisi delle ridondanze
+## 4.1 Analisi delle ridondanze
 L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
 contando il numero di passeggeri attivi per quella crociera tramite la relazione PARTECIPANTE.
 Questo attributo viene modificato ogni volta che si aggiunge una nuova persona alla crociera (circa 400 persone nuove al giorno tra tutte le crociere) e viene visualizzato ogni ora del giorno per monitorare il numero di posti rimanenti. Questo si riassume nelle seguenti due operazioni:
@@ -168,7 +168,7 @@ Costo Totale = 400x2x2 + 5001x24 = 121624
 
 L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando così il numero di accessi.
 
-# 4.2 Eliminazioni delle Generalizzazioni
+## 4.2 Eliminazioni delle Generalizzazioni
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
 
 **PERSONA**. La generalizzazione parziale PERSONA viene sostituita con la relazione IS-OSPITE (vedi Figura ??), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
@@ -183,7 +183,7 @@ Essendo la generalizzazione parziale, l’eliminazione dell’entità padre EQUI
 
 Il diagramma E–R ristrutturato, riportato in Figura ??, riflette tali modifiche rispetto alla versione originale presentata in Figura ??.
 
-# 4.3 Schema Relazionale
+## 4.3 Schema Relazionale
 Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
 
 - Crociera(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni, Porto_Partenza*, Porto_Finale*, Data_Ora_Partenza*, Durata*, PI_Compagnia)
@@ -212,3 +212,33 @@ Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in c
   - Organizza.Tipologia_evento -> Evento.Tipologia
   - Organizza.IMO_Crociera_Evento -> Evento.IMO_Crociera
 
+# 5 Implementazione in PostgreSQL e Definizione delle Query
+Il file Crociere.sql contiene il codice SQL necessario per la creazione e il popolamento delle tabelle del database. 
+Questo file include inoltre una serie di query per l’estrazione dei dati e 
+un indice creato specificamente per migliorare le prestazionidi una di queste interrogazioni.
+
+## 5.1 Definizione delle Query
+Di seguito vengono presentate e descritte le query con i relativi output generati e
+viene motivato l’utilizzo dell’indice proposto.
+
+
+
+
+## 5.2 Creazione degli indici
+Si suppone di voler ottimizzare la Query 2, per la quale occorre considerare:
+1) Condizione di Join: p.Città = c.Porto_Partenza
+2) Group by sulla colonna p.Città e aggregazione COUNT(c.IMO), AVG(c.Num_Prenotazioni)
+3) Ordinamento sul numero di crociere in partenza (alias Numero_Crociere)
+
+Per il punto 1, è opportuno creare un indice B+ Tree sulla colonna Porto_Partenza della tabella Crociera, poiché essa è usata per effettuare un join equi-condizionato con Porto(Città), e viene successivamente utilizzata per il raggruppamento dei risultati. Inoltre, Porto_Partenza non è una chiave primaria, né è automaticamente indicizzata dal sistema.
+
+CREATE INDEX idx_porto_partenza ON Crociera (Porto_Partenza);
+
+Questo indice consente:
+- un accesso rapido alle tuple della tabella Crociera che partono da una certa città,
+- un’efficiente esecuzione del join con la tabella Porto usando l’equivalenza sulla città,
+- e una scansione ordinata utile all'ottimizzazione del GROUP BY, permettendo di aggregare le tuple con lo stesso valore di Porto_Partenza con complessità inferiore.
+
+Per quanto riguarda il punto 3, l’ordinamento viene effettuato su un attributo derivato (Numero_Crociere, alias di COUNT(c.IMO)), quindi non può essere direttamente indicizzato. Tuttavia, un ordinamento efficace viene facilitato dalla pre-aggregazione ottimizzata tramite l’indice sul campo di raggruppamento (Porto_Partenza).
+
+Nota: la colonna Città in Porto è chiave primaria, quindi PostgreSQL crea automaticamente un indice B+ Tree su di essa. Non è necessario creare un ulteriore indice su Porto(Città) per il join.
