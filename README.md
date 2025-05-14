@@ -104,6 +104,11 @@ La generalizzazione tra Equipaggio e la specializzazione Animatore è modellata 
 
 Tabella ?? riassume le entità e relazioni individuate nella progettazione concettuale, riportando per ciascuna gli attributi rilevanti e l’identificatore scelto. Per le entità derivate da generalizzazione viene anche specificato il tipo di specializzazione utilizzato.
 
+Il presente schema E-R non permette di rappresentare direttametne il seguente vincolo:
+se una persona pe è animatore in due crociere cr' e cr'', allora cr' e cr'' appartengono alla stessa Classe:
+
+(cr', pe) ∈ Animatore ∧ (cr'', pe) ∈ Animatore ⇒ (cr'.Classe = cr''.Classe)
+
 # 4 Progettazione Logica
 In questa sezione viene illustrato il processo di “traduzione” dello schema concettuale in uno schema logico, con l’obiettivo di rappresentare i dati in modo preciso
 ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
@@ -180,18 +185,30 @@ Il diagramma E–R ristrutturato, riportato in Figura ??, riflette tali modifich
 # 4.3 Schema Relazionale
 Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
 
-- **Porto**(<ins>Città</ins>, Posti_Barche)
-- **Tappa**(<ins>Località</ins>, <ins>Codice</ins>, Data_Ora_Partenza, Data_Ora_Arrivo)
-  - Tappa.Località -> Porto.Città
-  - Tappa.Codice -> Crociera.IMO
-- **Crociera**(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni*, Data_Ora_Partenza*, Porto_Partenza*, Porto_Finale*, Durata*)
-- **Compagnia**(<ins>PI_Compagnia</ins>, Nome_Compagnia, Sede, Recapito)
-- **Passeggero**(<ins>Persona</ins>, <ins>Costo</ins>)
-  - Passeggero.Persona -> Persona.CF
-- **Persona**(<ins>CF</ins>, Nome, Cognome, Sesso)
-- **Equipaggio**(<ins>Persona</ins>, ID_Equipaggio, Lingue, Stipendio, Anni_Servizio)
-  - Equipaggio.Persona -> Persona.CF
-- **Animatore**(<ins>Persona</ins>, Abilità)
-  - Animatore.Persona -> Equipaggio.Persona
-- **Evento**(<ins>Nome_Evento</ins>, <ins>Tipo</ins>, <ins>Codice_Nave</ins>, Num_Cons_Partecipanti, Età_Min_Cons, Num_Min_Animatori)
-  - Evento.Codice_Nave -> Crociera.IMO
+- Crociera(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni, Porto_Partenza, Porto_Finale, Data_Ora_Partenza*, Durata*, PI_Compagnia)
+  - Crociera.PI_Compagnia -> Compagnia.PI
+  - Crociera.Porto_Partenza -> Porto.Città
+  - Crociera.Porto_Finale -> Porto.Città
+- Porto(<ins>Città</ins>, Numero_Massimo_Navi*)
+- Tappa(<ins>IMO</ins>, <ins>Città</ins>, <ins>Data_Ora_Partenza</ins>, Data_Ora_Arrivo)
+  - Tappa.IMO -> Crociera.IMO
+  - Tappa.Città -> Porto.Città
+- Compagnia(<ins>PI</ins>, Nome*, Sede*, Recapito_Telefonico*)
+- Persona(<ins>CF</ins>, Nome*, Cognome*, Sesso*)
+- Ospite(<ins>CF</ins>, Costo, IMO_Crociera)
+  - Ospite.CF -> Persona.CF
+  - IMO_Crociera -> Crociera.IMO
+- Persona(<ins>CF</ins>, Nome*, Cognome*, Sesso*)
+- Equipaggio(<ins>CF</ins>, IDequipaggio, Lingue_Parlate*, Stipendio, Anni_Servizio, IMO_Crociera*)
+  - Equipaggio.CF -> Persona.CF
+  - IMO_Crociera -> Crociera.IMO
+- Animatore(<ins>CF</ins>, Abilità)
+  - Animatore.CF -> Equipaggio.CF
+- Evento(<ins>Nome</ins>, <ins>Tipologia</ins>, <ins>IMO_Crociera</ins>, Num_Cons_Partecipanti*, Num_Min_Animatori*, Età_Consigliata*)
+  - Evento.IMO_Crociera -> Crociera.IMO
+- ORGANIZZA(<ins>CF_Animatore</ins>, <ins>Nome_Evento</ins>, <ins>Tipologia_Evento</ins>, <ins>IMO_Crociera_Evento</isn>)
+  - Organizza.CF_Animatore -> Animatore.CF
+  - Organizza.Nome_Evento -> Evento.Nome
+  - Organizza.Tipologia_evento -> Evento.Tipologia
+  - Organizza.IMO_Crociera_Evento -> Evento.IMO_Crociera
+
