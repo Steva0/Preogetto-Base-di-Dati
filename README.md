@@ -206,7 +206,7 @@ Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in c
   - Animatore.CF -> Equipaggio.CF
 - Evento(<ins>Nome</ins>, <ins>Tipologia</ins>, <ins>IMO_Crociera</ins>, Num_Cons_Partecipanti*, Num_Min_Animatori*, Età_Consigliata*)
   - Evento.IMO_Crociera -> Crociera.IMO
-- ORGANIZZA(<ins>CF_Animatore</ins>, <ins>Nome_Evento</ins>, <ins>Tipologia_Evento</ins>, <ins>IMO_Crociera_Evento</isn>)
+- ORGANIZZA(<ins>CF_Animatore</ins>, <ins>Nome_Evento</ins>, <ins>Tipologia_Evento</ins>, <ins>IMO_Crociera_Evento</ins>)
   - Organizza.CF_Animatore -> Animatore.CF
   - Organizza.Nome_Evento -> Evento.Nome
   - Organizza.Tipologia_evento -> Evento.Tipologia
