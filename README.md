@@ -185,7 +185,7 @@ Il diagramma E–R ristrutturato, riportato in Figura ??, riflette tali modifich
 # 4.3 Schema Relazionale
 Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
 
-- Crociera(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni, Porto_Partenza, Porto_Finale, Data_Ora_Partenza*, Durata*, PI_Compagnia)
+- Crociera(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni, Porto_Partenza*, Porto_Finale*, Data_Ora_Partenza*, Durata*, PI_Compagnia)
   - Crociera.PI_Compagnia -> Compagnia.PI
   - Crociera.Porto_Partenza -> Porto.Città
   - Crociera.Porto_Finale -> Porto.Città
@@ -193,16 +193,16 @@ Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in c
 - Tappa(<ins>IMO</ins>, <ins>Città</ins>, <ins>Data_Ora_Partenza</ins>, Data_Ora_Arrivo)
   - Tappa.IMO -> Crociera.IMO
   - Tappa.Città -> Porto.Città
-- Compagnia(<ins>PI</ins>, Nome*, Sede*, Recapito_Telefonico*)
-- Persona(<ins>CF</ins>, Nome*, Cognome*, Sesso*)
-- Ospite(<ins>CF</ins>, Costo, IMO_Crociera)
+- Compagnia(<ins>PI</ins>, Nome, Sede, Recapito_Telefonico*)
+- Persona(<ins>CF</ins>, Nome, Cognome, Sesso)
+- Ospite(<ins>CF</ins>, Costo*, IMO_Crociera)
   - Ospite.CF -> Persona.CF
   - IMO_Crociera -> Crociera.IMO
 - Persona(<ins>CF</ins>, Nome*, Cognome*, Sesso*)
-- Equipaggio(<ins>CF</ins>, IDequipaggio, Lingue_Parlate*, Stipendio, Anni_Servizio, IMO_Crociera*)
+- Equipaggio(<ins>CF</ins>, IDequipaggio, Lingue_Parlate*, Stipendio*, Anni_Servizio*, IMO_Crociera*)
   - Equipaggio.CF -> Persona.CF
   - IMO_Crociera -> Crociera.IMO
-- Animatore(<ins>CF</ins>, Abilità)
+- Animatore(<ins>CF</ins>, Abilità*)
   - Animatore.CF -> Equipaggio.CF
 - Evento(<ins>Nome</ins>, <ins>Tipologia</ins>, <ins>IMO_Crociera</ins>, Num_Cons_Partecipanti*, Num_Min_Animatori*, Età_Consigliata*)
   - Evento.IMO_Crociera -> Crociera.IMO
