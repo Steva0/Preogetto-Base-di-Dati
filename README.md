@@ -198,7 +198,6 @@ Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in c
 - Ospite(<ins>CF</ins>, Costo*, IMO_Crociera)
   - Ospite.CF -> Persona.CF
   - IMO_Crociera -> Crociera.IMO
-- Persona(<ins>CF</ins>, Nome*, Cognome*, Sesso*)
 - Equipaggio(<ins>CF</ins>, IDequipaggio, Lingue_Parlate*, Stipendio*, Anni_Servizio*, IMO_Crociera*)
   - Equipaggio.CF -> Persona.CF
   - IMO_Crociera -> Crociera.IMO
