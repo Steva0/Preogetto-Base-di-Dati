@@ -102,6 +102,64 @@ CREATE TABLE ORGANIZZA (
     FOREIGN KEY (IMO_Crociera_Evento) REFERENCES Evento(IMO_Crociera)
 );
 
+INSERT INTO Compagnia VALUES
+('0123456789', 'MareBlu Cruises', 'Genova, Italia', '+390101234567'),
+('9876543210', 'Oceania Travels', 'Napoli, Italia', '+390812345678'),
+('1234509876', 'Mediterranea SeaLine', 'Palermo, Italia', '+390916789012');
+
+INSERT INTO Porto VALUES
+('Genova', 10),
+('Napoli', 8),
+('Palermo', 6),
+('Barcellona', 12),
+('Marsiglia', 7),
+('Atene', 9);
+
+INSERT INTO Crociera VALUES
+('IMO0000001', 'Nave Azzurra', 50, 500, 400, 'Genova', 'Atene', '2025-07-01 10:00:00', 168, '0123456789'),
+('IMO0000002', 'Sole Mediterraneo', 60, 600, 520, 'Napoli', 'Barcellona', '2025-08-05 16:00:00', 120, '9876543210'),
+('IMO0000003', 'Stella del Mare', 55, 450, 300, 'Palermo', 'Marsiglia', '2025-09-10 08:00:00', 144, '1234509876');
+
+INSERT INTO Tappa VALUES
+('IMO0000001', 'Napoli', '2025-07-02 10:00:00', '2025-07-01 22:00:00'),
+('IMO0000001', 'Palermo', '2025-07-03 10:00:00', '2025-07-02 22:00:00'),
+('IMO0000001', 'Barcellona', '2025-07-04 10:00:00', '2025-07-03 22:00:00'),
+('IMO0000001', 'Marsiglia', '2025-07-05 10:00:00', '2025-07-04 22:00:00'),
+('IMO0000002', 'Genova', '2025-08-06 12:00:00', '2025-08-05 20:00:00'),
+('IMO0000002', 'Marsiglia', '2025-08-07 14:00:00', '2025-08-06 20:00:00');
+
+INSERT INTO Persona VALUES
+('RSSMRA80A01F205X', 'Mario', 'Rossi', 'M'),
+('BNCLRA85C60H501Y', 'Laura', 'Bianchi', 'F'),
+('VRDLGU90T10L219K', 'Luca', 'Verdi', 'M'),
+('PLLMNL95D01A562Z', 'Manuela', 'Paolini', 'F'),
+('GRGFNC78M15C351U', 'Francesco', 'Gargiulo', 'M');
+
+INSERT INTO Ospite VALUES
+('RSSMRA80A01F205X', 550.00, 'IMO0000001'),
+('BNCLRA85C60H501Y', 620.00, 'IMO0000001'),
+('VRDLGU90T10L219K', 480.00, 'IMO0000002');
+
+INSERT INTO Equipaggio VALUES
+('PLLMNL95D01A562Z', 'EQ001', 'Italiano, Inglese', 2200.00, 5, 'IMO0000001'),
+('GRGFNC78M15C351U', 'EQ002', 'Inglese, Francese', 2500.00, 7, 'IMO0000002');
+
+INSERT INTO Animatore VALUES
+('PLLMNL95D01A562Z', 'Balli di gruppo, Karaoke'),
+('GRGFNC78M15C351U', 'Teatro, Clownerie');
+
+INSERT INTO Evento VALUES
+('Festa di Benvenuto', 'Intrattenimento', 'IMO0000001', 150, 2, 18),
+('Karaoke Night', 'Musica', 'IMO0000001', 100, 1, 16),
+('Spettacolo Teatrale', 'Teatro', 'IMO0000002', 120, 2, 14);
+
+INSERT INTO ORGANIZZA VALUES
+('PLLMNL95D01A562Z', 'Festa di Benvenuto', 'Intrattenimento', 'IMO0000001'),
+('PLLMNL95D01A562Z', 'Karaoke Night', 'Musica', 'IMO0000001'),
+('GRGFNC78M15C351U', 'Spettacolo Teatrale', 'Teatro', 'IMO0000002');
+
+
+
 -- Query 1 – Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
