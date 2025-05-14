@@ -42,7 +42,7 @@ int main() {
     while (1) {
         printf("\nMenu - Seleziona una query da eseguire:\n");
         printf("1. Crociere con più di 3 tappe\n");
-        printf("2. Numero crociere per porto e media prenotazioni\n");
+        printf("2. Visualizza crociere in partenza da una certa città\n");
         printf("3. Crociere con media costo biglietti > 500€\n");
         printf("4. Animatori con più di 2 eventi\n");
         printf("5. Percentuale occupazione crociere\n");
