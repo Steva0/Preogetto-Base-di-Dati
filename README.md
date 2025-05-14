@@ -221,8 +221,59 @@ un indice creato specificamente per migliorare le prestazionidi una di queste in
 Di seguito vengono presentate e descritte le query con i relativi output generati e
 viene motivato l’utilizzo dell’indice proposto.
 
+**Query 1** Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe.
 
+SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
+FROM Crociera C
+JOIN Tappa T ON C.IMO = T.IMO
+GROUP BY C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale
+HAVING COUNT(DISTINCT T.Città) > 3
+ORDER BY Numero_Tappe DESC;
 
+Estratto dell’output:
+
+**QUERY 2** Trovare per ogni città (porto), quante crociere partono da lì e la media del numero di prenotazioni.
+
+SELECT p.Città, COUNT(c.IMO) AS Numero_Crociere, AVG(c.Num_Prenotazioni) AS Media_Prenotazioni
+FROM Porto p
+JOIN Crociera c ON p.Città = c.Porto_Partenza
+GROUP BY p.Città
+ORDER BY Numero_Crociere DESC;
+
+Estratto dell’output:
+
+**Query 3** Trovare le crociere che hanno una media del costo dei biglietti superiore a 500 euro
+
+SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo
+FROM Ospite O
+JOIN Crociera C ON O.IMO_Crociera = C.IMO
+GROUP BY O.IMO_Crociera, C.Nome_Nave
+HAVING AVG(O.Costo) > 500
+ORDER BY Media_Costo DESC;
+
+Estratto dell’output:
+
+**Query 4** Visualizzare gli animatori con più eventi organizzati, mostrando solo quelli con più di 2 eventi
+
+SELECT A.CF, P.Nome, P.Cognome, COUNT(*) AS Num_Eventi
+FROM Animatore A
+JOIN Persona P ON A.CF = P.CF
+JOIN ORGANIZZA O ON A.CF = O.CF_Animatore
+GROUP BY A.CF, P.Nome, P.Cognome
+HAVING COUNT(*) > 2
+ORDER BY Num_Eventi DESC;
+
+Estratto dell’output:
+
+**Query 5** Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacità massima (Num_Prenotazioni / Max_Passeggeri)
+
+SELECT IMO, Nome_Nave,
+    ROUND((Num_Prenotazioni * 100.0) / Max_Passeggeri, 2) AS Percentuale_Occupazione
+FROM Crociera
+WHERE Max_Passeggeri > 0
+ORDER BY Percentuale_Occupazione DESC;
+
+Estratto dell’output:
 
 ## 5.2 Creazione degli indici
 Si suppone di voler ottimizzare la Query 2, per la quale occorre considerare:
