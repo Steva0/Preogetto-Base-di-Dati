@@ -11,7 +11,7 @@ typedef struct {
     char query[MAX_QUERY_LEN];
 } Query;
 
-void check_conn(PGconn *conn) {
+void checkConn(PGconn *conn) {
     if (PQstatus(conn) != CONNECTION_OK) {
         fprintf(stderr, "Connessione fallita: %s\n", PQerrorMessage(conn));
         PQfinish(conn);
@@ -19,10 +19,30 @@ void check_conn(PGconn *conn) {
     }
 }
 
+int checkDatabaseExistence(PGconn *conn, const char *dbname) {
+    char query[256];
+    snprintf(query, sizeof(query), "SELECT 1 FROM pg_database WHERE datname='%s';", dbname);
+    PGresult *res = PQexec(conn, query);
+    int exists = PQntuples(res) > 0;
+    PQclear(res);
+    return exists;
+}
+
+void createDatabaseIfNotExists(PGconn *conn, const char *dbname) {
+    char query[256];
+    snprintf(query, sizeof(query), "CREATE DATABASE %s;", dbname);
+    PGresult *res = PQexec(conn, query);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        fprintf(stderr, "Errore nella creazione del database: %s\n", PQerrorMessage(conn));
+    } else {
+        printf("Database '%s' creato correttamente.\n", dbname);
+    }
+    PQclear(res);
+}
+
 void esegui_query(PGconn *conn, const char *query) {
     PGresult *res = PQexec(conn, query);
     if (PQresultStatus(res) == PGRES_COMMAND_OK) {
-        // Per comandi CREATE/INSERT
         PQclear(res);
         return;
     }
@@ -65,7 +85,6 @@ int carica_query_da_file(const char *filename, Query queries[], int *query_count
     (*contenuto_completo)[len] = '\0';
     fclose(file);
 
-    // Estrazione delle query per il menu
     char *line = strtok(*contenuto_completo, "\n");
     char buffer_query[MAX_QUERY_LEN] = "";
     int in_query = 0;
@@ -77,19 +96,16 @@ int carica_query_da_file(const char *filename, Query queries[], int *query_count
                 (*query_count)++;
                 buffer_query[0] = '\0';
             }
-
             in_query = 1;
             strcpy(queries[*query_count].descrizione, line + 9);
             buffer_query[0] = '\0';
         } else if (in_query) {
-            strcat(buffer_query, line);
-            strcat(buffer_query, "\n");
+            strncat(buffer_query, line, MAX_QUERY_LEN - strlen(buffer_query) - 2);
+            strncat(buffer_query, "\n", MAX_QUERY_LEN - strlen(buffer_query) - 1);
         }
-
         line = strtok(NULL, "\n");
     }
 
-    // Aggiungi l'ultima query
     if (in_query && *query_count < MAX_QUERY_NUM) {
         strcpy(queries[*query_count].query, buffer_query);
         (*query_count)++;
@@ -99,44 +115,56 @@ int carica_query_da_file(const char *filename, Query queries[], int *query_count
 }
 
 int main() {
-    const char *conninfo = "host=localhost dbname=progetto user=postgres password=tuapassword";
-    PGconn *conn = PQconnectdb(conninfo);
-    check_conn(conn);
+    const char *dbname = "crociere";
+    const char *script_filename = "Crociere.sql";
+
+    const char *conninfo_root = "user=postgres host=localhost port=5432";
+    PGconn *conn = PQconnectdb(conninfo_root);
+    checkConn(conn);
+
+    if (!checkDatabaseExistence(conn, dbname)) {
+        printf("Il database '%s' non esiste. Creazione in corso...\n", dbname);
+        createDatabaseIfNotExists(conn, dbname);
+    }
+    PQfinish(conn);
+
+    char conninfo_db[256];
+    snprintf(conninfo_db, sizeof(conninfo_db), "user=postgres dbname=%s host=localhost port=5432", dbname);
+    conn = PQconnectdb(conninfo_db);
+    checkConn(conn);
 
     Query queries[MAX_QUERY_NUM];
     int query_count = 0;
     char *contenuto_sql = NULL;
 
-    if (!carica_query_da_file("script.sql", queries, &query_count, &contenuto_sql)) {
+    if (!carica_query_da_file(script_filename, queries, &query_count, &contenuto_sql)) {
         fprintf(stderr, "Impossibile caricare il file SQL.\n");
+        PQfinish(conn);
         return 1;
     }
 
-    // Esegui tutto il contenuto del file per creare/popolare le tabelle
     PGresult *res = PQexec(conn, contenuto_sql);
     if (PQresultStatus(res) != PGRES_COMMAND_OK && PQresultStatus(res) != PGRES_TUPLES_OK) {
-        fprintf(stderr, "Errore nell'inizializzazione: %s\n", PQerrorMessage(conn));
+        fprintf(stderr, "Errore nell'esecuzione del file SQL: %s\n", PQerrorMessage(conn));
     } else {
-        printf("Tabelle create e popolate.\n");
+        printf("Script SQL eseguito correttamente.\n");
     }
     PQclear(res);
     free(contenuto_sql);
 
     int scelta;
     while (1) {
-        printf("\n=== Menu Query ===\n");
+        printf("\n--- MENU QUERY ---\n");
         for (int i = 0; i < query_count; i++) {
             printf("%d) %s\n", i + 1, queries[i].descrizione);
         }
-        printf("0) Esci\n");
-        printf("Scegli una query da eseguire (0 per uscire): ");
+        printf("0) Esci\nScegli una query da eseguire: ");
         scanf("%d", &scelta);
-        getchar(); // pulisce newline
+        getchar();
 
-        if (scelta == 0) {
-            break;
-        } else if (scelta >= 1 && scelta <= query_count) {
-            // SOSTITUZIONE DELLA QUERY SE CI SONO PARAMETRI
+        if (scelta == 0) break;
+
+        if (scelta >= 1 && scelta <= query_count) {
             char query_finale[MAX_QUERY_LEN];
             strcpy(query_finale, queries[scelta - 1].query);
 
@@ -150,19 +178,17 @@ int main() {
                 char valore_input[128];
                 printf("Inserisci valore per %s: ", nome_campo);
                 scanf(" %[^\n]", valore_input);
+                getchar();
 
                 char query_sostituita[MAX_QUERY_LEN];
-                *inizio_input = '\0'; // tronca temporaneamente
+                *inizio_input = '\0';
 
-                char query_sostituita[MAX_QUERY_LEN];
                 query_sostituita[0] = '\0';
-
                 strncat(query_sostituita, query_finale, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
                 strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
                 strncat(query_sostituita, valore_input, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
                 strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
                 strncat(query_sostituita, fine_input + 1, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
-
 
                 esegui_query(conn, query_sostituita);
             } else {
@@ -176,4 +202,3 @@ int main() {
     PQfinish(conn);
     return 0;
 }
-
