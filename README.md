@@ -293,3 +293,18 @@ Questo indice consente:
 Per quanto riguarda il punto 3, l’ordinamento viene effettuato su un attributo derivato (Numero_Crociere, alias di COUNT(c.IMO)), quindi non può essere direttamente indicizzato. Tuttavia, un ordinamento efficace viene facilitato dalla pre-aggregazione ottimizzata tramite l’indice sul campo di raggruppamento (Porto_Partenza).
 
 Nota: la colonna Città in Porto è chiave primaria, quindi PostgreSQL crea automaticamente un indice B+ Tree su di essa. Non è necessario creare un ulteriore indice su Porto(Città) per il join.
+
+# 6 Applicazione Software
+Il file Query.c implementa un programma in linguaggio C che consente di connettersi a un database PostgreSQL contenente i dati relativi alla gestione delle crociere. Lo scopo principale del programma è eseguire e visualizzare i risultati di diverse query SQL predefinite, come descritto nella Sezione 5 del progetto.
+All’avvio, il programma presenta un’interfaccia testuale interattiva che mostra un menu numerato con le interrogazioni disponibili. L’utente può selezionare la query desiderata digitando il numero corrispondente.
+
+Le query proposte coprono diversi aspetti gestionali, tra cui:
+1) Identificazione delle crociere che toccano più di tre porti diversi, con indicazione delle città di partenza, di arrivo e del numero di tappe.
+2) Visualizzazione delle crociere in partenza da una città specifica fornita dall’utente.
+3) Individuazione delle crociere con costo medio dei biglietti superiore a 500 euro.
+4) Elenco degli animatori con un numero di eventi organizzati superiore a due.
+5) Calcolo, per ogni crociera, della percentuale di occupazione rispetto alla capacità massima disponibile.
+
+In particolare, la seconda query è stata resa parametrica: all’utente viene richiesto di inserire il nome della città di partenza, che viene quindi utilizzato per personalizzare la query SQL in fase di esecuzione.
+
+Il codice gestisce anche l’inizializzazione del database, caricando uno script SQL che crea e popola le tabelle necessarie, e suddivide il file delle query in modo da consentire una facile selezione e gestione tramite menu. Le query disponibili non sono legate al codice, quindi possono essere aggiunte, modificate o eliminate dal file Crociere.sql e si modificherà quindi in automatico il menù a scelta.
