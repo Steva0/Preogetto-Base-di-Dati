@@ -133,30 +133,28 @@ ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze
 con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma ristrutturato, con una descrizione delle modifiche apportate.
 
 ## Tabella Entità
-| **ENTITÀ** | **DESCRIZIONE**                                     | **ATTRIBUTI**                                                                                                              | **IDENTIFICATORE**                     |
+| **Entità** | **Descrizione**                                     | **Attributi**                                                                                                              | **Identificatore**                     |
 | ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| crociera   | mezzo di trasporto marittimo                        | IMO, Nome nave, Porto partenza, Porto finale, Data/Ora partenza, Durata, Min equipaggio, Max passeggeri, Persone prenotate | IMO                                    |
-| porto      | località in cui la crociera può attraccare          | Città, Numero massimo navi                                                                                                 | Città                                  |
-| passeggero | passeggeri ospiti della crociera                    | CF, Costo, IMO crociera                                                                                                    | CF                                     |
-| persona    | persone partecipanti alle crociere                  | CF, Nome, Cognome, Sesso                                                                                                   | CF                                     |
-| equipaggio | persone membri dell’equipaggio                      | CF, IDequipaggio, Lingue parlate, Stipendio, Anni di servizio, IMO crociera                                                | CF                                     |
-| animatore  | membri dell’equipaggio che si occupano degli eventi | CF, Abilità                                                                                                                | CF                                     |
-| compagnia  | società che possiedono le navi da crociera          | P.I. compagnia, Nome, Sede, Recapito                                                                                       | P.I. compagnia                         |
-| evento     | eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, IMO crociera          | Nome evento, Tipo evento, IMO crociera |
-
-@ Tabella 1
+| Crociera   | Mezzo di trasporto marittimo                        | Imo, Nome nave, Porto partenza, Porto finale, Data/ora partenza, Durata, Min equipaggio, Max passeggeri, Persone prenotate | Imo                                    |
+| Porto      | Località in cui la crociera può attraccare          | Città, Numero massimo navi                                                                                                 | Città                                  |
+| Persona    | Persone partecipanti alle crociere                  | Codice fiscale (CF), Nome, Cognome, Sesso                                                                                  | CF                                     |
+| Passeggero | Passeggeri ospiti della crociera                    | Codice fiscale (CF), Costo, Imo crociera                                                                                   | CF                                     |
+| Equipaggio | Persone membri dell’equipaggio                      | Codice fiscale (CF), Id equipaggio, Lingue parlate, Stipendio, Anni di servizio, Imo crociera                              | CF                                     |
+| Animatore  | Membri dell’equipaggio che si occupano degli eventi | Codice fiscale (CF), Abilità                                                                                               | CF                                     |
+| Compagnia  | Società che possiedono le navi da crociera          | Partita IVA (P.I. compagnia), Nome, Sede, Recapito                                                                         | P.I. compagnia                         |
+| Evento     | Eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, Imo crociera          | Nome evento, Tipo evento, Imo crociera |
+### Tabella 1
 
 ## Tabella Relazioni
-| **RELAZIONE** | **DESCRIZIONE**                                     | **COMPONENTI**                | **ATTRIBUTI**                      |
+| **Relazione** | **Descrizione**                                     | **Componenti**                | **Attributi**                      |
 | ------------- | --------------------------------------------------- | ----------------------------- | ---------------------------------- |
-| tappa         | tappe portuali fatte da una nave                    | porto, crociera               | Data/Ora arrivo, Data/Ora partenza |
-| partecipante  | assegnazione di una persona (ospite) a una crociera | crociera, passeggero (ospite) | -                                  |
-| staff         | membri dell’equipaggio assegnati a una crociera     | crociera, equipaggio          | -                                  |
-| proprietà     | navi da crociera possedute da una compagnia         | crociera, compagnia           | -                                  |
-| disponibilità | eventi programmati per una crociera                 | crociera, evento              | -                                  |
-| organizza     | assegnazione di uno o più animatori a un evento     | evento, animatore             | -                                  |
-
-@ Tabella 2
+| Tappa         | Tappe portuali fatte da una nave                    | Porto, Crociera               | Data/ora arrivo, Data/ora partenza |
+| Partecipante  | Assegnazione di una persona (ospite) a una crociera | Crociera, Passeggero (ospite) | –                                  |
+| Staff         | Membri dell’equipaggio assegnati a una crociera     | Crociera, Equipaggio          | –                                  |
+| Proprietà     | Navi da crociera possedute da una compagnia         | Crociera, Compagnia           | –                                  |
+| Disponibilità | Eventi programmati per una crociera                 | Crociera, Evento              | –                                  |
+| Organizza     | Assegnazione di uno o più animatori a un evento     | Evento, Animatore             | –                                  |
+### Tabella 2
 
 ## 4.1 Analisi delle ridondanze
 L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
