@@ -62,7 +62,7 @@ Tutti gli individui a bordo (sia personale che ospiti) sono entità del tipo "Pe
 - **Cognome**
 - **Sesso**
 
-Una **persona può essere un **ospite** o un membro dell’**equipaggio**.
+Una **persona** può essere un **ospite** o un membro dell’**equipaggio**.
 
 ## **Equipaggio**
 
