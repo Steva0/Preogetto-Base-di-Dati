@@ -3,8 +3,9 @@
 #include <string.h>
 #include <libpq-fe.h>
 
-#define MAX_QUERY_LEN 2048
-#define MAX_QUERY_NUM 50
+#define MAX_QUERY_LEN 8192
+#define MAX_QUERY_NUM 1000
+
 
 typedef struct {
     char descrizione[256];
@@ -39,6 +40,67 @@ void createDatabaseIfNotExists(PGconn *conn, const char *dbname) {
     }
     PQclear(res);
 }
+
+int esegui_script_sql_senza_commenti(PGconn *conn, const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        perror("Errore nell'apertura del file SQL");
+        return 0;
+    }
+
+    char *contenuto = malloc(MAX_QUERY_LEN * MAX_QUERY_NUM);
+    if (!contenuto) {
+        perror("Errore di allocazione");
+        fclose(file);
+        return 0;
+    }
+    contenuto[0] = '\0';
+
+    char riga[1024];
+    while (fgets(riga, sizeof(riga), file)) {
+        char *commento = strstr(riga, "--");
+        if (commento) *commento = '\0';  // tronca al commento
+        // Rimuove whitespace finali
+        size_t len = strlen(riga);
+        while (len > 0 && (riga[len - 1] == '\n' || riga[len - 1] == '\r' || riga[len - 1] == ' ' || riga[len - 1] == '\t')) {
+            riga[--len] = '\0';
+        }
+        // Aggiunge la riga al contenuto
+        if (strlen(riga) > 0) {
+            strcat(contenuto, riga);
+            strcat(contenuto, "\n");
+        }
+    }
+
+    fclose(file);
+
+    // Ora divide il contenuto su ;
+    char *query = strtok(contenuto, ";");
+    while (query != NULL) {
+        // Rimuove whitespace iniziali
+        while (*query == ' ' || *query == '\n' || *query == '\r' || *query == '\t') query++;
+
+        if (strlen(query) > 0) {
+            char query_finale[MAX_QUERY_LEN];
+            snprintf(query_finale, sizeof(query_finale), "%s;", query);
+
+            PGresult *res = PQexec(conn, query_finale);
+            if (PQresultStatus(res) != PGRES_COMMAND_OK && PQresultStatus(res) != PGRES_TUPLES_OK) {
+                fprintf(stderr, "Errore nell'esecuzione di una query:\n%s\nErrore: %s\n", query_finale, PQresultErrorMessage(res));
+                PQclear(res);
+                free(contenuto);
+                return 0;
+            }
+            PQclear(res);
+        }
+
+        query = strtok(NULL, ";");
+    }
+
+    free(contenuto);
+    return 1;
+}
+
 
 void esegui_query(PGconn *conn, const char *query) {
     PGresult *res = PQexec(conn, query);
@@ -112,93 +174,4 @@ int carica_query_da_file(const char *filename, Query queries[], int *query_count
     }
 
     return 1;
-}
-
-int main() {
-    const char *dbname = "crociere";
-    const char *script_filename = "Crociere.sql";
-
-    const char *conninfo_root = "user=postgres host=localhost port=5432";
-    PGconn *conn = PQconnectdb(conninfo_root);
-    checkConn(conn);
-
-    if (!checkDatabaseExistence(conn, dbname)) {
-        printf("Il database '%s' non esiste. Creazione in corso...\n", dbname);
-        createDatabaseIfNotExists(conn, dbname);
-    }
-    PQfinish(conn);
-
-    char conninfo_db[256];
-    snprintf(conninfo_db, sizeof(conninfo_db), "user=postgres dbname=%s host=localhost port=5432", dbname);
-    conn = PQconnectdb(conninfo_db);
-    checkConn(conn);
-
-    Query queries[MAX_QUERY_NUM];
-    int query_count = 0;
-    char *contenuto_sql = NULL;
-
-    if (!carica_query_da_file(script_filename, queries, &query_count, &contenuto_sql)) {
-        fprintf(stderr, "Impossibile caricare il file SQL.\n");
-        PQfinish(conn);
-        return 1;
-    }
-
-    PGresult *res = PQexec(conn, contenuto_sql);
-    if (PQresultStatus(res) != PGRES_COMMAND_OK && PQresultStatus(res) != PGRES_TUPLES_OK) {
-        fprintf(stderr, "Errore nell'esecuzione del file SQL: %s\n", PQerrorMessage(conn));
-    } else {
-        printf("Script SQL eseguito correttamente.\n");
-    }
-    PQclear(res);
-    free(contenuto_sql);
-
-    int scelta;
-    while (1) {
-        printf("\n--- MENU QUERY ---\n");
-        for (int i = 0; i < query_count; i++) {
-            printf("%d) %s\n", i + 1, queries[i].descrizione);
-        }
-        printf("0) Esci\nScegli una query da eseguire: ");
-        scanf("%d", &scelta);
-        getchar();
-
-        if (scelta == 0) break;
-
-        if (scelta >= 1 && scelta <= query_count) {
-            char query_finale[MAX_QUERY_LEN];
-            strcpy(query_finale, queries[scelta - 1].query);
-
-            char *inizio_input = strstr(query_finale, "<");
-            char *fine_input = strstr(query_finale, ">");
-            if (inizio_input && fine_input && fine_input > inizio_input) {
-                char nome_campo[64];
-                strncpy(nome_campo, inizio_input + 1, fine_input - inizio_input - 1);
-                nome_campo[fine_input - inizio_input - 1] = '\0';
-
-                char valore_input[128];
-                printf("Inserisci valore per %s: ", nome_campo);
-                scanf(" %[^\n]", valore_input);
-                getchar();
-
-                char query_sostituita[MAX_QUERY_LEN];
-                *inizio_input = '\0';
-
-                query_sostituita[0] = '\0';
-                strncat(query_sostituita, query_finale, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
-                strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
-                strncat(query_sostituita, valore_input, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
-                strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
-                strncat(query_sostituita, fine_input + 1, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
-
-                esegui_query(conn, query_sostituita);
-            } else {
-                esegui_query(conn, query_finale);
-            }
-        } else {
-            printf("Scelta non valida.\n");
-        }
-    }
-
-    PQfinish(conn);
-    return 0;
 }
