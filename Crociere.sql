@@ -157,7 +157,7 @@ GROUP BY C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale
 HAVING COUNT(DISTINCT T.Città) > 3
 ORDER BY Numero_Tappe DESC;
 
--- QUERY 2 – Visualizzare tutte le crociere in partenza da una città inserita dall’utente
+-- Query 2 – Visualizzare tutte le crociere in partenza da una città inserita dall’utente
 SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
 FROM Crociera c
 WHERE c.Porto_Partenza = '<CITTÀ>';
