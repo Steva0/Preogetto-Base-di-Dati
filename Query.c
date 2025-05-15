@@ -266,9 +266,9 @@ int main() {
             for (int i = 0; i < queries[scelta - 1].param_count; i++) {
                 char valore[MAX_PARAM_LEN];
                 printf("Inserisci valore per '%s': ", queries[scelta - 1].params[i]);
-                scanf("%s", valore);  // per semplicità usiamo scanf %s; puoi usare fgets se servono spazi
+                scanf("%s", valore);  // per semplicità usiamo scanf %s
 
-                // Sostituisci <PARAM> con il valore
+                // Sostituisce <PARAM> con il valore
                 char *pos = strstr(final_sql, queries[scelta - 1].params[i]);
                 if (pos) {
                     char segnaposto[MAX_PARAM_LEN + 2];
@@ -278,7 +278,7 @@ int main() {
                     char *inizio = final_sql;
                     char *found;
 
-                    // Cerca e sostituisci tutte le occorrenze
+                    // Cerca e sostituisce tutte le occorrenze
                     nuova_query[0] = '\0';
                     while ((found = strstr(inizio, segnaposto)) != NULL) {
                         strncat(nuova_query, inizio, found - inizio);
