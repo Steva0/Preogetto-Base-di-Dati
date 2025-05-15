@@ -1,3 +1,5 @@
+<div align="justify">
+
 # Base di Dati di un Sistema di Gestione Crociere
 
 Membri del gruppo:
@@ -37,11 +39,11 @@ Ogni crociera è identificata dal codice IMO e registra:
 - **Tipologia** (es. mediterranea, fluviale, transatlantica)
 
 Ogni **crociera**:
-- È di proprietà di una compagnia
-- Parte da un porto e arriva in un altro
-- Può prevedere tappe intermedie
-- Ha a bordo ospiti e membri dell’equipaggio
-- Include eventi ricreativi gestiti da animatori
+- È di proprietà di una **compagnia**
+- Parte da un **porto** e arriva in un altro
+- Può prevedere **tappe** intermedie
+- Ha a bordo **ospiti** e **membri dell’equipaggio**
+- Include **eventi** gestiti da **animatori**
 
 ## **Porti**
 
@@ -103,9 +105,13 @@ Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 - **Numero consigliato di partecipanti**
 
 Ogni **evento** è gestito da uno o più **animatori** e può essere frequentato da più **ospiti**.
+</div>
+<div align="center">
+<img src="img/Con_Generalizzazione.png" alt="Grafico2" width="600"/>
 
-![Grafico1](img/Con_Generalizzazione.png)
 Grafico1
+</div>
+<div align="justify">
 
 # 3 Progettazione Concettuale
 La Figura 1 riporta il diagramma Entità–Relazione (E–R) che riassume i requisiti descritti nella sezione 2.
@@ -132,7 +138,9 @@ In questa sezione viene illustrato il processo di “traduzione” dello schema 
 ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
 con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma ristrutturato, con una descrizione delle modifiche apportate.
 
-## Tabella Entità
+</div>
+<div align="center">
+
 | **Entità** | **Descrizione**                                     | **Attributi**                                                                                                              | **Identificatore**                     |
 | ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
 | Crociera   | Mezzo di trasporto marittimo                        | Imo, Nome nave, Porto partenza, Porto finale, Data/ora partenza, Durata, Min equipaggio, Max passeggeri, Persone prenotate | Imo                                    |
@@ -143,9 +151,13 @@ con l’eliminazione delle due generalizzazioni. Infine, viene presentato il dia
 | Animatore  | Membri dell’equipaggio che si occupano degli eventi | Codice fiscale (CF), Abilità                                                                                               | CF                                     |
 | Compagnia  | Società che possiedono le navi da crociera          | Partita IVA (P.I. compagnia), Nome, Sede, Recapito                                                                         | P.I. compagnia                         |
 | Evento     | Eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, Imo crociera          | Nome evento, Tipo evento, Imo crociera |
-### Tabella 1
 
-## Tabella Relazioni
+Tabella 1 (Entità)
+</div>
+
+</div>
+<div align="center">
+
 | **Relazione** | **Descrizione**                                     | **Componenti**                | **Attributi**                      |
 | ------------- | --------------------------------------------------- | ----------------------------- | ---------------------------------- |
 | Tappa         | Tappe portuali fatte da una nave                    | Porto, Crociera               | Data/ora arrivo, Data/ora partenza |
@@ -154,7 +166,12 @@ con l’eliminazione delle due generalizzazioni. Infine, viene presentato il dia
 | Proprietà     | Navi da crociera possedute da una compagnia         | Crociera, Compagnia           | –                                  |
 | Disponibilità | Eventi programmati per una crociera                 | Crociera, Evento              | –                                  |
 | Organizza     | Assegnazione di uno o più animatori a un evento     | Evento, Animatore             | –                                  |
-### Tabella 2
+
+Tabella 2 (Relazioni)
+
+</div>
+<div align="justify">
+
 
 ## 4.1 Analisi delle ridondanze
 L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
@@ -165,6 +182,8 @@ Questo attributo viene modificato ogni volta che si aggiunge una nuova persona a
 - `Operazione 2 (24 al giorno): visualizza il numero di prenotazioni attuali in una crociera.`
 
 Assumendo i seguenti volumi nella base di dati:
+</div>
+<div align="center">
 
 | Concetto | Costrutto | Volume|
 |----------|-----------|-------|
@@ -172,36 +191,63 @@ Assumendo i seguenti volumi nella base di dati:
 | PARTECIPANTE | R | 150000 |
 | PASSEGGERO | E | 150000 |
 
-la seguente analisi serve per stabilire se sia utile o meno tenere l’attributo ridondante Persone_Prenotate in CROCIERA.
+</div>
+<div align="justify">
 
-**CON RIDONDANZA** Analizziamo prima il costo totale con ridondanza.
+La seguente analisi serve per stabilire se sia utile o meno tenere l’attributo ridondante Persone_Prenotate in CROCIERA.
+
+## **CON RIDONDANZA** 
+Analizziamo prima il costo totale con ridondanza.
+
 - Operazione 1:
+</div>
+  <div align="center">
+
   |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
   |---------|-----------|---------|------|-------------|
   |PASSEGGERO | E | 1 | S | × 400 |
   |PARTECIPANTE | R | 1 | S | × 400 |
   |CROCIERA | E | 1 | L | × 400 |
   |CROCIERA | E | 1 | S | × 400 |
-- Operazione2:
+  </div>
+  <div align="justify">
+- Operazione 2:
+</div>
+  <div align="center">
+
   |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
   |---------|-----------|---------|------|-------------|
   |Crociera | E | 1 | L | × 24 |
+  </div>
+  <div align="justify">
 
 Assumendo costo doppio per gli accessi in scrittura:
 ```math
 Costo Totale = 400 * 3 * 2 + 400 + 24 = 2824
 ```
-**SENZA RIDONDANZA** Analizziamo il costo totale senza ridondanza.
+## **SENZA RIDONDANZA** 
+Analizziamo il costo totale senza ridondanza.
 - Operazione 1:
+</div>
+  <div align="center">
+
   |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
   |---------|-----------|---------|------|-------------|
   |PASSEGGERO | E | 1 | S | × 400 |
   |PARTECIPANTE | R | 1 | S | × 400 |
-- Operazione 2 (con circa 150000/30 = 5000 passeggeri al giorno)
-  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
-  |---------|-----------|---------|------|-------------|
-  |CROCIERA | E | 1 | L | × 24 |
-  |PARTECIPANTE | R | 5000 | L | × 24 |
+  </div>
+  <div align="justify">
+- Operazione 2 (con circa 150000/30 = 5000 passeggeri al giorno):
+</div>
+  <div align="center">
+
+|Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+|---------|-----------|---------|------|-------------|
+|CROCIERA | E | 1 | L | × 24 |
+|PARTECIPANTE | R | 5000 | L | × 24 |
+  </div>
+  <div align="justify">
+
 
 Assumendo costo doppio per gli accessi in scrittura:
 ```math
@@ -211,9 +257,13 @@ L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando c
 
 ## 4.2 Eliminazioni delle Generalizzazioni
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
+</div>
+<div align="center">
+<img src="img/Senza_Generalizzazione.png" alt="Grafico2" width="600"/>
 
-![Grafico2](img/Senza_Generalizzazione.png)
 Grafico2
+</div>
+<div align="justify">
 
 **PERSONA**. La generalizzazione parziale PERSONA viene sostituita con le relazioni `IS-OSPITE` e `IS-EQUIP` (vedi Figura 2), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
 Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGIERO).
@@ -326,7 +376,7 @@ Si suppone di voler ottimizzare la Query 2, per la quale occorre considerare:
 2) Group by sulla colonna p.Città e aggregazione COUNT(c.IMO), AVG(c.Num_Prenotazioni)
 3) Ordinamento sul numero di crociere in partenza (alias Numero_Crociere)
 
-Per il punto 1, è opportuno creare un indice B+ Tree sulla colonna Porto_Partenza della tabella Crociera, poiché essa è usata per effettuare un join equi-condizionato con Porto(Città), e viene successivamente utilizzata per il raggruppamento dei risultati. Inoltre, Porto_Partenza non è una chiave primaria, né è automaticamente indicizzata dal sistema.
+Per il punto 1, è opportuno creare un indice sulla colonna Porto_Partenza della tabella Crociera, poiché questa viene utilizzata in un join basato sull’uguaglianza con Porto(Città) e successivamente per il raggruppamento dei risultati. Inoltre, Porto_Partenza non è una chiave primaria e non è automaticamente indicizzata dal sistema.
 ```sql
 CREATE INDEX idx_porto_partenza ON Crociera (Porto_Partenza);
 ```
@@ -363,3 +413,4 @@ In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve co
 ```bash
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
 ```
+</div>
