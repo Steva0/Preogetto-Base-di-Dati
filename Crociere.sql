@@ -53,12 +53,13 @@ CREATE TABLE IF NOT EXISTS Ospite (
 );
 
 CREATE TABLE IF NOT EXISTS Equipaggio (
-    CF CHAR(16) UNIQUE,
-    IDequipaggio CHAR(10) PRIMARY KEY,
+    CF CHAR(16),
+    IDequipaggio CHAR(10) NOT NULL,
     Lingue_Parlate VARCHAR(100),
     Stipendio DECIMAL(10, 2),
     Anni_Servizio INT,
     IMO_Crociera CHAR(10),
+    PRIMARY KEY (CF),
     FOREIGN KEY (CF) REFERENCES Persona(CF)
 );
 
