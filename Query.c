@@ -5,6 +5,7 @@
 
 #define MAX_PARAMS 10
 #define MAX_PARAM_LEN 32
+#define MAX_QUERIES 20
 
 typedef struct {
     char title[128];
@@ -85,6 +86,7 @@ void exec_select(PGconn *conn, const char *sql) {
     }
     PQclear(res);
 }
+
 
 int main() {
     PGconn *conn;
