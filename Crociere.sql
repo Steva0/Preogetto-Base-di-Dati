@@ -93,33 +93,37 @@ CREATE TABLE IF NOT EXISTS ORGANIZZA (
 
 
 INSERT INTO Compagnia VALUES
-('1111111111', 'Costa del Sole', 'Civitavecchia', 'Italia', '+390766123456'),
-('2222222222', 'Vento Estivo', 'Bari', 'Italia', '+390805432198'),
-('3333333333', 'Blue Horizon', 'Venezia', 'Italia', '+390412233445'),
-('4444444444', 'Tramonto Cruise Line', 'Trieste', 'Italia', '+390402224466'),
-('5555555555', 'Stella Marina Cruises', 'Livorno', 'Italia', '+390586334455'),
-('6666666666', 'Azzurra Voyages', 'La Spezia', 'Italia', '+390187665544'),
-('7777777777', 'Aurora Line', 'Brindisi', 'Italia', '+390831112233'),
-('8888888888', 'Adriatica Cruise', 'Ancona', 'Italia', '+390712221133'),
-('9999999999', 'Mediterraneo Royal', 'Reggio Calabria', 'Italia', '+390965778899'),
-('1010101010', 'Sirena del Mare', 'Salerno', 'Italia', '+390892221100'),
-('1212121212', 'Egeo Travel', 'Taranto', 'Italia', '+390997665544'),
-('1313131313', 'Poseidon Cruises', 'Cagliari', 'Italia', '+390706665544'),
-('1414141414', 'Atlantica Line', 'Ajaccio', 'Francia', '+33495223344'),
-('1515151515', 'Europa Waves', 'Marsiglia', 'Francia', '+33491123456'),
-('1616161616', 'Porto Viaggi', 'Barcellona', 'Spagna', '+34933123456'),
-('1717171717', 'Onda Serena', 'Valencia', 'Spagna', '+34961222111'),
-('1818181818', 'Grecia Mare', 'Pireo', 'Grecia', '+302104445566'),
-('1919191919', 'Croazia Blu', 'Dubrovnik', 'Croazia', '+38520322333'),
-('2020202020', 'Baltic Dream', 'Tallinn', 'Estonia', '+3726611222'),
-('2121212121', 'Nordik Sea Line', 'Oslo', 'Norvegia', '+4722345566');
+('1111111111', 'Costa del Sole', 'Civitavecchia', '+390766123456'),
+('2222222222', 'Vento Estivo', 'Bari', '+390805432198'),
+('3333333333', 'Blue Horizon', 'Venezia', '+390412233445'),
+('4444444444', 'Tramonto Cruise Line', 'Trieste', '+390402224466'),
+('5555555555', 'Stella Marina Cruises', 'Livorno', '+390586334455'),
+('6666666666', 'Azzurra Voyages', 'La Spezia', '+390187665544'),
+('7777777777', 'Aurora Line', 'Brindisi', '+390831112233'),
+('8888888888', 'Adriatica Cruise', 'Ancona', '+390712221133'),
+('9999999999', 'Mediterraneo Royal', 'Reggio Calabria', '+390965778899'),
+('1010101010', 'Sirena del Mare', 'Salerno', '+390892221100'),
+('1212121212', 'Egeo Travel', 'Taranto', '+390997665544'),
+('1313131313', 'Poseidon Cruises', 'Cagliari', '+390706665544'),
+('1414141414', 'Atlantica Line', 'Ajaccio', '+33495223344'),
+('1515151515', 'Europa Waves', 'Marsiglia', '+33491123456'),
+('1616161616', 'Porto Viaggi', 'Barcellona', '+34933123456'),
+('1717171717', 'Onda Serena', 'Valencia', '+34961222111'),
+('1818181818', 'Grecia Mare', 'Pireo', '+302104445566'),
+('1919191919', 'Croazia Blu', 'Dubrovnik', '+38520322333'),
+('2020202020', 'Baltic Dream', 'Tallinn', '+3726611222'),
+('2121212121', 'Nordik Sea Line', 'Oslo', '+4722345566');
 
 
 INSERT INTO Porto VALUES
 ('Civitavecchia', 9),
+('Napoli', 10),
 ('Livorno', 8),
 ('Venezia', 7),
 ('Trieste', 6),
+('Palermo', 8),
+('Marsiglia', 11),
+('Barcellona', 9),
 ('La Spezia', 5),
 ('Savona', 6),
 ('Ravenna', 4),
@@ -128,7 +132,6 @@ INSERT INTO Porto VALUES
 ('Ancona', 5),
 ('Salerno', 5),
 ('Reggio Calabria', 4),
-('Cagliari', 6),
 ('Olbia', 5),
 ('Trapani', 3),
 ('Messina', 5),
@@ -157,7 +160,6 @@ INSERT INTO Porto VALUES
 ('Danzica', 7),
 ('Szczecin', 4),
 ('Lisbona', 8),
-('Porto', 6),
 ('Funchal', 4),
 ('Pireo', 10),
 ('Salonicco', 6),
@@ -183,7 +185,6 @@ INSERT INTO Porto VALUES
 ('Palamós', 3),
 ('Sete', 4),
 ('Cagliari', 6),
-('Ajaccio', 4),
 ('Hvar', 3),
 ('Mykonos', 4),
 ('Santorini', 4),
@@ -202,17 +203,21 @@ INSERT INTO Porto VALUES
 ('Fort Lauderdale', 11),
 ('Galveston', 9),
 ('New Orleans', 8),
-('Key West', 4);
+('Genova', 12),
+('Atene', 4),
+('Key West', 4),
+('Southampton', 6),
+('Nice', 6);
 
 INSERT INTO Crociera VALUES
 ('IMO0000001', 'Nave Azzurra', 50, 500, 400, 'Genova', 'Atene', '2025-07-01 10:00:00', 168, '1010101010'),
 ('IMO0000002', 'Sole Mediterraneo', 60, 600, 520, 'Napoli', 'Barcellona', '2025-08-05 16:00:00', 120, '1212121212'),
-('IMO0000003', 'Stella del Mare', 55, 450, 300, 'Palermo', 'Marsiglia', '2025-09-10 08:00:00', 144, '1313131313');
+('IMO0000003', 'Stella del Mare', 55, 450, 300, 'Palermo', 'Marsiglia', '2025-09-10 08:00:00', 144, '1313131313'),
 ('IMO0000004', 'Oceano Blu', 48, 520, 400, 'Civitavecchia', 'Valencia', '2025-06-15 09:00:00', 120, '1111111111'),
 ('IMO0000005', 'Alba Serena', 52, 530, 410, 'Venezia', 'Dubrovnik', '2025-06-20 17:00:00', 96, '2222222222'),
 ('IMO0000006', 'Costa Magica', 60, 580, 500, 'Livorno', 'Marsiglia', '2025-07-03 11:00:00', 72, '3333333333'),
 ('IMO0000007', 'Mare Dorato', 62, 600, 520, 'La Spezia', 'Barcellona', '2025-07-07 15:00:00', 96, '4444444444'),
-('IMO0000008', 'Tramonto d’Oriente', 55, 490, 420, 'Brindisi', 'Atene', '2025-07-10 14:00:00', 120, '5555555555'),
+('IMO0000008', 'Tramonto d Oriente', 55, 490, 420, 'Brindisi', 'Atene', '2025-07-10 14:00:00', 120, '5555555555'),
 ('IMO0000009', 'Sirena Bianca', 58, 550, 470, 'Bari', 'Corfù', '2025-07-14 10:30:00', 72, '6666666666'),
 ('IMO0000010', 'Regina del Mare', 50, 500, 400, 'Ancona', 'Salonicco', '2025-07-20 18:00:00', 96, '7777777777'),
 ('IMO0000011', 'Mediterranea Star', 60, 610, 490, 'Salerno', 'Palermo', '2025-07-25 08:30:00', 48, '8888888888'),
@@ -246,46 +251,46 @@ INSERT INTO Tappa VALUES
 ('IMO0000001', 'Napoli', '2025-07-02 10:00:00', '2025-07-01 22:00:00'),
 ('IMO0000001', 'Palermo', '2025-07-03 10:00:00', '2025-07-02 22:00:00'),
 ('IMO0000001', 'Barcellona', '2025-07-04 10:00:00', '2025-07-03 22:00:00'),
-('IMO0000001', 'Marsiglia', '2025-07-05 10:00:00', '2025-07-04 22:00:00');
+('IMO0000001', 'Marsiglia', '2025-07-05 10:00:00', '2025-07-04 22:00:00'),
 ('IMO0000002', 'Genova', '2025-08-06 12:00:00', '2025-08-05 20:00:00'),
-('IMO0000002', 'Marsiglia', '2025-08-07 14:00:00', '2025-08-06 20:00:00');
+('IMO0000002', 'Marsiglia', '2025-08-07 14:00:00', '2025-08-06 20:00:00'),
 ('IMO0000003', 'Cagliari', '2025-09-11 12:00:00', '2025-09-10 22:00:00'),
 ('IMO0000003', 'Ajaccio', '2025-09-12 13:00:00', '2025-09-11 21:00:00'),
-('IMO0000003', 'Genova', '2025-09-13 14:00:00', '2025-09-12 22:00:00');
+('IMO0000003', 'Genova', '2025-09-13 14:00:00', '2025-09-12 22:00:00'),
 ('IMO0000004', 'Livorno', '2025-06-16 12:00:00', '2025-06-15 21:00:00'),
-('IMO0000004', 'Marsiglia', '2025-06-17 13:00:00', '2025-06-16 20:00:00');
+('IMO0000004', 'Marsiglia', '2025-06-17 13:00:00', '2025-06-16 20:00:00'),
 ('IMO0000005', 'Ancona', '2025-06-21 11:00:00', '2025-06-20 22:00:00'),
-('IMO0000005', 'Spalato', '2025-06-22 13:00:00', '2025-06-21 20:00:00');
+('IMO0000005', 'Spalato', '2025-06-22 13:00:00', '2025-06-21 20:00:00'),
 ('IMO0000006', 'Civitavecchia', '2025-07-04 12:00:00', '2025-07-03 22:00:00'),
-('IMO0000006', 'Palermo', '2025-07-05 13:00:00', '2025-07-04 21:00:00');
+('IMO0000006', 'Palermo', '2025-07-05 13:00:00', '2025-07-04 21:00:00'),
 ('IMO0000007', 'Ajaccio', '2025-07-08 13:00:00', '2025-07-07 22:00:00'),
-('IMO0000007', 'Valencia', '2025-07-09 14:00:00', '2025-07-08 21:00:00');
+('IMO0000007', 'Valencia', '2025-07-09 14:00:00', '2025-07-08 21:00:00'),
 ('IMO0000008', 'Corfù', '2025-07-11 12:00:00', '2025-07-10 21:00:00'),
-('IMO0000008', 'Salonicco', '2025-07-12 13:00:00', '2025-07-11 22:00:00');
+('IMO0000008', 'Salonicco', '2025-07-12 13:00:00', '2025-07-11 22:00:00'),
 ('IMO0000009', 'Dubrovnik', '2025-07-15 10:00:00', '2025-07-14 20:00:00'),
-('IMO0000009', 'Spalato', '2025-07-16 11:00:00', '2025-07-15 20:00:00');
+('IMO0000009', 'Spalato', '2025-07-16 11:00:00', '2025-07-15 20:00:00'),
 ('IMO0000010', 'Bari', '2025-07-21 12:00:00', '2025-07-20 22:00:00'),
-('IMO0000010', 'Brindisi', '2025-07-22 14:00:00', '2025-07-21 22:00:00');
+('IMO0000010', 'Brindisi', '2025-07-22 14:00:00', '2025-07-21 22:00:00'),
 ('IMO0000011', 'Cagliari', '2025-07-26 10:00:00', '2025-07-25 20:00:00'),
-('IMO0000011', 'Ajaccio', '2025-07-27 12:00:00', '2025-07-26 20:00:00');
+('IMO0000011', 'Ajaccio', '2025-07-27 12:00:00', '2025-07-26 20:00:00'),
 ('IMO0000012', 'Olbia', '2025-08-02 09:00:00', '2025-08-01 20:00:00'),
-('IMO0000012', 'Genova', '2025-08-03 11:00:00', '2025-08-02 20:00:00');
+('IMO0000012', 'Genova', '2025-08-03 11:00:00', '2025-08-02 20:00:00'),
 ('IMO0000013', 'Ajaccio', '2025-08-11 10:00:00', '2025-08-10 20:00:00'),
-('IMO0000013', 'Civitavecchia', '2025-08-12 12:00:00', '2025-08-11 20:00:00');
+('IMO0000013', 'Civitavecchia', '2025-08-12 12:00:00', '2025-08-11 20:00:00'),
 ('IMO0000014', 'Barcellona', '2025-08-16 09:00:00', '2025-08-15 20:00:00'),
-('IMO0000014', 'Marsiglia', '2025-08-17 11:00:00', '2025-08-16 20:00:00');
+('IMO0000014', 'Marsiglia', '2025-08-17 11:00:00', '2025-08-16 20:00:00'),
 ('IMO0000015', 'Valencia', '2025-08-21 10:00:00', '2025-08-20 20:00:00'),
-('IMO0000015', 'Palermo', '2025-08-22 12:00:00', '2025-08-21 20:00:00');
+('IMO0000015', 'Palermo', '2025-08-22 12:00:00', '2025-08-21 20:00:00'),
 ('IMO0000016', 'Marsiglia', '2025-08-26 09:00:00', '2025-08-25 20:00:00'),
-('IMO0000016', 'Genova', '2025-08-27 11:00:00', '2025-08-26 20:00:00');
+('IMO0000016', 'Genova', '2025-08-27 11:00:00', '2025-08-26 20:00:00'),
 ('IMO0000017', 'Valencia', '2025-09-02 10:00:00', '2025-09-01 20:00:00'),
-('IMO0000017', 'Barcellona', '2025-09-03 12:00:00', '2025-09-02 20:00:00');
+('IMO0000017', 'Barcellona', '2025-09-03 12:00:00', '2025-09-02 20:00:00'),
 ('IMO0000018', 'Napoli', '2025-09-06 09:00:00', '2025-09-05 20:00:00'),
-('IMO0000018', 'Civitavecchia', '2025-09-07 11:00:00', '2025-09-06 20:00:00');
+('IMO0000018', 'Civitavecchia', '2025-09-07 11:00:00', '2025-09-06 20:00:00'),
 ('IMO0000019', 'Rodi', '2025-09-11 10:00:00', '2025-09-10 20:00:00'),
-('IMO0000019', 'Heraklion', '2025-09-12 12:00:00', '2025-09-11 20:00:00');
+('IMO0000019', 'Heraklion', '2025-09-12 12:00:00', '2025-09-11 20:00:00'),
 ('IMO0000020', 'Spalato', '2025-09-16 09:00:00', '2025-09-15 20:00:00'),
-('IMO0000020', 'Kotor', '2025-09-17 11:00:00', '2025-09-16 20:00:00');
+('IMO0000020', 'Kotor', '2025-09-17 11:00:00', '2025-09-16 20:00:00'),
 ('IMO0000021', 'Stoccolma', '2025-09-21 10:00:00', '2025-09-20 20:00:00'),
 ('IMO0000021', 'Helsinki', '2025-09-22 12:00:00', '2025-09-21 20:00:00');
 
@@ -459,7 +464,7 @@ INSERT INTO Persona VALUES
 ('RSSMRA46A67F205K', 'Mario', 'Rossi', 'M'),
 ('VRDLGU47T68L219L', 'Luca', 'Verdi', 'M'),
 ('PLLMNL48D69A562M', 'Manuela', 'Paolini', 'F'),
-('GRGFNC49M70C351N', 'Francesco', 'Gargiulo', 'M');
+('GRGFNC49M70C351N', 'Francesco', 'Gargiulo', 'M'),
 ('BNCLRA50C71H501O', 'Laura', 'Bianchi', 'F'),
 ('RSSMRA51A72F205P', 'Mario', 'Rossi', 'M'),
 ('VRDLGU52T73L219Q', 'Luca', 'Verdi', 'M'),
@@ -718,7 +723,7 @@ INSERT INTO ORGANIZZA VALUES
 
 CREATE INDEX idx_crociera_porto_partenza ON Crociera(Porto_Partenza);
 
--- Query 1 - Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe
+-- Query 1 - Trovare le crociere che toccano piu' di 3 porti diversi e indicarne la citta' di partenza, di arrivo e il numero di tappe
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
 JOIN Tappa T ON C.IMO = T.IMO
