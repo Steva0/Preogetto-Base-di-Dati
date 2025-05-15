@@ -149,7 +149,7 @@ INSERT INTO ORGANIZZA VALUES
 
 CREATE INDEX idx_crociera_porto_partenza ON Crociera(Porto_Partenza);
 
--- Query 1 - Seleziona tutte le crociere con piu' di 3 tappe
+-- Query 1 – Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
 JOIN Tappa T ON C.IMO = T.IMO
@@ -157,12 +157,12 @@ GROUP BY C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale
 HAVING COUNT(DISTINCT T.Città) > 3
 ORDER BY Numero_Tappe DESC;
 
--- Query 2 - Visualizzare tutte le crociere in partenza da una città inserita dall’utente
+-- Query 2 - Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente
 SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
 FROM Crociera c
 WHERE c.Porto_Partenza = '<CITTÀ>';
 
--- Query 3 - Seleziona tutte le crociere con un costo medio superiore a 500
+-- Query 3 - Trovare le crociere che hanno una media del costo dei biglietti superiore a 500 euro
 SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo
 FROM Ospite O
 JOIN Crociera C ON O.IMO_Crociera = C.IMO
@@ -170,7 +170,7 @@ GROUP BY O.IMO_Crociera, C.Nome_Nave
 HAVING AVG(O.Costo) > 500
 ORDER BY Media_Costo DESC;
 
--- Query 4 - Seleziona tutti gli animatori che hanno organizzato piu' di 2 eventi
+-- Query 4 - Visualizzare gli animatori con più eventi organizzati, mostrando solo quelli con più di 2 eventi
 SELECT A.CF, P.Nome, P.Cognome, COUNT(*) AS Num_Eventi
 FROM Animatore A
 JOIN Persona P ON A.CF = P.CF
@@ -179,7 +179,7 @@ GROUP BY A.CF, P.Nome, P.Cognome
 HAVING COUNT(*) > 2
 ORDER BY Num_Eventi DESC;
 
--- Query 5 - Seleziona tutte le crociere con un numero di prenotazioni superiore alla media
+-- Query 5 - Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacità massima (Num_Prenotazioni / Max_Passeggeri)
 SELECT IMO, Nome_Nave,
        ROUND((Num_Prenotazioni * 100.0) / Max_Passeggeri, 2) AS Percentuale_Occupazione
 FROM Crociera
