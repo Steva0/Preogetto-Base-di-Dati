@@ -6,6 +6,7 @@
 #define MAX_PARAMS 10
 #define MAX_PARAM_LEN 32
 #define MAX_QUERIES 20
+#define MAX_SQL_LEN 2048
 
 typedef struct {
     char title[128];
