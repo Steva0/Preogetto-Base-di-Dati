@@ -1,93 +1,94 @@
 # Base di Dati di un Sistema di Gestione Crociere
 
 Membri del gruppo:
-- Ghiraldin Mirco 2102505
-- Stevanin Michele 2101741
+- `**Ghiraldin Mirco** 2102505`
+- `**Stevanin Michele** 2101741`
 
 # 1 Abstract
-In questo elaborato viene presentato lo sviluppo di una base di dati relazionale pensata per gestire le attività delle compagnie di crociera. L’obiettivo è costruire un sistema informativo in grado di organizzare in modo chiaro ed efficiente tutte le informazioni legate alla gestione delle navi, del personale e delle attività a bordo.
+In questo elaborato viene presentato lo sviluppo di una base di dati relazionale pensata per **gestire le attività delle compagnie di crociera**. L’obiettivo è costruire un `sistema informativo` in grado di organizzare in modo chiaro ed efficiente tutte le informazioni legate alla gestione delle navi, del personale e delle attività a bordo.
 
 Il progetto copre l’intero ciclo di vita di una crociera: si parte dall’identificazione delle compagnie organizzatrici (tramite partita IVA), per arrivare alla gestione delle singole crociere, ciascuna con il proprio itinerario, i porti di partenza e arrivo, le date, le tappe intermedie e altri dettagli tecnici. A bordo interagiscono diverse figure: passeggeri, membri dell’equipaggio e animatori, rappresentati nel modello tramite un sistema di generalizzazioni e specializzazioni che permette di descrivere con flessibilità i diversi ruoli.
 
-Il modello affronta anche aspetti legati alle prestazioni del sistema, comne ad esempio l’analisi della ridondanza relativa al numero di passeggeri prenotati. Il progetto è stato sviluppato seguendo un approccio modulare, ispirato alle metodologie viste durante il corso, con l’obiettivo di garantire integrità, coerenza e adattabilità in contesti reali di gestione delle crociere.
+Il modello affronta anche aspetti legati alle **prestazioni del sistema**, comne ad esempio l’analisi della ridondanza relativa al numero di passeggeri prenotati. Il progetto è stato sviluppato seguendo un approccio modulare, ispirato alle metodologie viste durante il corso, con l’obiettivo di garantire integrità, coerenza e adattabilità in contesti reali di gestione delle crociere.
 
 # 2 Analisi dei Requisiti
 
 **Compagnie Marittime**
 
 Ogni compagnia è identificata da una partita IVA univoca e include le seguenti informazioni:
-- Partita IVA (PK)
-- Nome
-- Sede
-- Recapito
+- **Partita IVA** (PK)
+- **Nome**
+- **Sede**
+- **Recapito**
 
-Le compagnie possiedono una o più crociere.
+Le **compagnie** possiedono una o più **crociere**.
 
 **Crociere**
 
 Ogni crociera è identificata dal codice IMO e registra:
-- Codice IMO (PK)
-- Nome della nave
-- Porto di partenza
-- Porto di arrivo
-- Data e ora di partenza
-- Durata (in giorni)
-- Numero minimo di membri dell’equipaggio
-- Numero massimo di passeggeri
-- Tipologia (es. mediterranea, fluviale, transatlantica)
+- **Codice IMO** (PK)
+- **Nome della nave**
+- **Porto di partenza**
+- **Porto di arrivo**
+- **Data e ora di partenza**
+- **Durata** (in giorni)
+- **Numero minimo di membri dell’equipaggio**
+- **Numero massimo di passeggeri**
+- **Tipologia** (es. mediterranea, fluviale, transatlantica)
 
-Ogni crociera può avere più tappe intermedie e prevede eventi a bordo.
+Ogni **crociera** può avere più **tappe** intermedie e prevede **eventi** a bordo.
 
 **Porti**
 
 Ogni porto è identificato dalla città in cui si trova:
-- Nome della città (PK)
-- Numero massimo di navi
+- **Nome della città** (PK)
+- **Numero massimo di navi**
 
-Una crociera può prevedere soste in più porti (tappe).
+Una **crociera** può prevedere soste in più **porti** (tappe).
 
 **Tappe**
 
 Le tappe rappresentano le fermate della crociera nei porti e includono:
-- Data e ora di arrivo
-- Data e ora di partenza
+- **Data e ora di arrivo**
+- **Data e ora di partenza**
 
-Ogni tappa è collegata a un porto e a una specifica crociera.
+Ogni **tappa** è collegata a un **porto** e a una specifica **crociera**.
 
 **Persone**
 
 Tutti gli individui a bordo (sia personale che ospiti) sono entità del tipo "Persona", identificata tramite:
-- Codice Fiscale (PK)
-- Nome
-- Cognome
-- Sesso
+- **Codice Fiscale** (PK)
+- **Nome**
+- **Cognome**
+- **Sesso**
 
-Una persona può essere un ospite o un membro dell’equipaggio.
+Una **persona può essere un **ospite** o un membro dell’**equipaggio**.
 
 **Equipaggio**
 
 L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associato a:
-- Stipendio
-- Anni di servizio
-- Lingue parlate
+- **ID equipaggio** (PK)
+- **Stipendio**
+- **Anni di servizio**
+- **Lingue parlate**
 
-Un membro dell’equipaggio può essere designato come capitano o come animatore.
+Un **membro dell’equipaggio** può essere specializzato in **animatore**.
 
 **Animatori**
 
-Gli animatori sono una specializzazione dell’equipaggio e dispongono di una o più abilità:
-- Abilità specifiche (es. ballo, canto, giochi)
+Gli **animatori** sono una specializzazione dell’**equipaggio** e dispongono di una o più **abilità**:
+- **Abilità specifiche** (es. ballo, canto, giochi)
 
 **Eventi**
 
 Durante le crociere vengono organizzati eventi, ciascuno identificato da:
-- Nome dell’evento (PK)
-- Tipo di evento (PK)
-- Età consigliata
-- Numero minimo di animatori
-- Numero consigliato di partecipanti
+- **Nome dell’evento** (PK)
+- **Tipo di evento** (PK)
+- **Età consigliata**
+- **Numero minimo di animatori**
+- **Numero consigliato di partecipanti**
 
-Ogni evento è gestito da uno o più animatori e può essere frequentato da più ospiti.
+Ogni **evento** è gestito da uno o più **animatori** e può essere frequentato da più **ospiti**.
 
 # 3 Progettazione Concettuale
 La Figura ?? riporta il diagramma Entità–Relazione (E–R) che riassume i requisiti descritti nella sezione 2.
