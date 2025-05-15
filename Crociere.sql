@@ -149,7 +149,7 @@ INSERT INTO ORGANIZZA VALUES
 
 CREATE INDEX idx_crociera_porto_partenza ON Crociera(Porto_Partenza);
 
--- Query 1 – Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe
+-- Query 1 - Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
 JOIN Tappa T ON C.IMO = T.IMO
