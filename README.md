@@ -311,5 +311,7 @@ Il codice gestisce anche l’inizializzazione del database, caricando uno script
 
 Note: in alcuni computer si può compilare direttamente con: 
 - gcc -o query Query.c -lpq
+
 In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve compilare con il codice:
+
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
