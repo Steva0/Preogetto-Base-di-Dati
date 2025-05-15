@@ -154,8 +154,15 @@ int main() {
                 char query_sostituita[MAX_QUERY_LEN];
                 *inizio_input = '\0'; // tronca temporaneamente
 
-                snprintf(query_sostituita, MAX_QUERY_LEN, "%s'%s'%s",
-                        query_finale, valore_input, fine_input + 1);
+                char query_sostituita[MAX_QUERY_LEN];
+                query_sostituita[0] = '\0';
+
+                strncat(query_sostituita, query_finale, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, valore_input, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, fine_input + 1, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+
 
                 esegui_query(conn, query_sostituita);
             } else {
