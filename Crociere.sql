@@ -149,7 +149,7 @@ INSERT INTO ORGANIZZA VALUES
 
 CREATE INDEX idx_crociera_porto_partenza ON Crociera(Porto_Partenza);
 
--- Query 1 - Seleziona tutte le crociere con più di 3 tappe
+-- Query 1 - Seleziona tutte le crociere con piu' di 3 tappe
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
 JOIN Tappa T ON C.IMO = T.IMO
@@ -157,7 +157,7 @@ GROUP BY C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale
 HAVING COUNT(DISTINCT T.Città) > 3
 ORDER BY Numero_Tappe DESC;
 
--- Query 2 - Seleziona tutte le crociere con più di 500 prenotazioni
+-- QUERY 2 – Visualizzare tutte le crociere in partenza da una città inserita dall’utente
 SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
 FROM Crociera c
 WHERE c.Porto_Partenza = '<CITTÀ>';
@@ -170,7 +170,7 @@ GROUP BY O.IMO_Crociera, C.Nome_Nave
 HAVING AVG(O.Costo) > 500
 ORDER BY Media_Costo DESC;
 
--- Query 4 - Seleziona tutti gli animatori che hanno organizzato più di 2 eventi
+-- Query 4 - Seleziona tutti gli animatori che hanno organizzato piu' di 2 eventi
 SELECT A.CF, P.Nome, P.Cognome, COUNT(*) AS Num_Eventi
 FROM Animatore A
 JOIN Persona P ON A.CF = P.CF
