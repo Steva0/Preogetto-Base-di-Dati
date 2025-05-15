@@ -232,13 +232,7 @@ int main() {
         strncpy(queries[qcount].title, titlebuf, sizeof(queries[qcount].title));
         queries[qcount].title[sizeof(queries[qcount].title)-1] = '\0';
 
-        strncpy(queries[qcount].sql, query_start, query_len);
-        queries[qcount].sql[query_len] = '\0';
-
-        strncpy(queries[qcount].title, titlebuf, sizeof(queries[qcount].title));
-        queries[qcount].title[sizeof(queries[qcount].title)-1] = '\0';
-
-        // === Nuovo codice per estrarre i parametri <PARAM> dalla query SQL ===
+        // Codice per estrarre i parametri <PARAM> dalla query SQL
         queries[qcount].param_count = 0;
 
         char *search_start = queries[qcount].sql;
