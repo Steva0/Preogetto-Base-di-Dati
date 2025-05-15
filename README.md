@@ -91,7 +91,7 @@ Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 Ogni **evento** è gestito da uno o più **animatori** e può essere frequentato da più **ospiti**.
 
 # 3 Progettazione Concettuale
-La Figura ?? riporta il diagramma Entità–Relazione (E–R) che riassume i requisiti descritti nella sezione 2.
+La Figura 1 riporta il diagramma Entità–Relazione (E–R) che riassume i requisiti descritti nella sezione 2.
 
 Nel modello la progettazione concettuale si è basata su una visione gerarchica del personale di bordo, dove la generalizzazione rappresenta il fatto che tutti i membri dell’equipaggio e gli ospiti condividono un insieme comune di attributi base, ma possono essere specializzati in ruoli specifici.
 
@@ -107,9 +107,9 @@ Tabella ?? riassume le entità e relazioni individuate nella progettazione conce
 
 Il presente schema E-R non permette di rappresentare direttametne il seguente vincolo:
 se una persona pe è animatore in due crociere cr' e cr'', allora cr' e cr'' appartengono alla stessa Classe:
-
+```math
 (cr', pe) ∈ Animatore ∧ (cr'', pe) ∈ Animatore ⇒ (cr'.Classe = cr''.Classe)
-
+```
 # 4 Progettazione Logica
 In questa sezione viene illustrato il processo di “traduzione” dello schema concettuale in uno schema logico, con l’obiettivo di rappresentare i dati in modo preciso
 ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
