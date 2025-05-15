@@ -53,7 +53,7 @@ CREATE TABLE Ospite (
 );
 
 CREATE TABLE Equipaggio (
-    CF CHAR(16),
+    CF CHAR(16) UNIQUE,
     IDequipaggio CHAR(10) PRIMARY KEY,
     Lingue_Parlate VARCHAR(100),
     Stipendio DECIMAL(10, 2),
