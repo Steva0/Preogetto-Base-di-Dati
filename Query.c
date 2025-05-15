@@ -3,91 +3,17 @@
 #include <string.h>
 #include <libpq-fe.h>
 
-void checkConn(PGconn *conn) {
+#define MAX_QUERY_LEN 2048
+#define MAX_QUERY_NUM 50
+
+typedef struct {
+    char descrizione[256];
+    char query[MAX_QUERY_LEN];
+} Query;
+
+void check_conn(PGconn *conn) {
     if (PQstatus(conn) != CONNECTION_OK) {
-        fprintf(stderr, "Errore di connessione: %s\n", PQerrorMessage(conn));
-        PQfinish(conn);
-        exit(1);
-    }
-}
-
-int checkDatabaseExistence(PGconn *conn, const char *dbname) {
-    char conninfo[256];
-    snprintf(conninfo, sizeof(conninfo), "user=postgres dbname=%s host=localhost port=5432", dbname);
-    PGconn *testConn = PQconnectdb(conninfo);
-    int exists = (PQstatus(testConn) == CONNECTION_OK);
-    PQfinish(testConn);
-    return exists;
-}
-
-void createDatabaseIfNotExists(PGconn *conn, const char *dbname) {
-    char query[256];
-    snprintf(query, sizeof(query), "CREATE DATABASE %s;", dbname);
-
-    PGresult *res = PQexec(conn, query);
-    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        fprintf(stderr, "Errore nella creazione del database: %s", PQerrorMessage(conn));
-        PQclear(res);
-        PQfinish(conn);
-        exit(1);
-    }
-    PQclear(res);
-    printf("Database '%s' creato con successo.\n", dbname);
-}
-
-char* leggi_file_sql(const char* filename) {
-    FILE *file = fopen(filename, "rb");
-    if (!file) {
-        fprintf(stderr, "Errore nell'apertura del file %s\n", filename);
-        return NULL;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    rewind(file);
-
-    char *content = (char*)malloc(size + 1);
-    if (!content) {
-        fprintf(stderr, "Errore nell'allocazione della memoria\n");
-        fclose(file);
-        return NULL;
-    }
-
-    fread(content, 1, size, file);
-    content[size] = '\0';
-    fclose(file);
-
-    return content;
-}
-
-int esegui_script_sql_righe(PGconn *conn, const char *filename) {
-    char *script = leggi_file_sql(filename);
-    if (!script) return 0;
-
-    char *comando = strtok(script, ";");
-    while (comando != NULL) {
-        while (*comando == '\n' || *comando == ' ') comando++;  // Skip spazi iniziali
-        if (strlen(comando) > 0) {
-            PGresult *res = PQexec(conn, comando);
-            if (PQresultStatus(res) != PGRES_COMMAND_OK && PQresultStatus(res) != PGRES_TUPLES_OK) {
-                fprintf(stderr, "Errore nel comando SQL:\n%s\n%s\n", comando, PQerrorMessage(conn));
-                PQclear(res);
-                free(script);
-                return 0;
-            }
-            PQclear(res);
-        }
-        comando = strtok(NULL, ";");
-    }
-
-    free(script);
-    return 1;
-}
-
-void checkResult(PGresult *res, PGconn *conn) {
-    if (PQresultStatus(res) != PGRES_TUPLES_OK && PQresultStatus(res) != PGRES_COMMAND_OK) {
-        fprintf(stderr, "Errore nell'esecuzione della query: %s\n", PQerrorMessage(conn));
-        PQclear(res);
+        fprintf(stderr, "Connessione fallita: %s\n", PQerrorMessage(conn));
         PQfinish(conn);
         exit(1);
     }
@@ -95,129 +21,152 @@ void checkResult(PGresult *res, PGconn *conn) {
 
 void esegui_query(PGconn *conn, const char *query) {
     PGresult *res = PQexec(conn, query);
-    checkResult(res, conn);
-
-    int n_rows = PQntuples(res);
-    int n_fields = PQnfields(res);
-
-    for (int i = 0; i < n_fields; i++) {
-        printf("%-25s", PQfname(res, i));
+    if (PQresultStatus(res) == PGRES_COMMAND_OK) {
+        // Per comandi CREATE/INSERT
+        PQclear(res);
+        return;
     }
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        fprintf(stderr, "Errore nella query: %s\n", PQerrorMessage(conn));
+        PQclear(res);
+        return;
+    }
+
+    int righe = PQntuples(res);
+    int colonne = PQnfields(res);
+
+    for (int i = 0; i < colonne; i++)
+        printf("%s\t", PQfname(res, i));
     printf("\n");
 
-    for (int i = 0; i < n_rows; i++) {
-        for (int j = 0; j < n_fields; j++) {
-            printf("%-25s", PQgetvalue(res, i, j));
-        }
+    for (int i = 0; i < righe; i++) {
+        for (int j = 0; j < colonne; j++)
+            printf("%s\t", PQgetvalue(res, i, j));
         printf("\n");
     }
 
     PQclear(res);
 }
 
-int main() {
-    const char *dbname = "crociere";
-    const char *script_filename = "Crociere.sql";
-
-    const char *conninfo_root = "user=postgres host=localhost port=5432";
-    PGconn *conn = PQconnectdb(conninfo_root);
-    checkConn(conn);
-
-    if (!checkDatabaseExistence(conn, dbname)) {
-        printf("Il database '%s' non esiste. Creazione in corso...\n", dbname);
-        createDatabaseIfNotExists(conn, dbname);
+int carica_query_da_file(const char *filename, Query queries[], int *query_count, char **contenuto_completo) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        perror("Errore nell'apertura del file");
+        return 0;
     }
-    PQfinish(conn);
 
-    char conninfo_db[256];
-    snprintf(conninfo_db, sizeof(conninfo_db), "user=postgres dbname=%s host=localhost port=5432", dbname);
-    conn = PQconnectdb(conninfo_db);
-    checkConn(conn);
+    fseek(file, 0, SEEK_END);
+    long len = ftell(file);
+    rewind(file);
 
-    printf("Esecuzione dello script SQL da file '%s'...\n", script_filename);
-    if (!esegui_script_sql_righe(conn, script_filename)) {
-        fprintf(stderr, "Errore durante l'esecuzione dello script SQL.\n");
-        PQfinish(conn);
+    *contenuto_completo = malloc(len + 1);
+    fread(*contenuto_completo, 1, len, file);
+    (*contenuto_completo)[len] = '\0';
+    fclose(file);
+
+    // Estrazione delle query per il menu
+    char *line = strtok(*contenuto_completo, "\n");
+    char buffer_query[MAX_QUERY_LEN] = "";
+    int in_query = 0;
+
+    while (line) {
+        if (strncmp(line, "-- QUERY:", 9) == 0) {
+            if (in_query && *query_count < MAX_QUERY_NUM) {
+                strcpy(queries[*query_count].query, buffer_query);
+                (*query_count)++;
+                buffer_query[0] = '\0';
+            }
+
+            in_query = 1;
+            strcpy(queries[*query_count].descrizione, line + 9);
+            buffer_query[0] = '\0';
+        } else if (in_query) {
+            strcat(buffer_query, line);
+            strcat(buffer_query, "\n");
+        }
+
+        line = strtok(NULL, "\n");
+    }
+
+    // Aggiungi l'ultima query
+    if (in_query && *query_count < MAX_QUERY_NUM) {
+        strcpy(queries[*query_count].query, buffer_query);
+        (*query_count)++;
+    }
+
+    return 1;
+}
+
+int main() {
+    const char *conninfo = "host=localhost dbname=progetto user=postgres password=tuapassword";
+    PGconn *conn = PQconnectdb(conninfo);
+    check_conn(conn);
+
+    Query queries[MAX_QUERY_NUM];
+    int query_count = 0;
+    char *contenuto_sql = NULL;
+
+    if (!carica_query_da_file("script.sql", queries, &query_count, &contenuto_sql)) {
+        fprintf(stderr, "Impossibile caricare il file SQL.\n");
         return 1;
     }
-    printf("Script SQL eseguito correttamente.\n");
+
+    // Esegui tutto il contenuto del file per creare/popolare le tabelle
+    PGresult *res = PQexec(conn, contenuto_sql);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK && PQresultStatus(res) != PGRES_TUPLES_OK) {
+        fprintf(stderr, "Errore nell'inizializzazione: %s\n", PQerrorMessage(conn));
+    } else {
+        printf("Tabelle create e popolate.\n");
+    }
+    PQclear(res);
+    free(contenuto_sql);
 
     int scelta;
     while (1) {
-        printf("\nMenu - Seleziona una query da eseguire:\n");
-        printf("1. Crociere con più di 3 tappe\n");
-        printf("2. Visualizza crociere in partenza da una certa città\n");
-        printf("3. Crociere con media costo biglietti > 500€\n");
-        printf("4. Animatori con più di 2 eventi\n");
-        printf("5. Percentuale occupazione crociere\n");
-        printf("0. Esci\n");
-        printf("Scelta: ");
+        printf("\n=== Menu Query ===\n");
+        for (int i = 0; i < query_count; i++) {
+            printf("%d) %s\n", i + 1, queries[i].descrizione);
+        }
+        printf("0) Esci\n");
+        printf("Scegli una query da eseguire (0 per uscire): ");
         scanf("%d", &scelta);
+        getchar(); // pulisce newline
 
-        switch (scelta) {
-            case 1:
-                esegui_query(conn,
-                    "SELECT c.imo, c.nome_nave, c.porto_partenza, c.porto_finale, COUNT(DISTINCT t.città) AS numero_tappe "
-                    "FROM crociera c "
-                    "JOIN tappa t ON c.imo = t.imo "
-                    "GROUP BY c.imo, c.nome_nave, c.porto_partenza, c.porto_finale "
-                    "HAVING COUNT(DISTINCT t.città) > 3 "
-                    "ORDER BY numero_tappe DESC;"
-                );
-                break;
-            case 2: {
-                char citta[50];
-                printf("Inserisci la città di partenza: ");
-                scanf("%s", citta);
+        if (scelta == 0) {
+            break;
+        } else if (scelta >= 1 && scelta <= query_count) {
+            // SOSTITUZIONE DELLA QUERY SE CI SONO PARAMETRI
+            char query_finale[MAX_QUERY_LEN];
+            strcpy(query_finale, queries[scelta - 1].query);
 
-                char query[512];
-                snprintf(query, sizeof(query),
-                    "SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni "
-                    "FROM Crociera c "
-                    "WHERE c.Porto_Partenza = '%s';", citta);
+            char *inizio_input = strstr(query_finale, "<");
+            char *fine_input = strstr(query_finale, ">");
+            if (inizio_input && fine_input && fine_input > inizio_input) {
+                char nome_campo[64];
+                strncpy(nome_campo, inizio_input + 1, fine_input - inizio_input - 1);
+                nome_campo[fine_input - inizio_input - 1] = '\0';
 
-                esegui_query(conn, query);
-                break;
+                char valore_input[128];
+                printf("Inserisci valore per %s: ", nome_campo);
+                scanf(" %[^\n]", valore_input);
+
+                char query_sostituita[MAX_QUERY_LEN];
+                *inizio_input = '\0'; // tronca temporaneamente
+
+                snprintf(query_sostituita, MAX_QUERY_LEN, "%s'%s'%s",
+                        query_finale, valore_input, fine_input + 1);
+
+                esegui_query(conn, query_sostituita);
+            } else {
+                esegui_query(conn, query_finale);
             }
-            case 3:
-                esegui_query(conn,
-                    "SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo "
-                    "FROM Ospite O "
-                    "JOIN Crociera C ON O.IMO_Crociera = C.IMO "
-                    "GROUP BY O.IMO_Crociera, C.Nome_Nave "
-                    "HAVING AVG(O.Costo) > 500 "
-                    "ORDER BY Media_Costo DESC;"
-                );
-                break;
-            case 4:
-                esegui_query(conn,
-                    "SELECT A.CF, P.Nome, P.Cognome, COUNT(*) AS Num_Eventi "
-                    "FROM Animatore A "
-                    "JOIN Persona P ON A.CF = P.CF "
-                    "JOIN ORGANIZZA O ON A.CF = O.CF_Animatore "
-                    "GROUP BY A.CF, P.Nome, P.Cognome "
-                    "HAVING COUNT(*) > 2 "
-                    "ORDER BY Num_Eventi DESC;"
-                );
-                break;
-            case 5:
-                esegui_query(conn,
-                    "SELECT IMO, Nome_Nave, "
-                    "ROUND((Num_Prenotazioni * 100.0) / Max_Passeggeri, 2) AS Percentuale_Occupazione "
-                    "FROM Crociera "
-                    "WHERE Max_Passeggeri > 0 "
-                    "ORDER BY Percentuale_Occupazione DESC;"
-                );
-                break;
-            case 0:
-                PQfinish(conn);
-                printf("Connessione chiusa. Uscita.\n");
-                return 0;
-            default:
-                printf("Scelta non valida. Riprova.\n");
+        } else {
+            printf("Scelta non valida.\n");
         }
     }
 
     PQfinish(conn);
     return 0;
 }
+
