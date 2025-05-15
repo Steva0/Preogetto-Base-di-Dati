@@ -1,16 +1,16 @@
-CREATE TABLE Compagnia (
+CREATE TABLE IF NOT EXISTS Compagnia (
     PI CHAR(10) PRIMARY KEY,
     Nome VARCHAR(100) NOT NULL,
     Sede VARCHAR(200) NOT NULL,
     Recapito_Telefonico VARCHAR(15)
 );
 
-CREATE TABLE Porto (
+CREATE TABLE IF NOT EXISTS Porto (
     Città VARCHAR(100) PRIMARY KEY,
     Numero_Massimo_Navi INT
 );
 
-CREATE TABLE Crociera (
+CREATE TABLE IF NOT EXISTS Crociera (
     IMO CHAR(10) PRIMARY KEY,
     Nome_Nave VARCHAR(100) NOT NULL,
     Min_Equipaggio INT NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE Crociera (
     FOREIGN KEY (Porto_Finale) REFERENCES Porto(Città)
 );
 
-CREATE TABLE Tappa (
+CREATE TABLE IF NOT EXISTS Tappa (
     IMO CHAR(10),
     Città VARCHAR(100),
     Data_Ora_Partenza TIMESTAMP,
@@ -36,14 +36,14 @@ CREATE TABLE Tappa (
     FOREIGN KEY (Città) REFERENCES Porto(Città)
 );
 
-CREATE TABLE Persona (
+CREATE TABLE IF NOT EXISTS Persona (
     CF CHAR(16) PRIMARY KEY,
     Nome VARCHAR(100) NOT NULL,
     Cognome VARCHAR(100) NOT NULL,
     Sesso CHAR(1) NOT NULL
 );
 
-CREATE TABLE Ospite (
+CREATE TABLE IF NOT EXISTS Ospite (
     CF CHAR(16),
     Costo DECIMAL(10, 2),
     IMO_Crociera CHAR(10),
@@ -52,7 +52,7 @@ CREATE TABLE Ospite (
     FOREIGN KEY (IMO_Crociera) REFERENCES Crociera(IMO)
 );
 
-CREATE TABLE Equipaggio (
+CREATE TABLE IF NOT EXISTS Equipaggio (
     CF CHAR(16) UNIQUE,
     IDequipaggio CHAR(10) PRIMARY KEY,
     Lingue_Parlate VARCHAR(100),
@@ -62,14 +62,14 @@ CREATE TABLE Equipaggio (
     FOREIGN KEY (CF) REFERENCES Persona(CF)
 );
 
-CREATE TABLE Animatore (
+CREATE TABLE IF NOT EXISTS Animatore (
     CF CHAR(16),
     Abilità VARCHAR(100),
     PRIMARY KEY (CF),
     FOREIGN KEY (CF) REFERENCES Equipaggio(CF)
 );
 
-CREATE TABLE Evento (
+CREATE TABLE IF NOT EXISTS Evento (
     Nome VARCHAR(100),
     Tipologia VARCHAR(100),
     IMO_Crociera CHAR(10),
@@ -80,7 +80,7 @@ CREATE TABLE Evento (
     FOREIGN KEY (IMO_Crociera) REFERENCES Crociera(IMO)
 );
 
-CREATE TABLE ORGANIZZA (
+CREATE TABLE IF NOT EXISTS ORGANIZZA (
     CF_Animatore CHAR(16),
     Nome_Evento VARCHAR(100),
     Tipologia_Evento VARCHAR(100),
