@@ -170,8 +170,15 @@ int main() {
         char *comment_line_start = strstr(p, "-- Query");
         if (!comment_line_start) break;
 
-        // Saltiamo "-- "
-        comment_line_start += 3;
+        // Trova la prima occorrenza di " - " nella riga commento e salta dopo di essa
+        char *pos = strstr(comment_line_start, " - ");
+        if (pos) {
+            comment_line_start = pos + 3; // +3 per saltare " - "
+        } else {
+            // Se non trovi " - ", continua da dopo "-- "
+            comment_line_start += 3;
+}
+
 
         // Leggiamo la riga commento fino a newline
         char *line_end = strchr(comment_line_start, '\n');
