@@ -256,7 +256,42 @@ int main() {
         }
 
         printf("\nEsecuzione query: %s\n\n", queries[scelta - 1].title);
-        exec_select(conn, queries[scelta - 1].sql);
+        
+        char final_sql[MAX_SQL_LEN];
+        strcpy(final_sql, queries[scelta - 1].sql);
+
+        // Se ci sono parametri, chiediamoli all'utente
+        if (queries[scelta - 1].param_count > 0) {
+            for (int i = 0; i < queries[scelta - 1].param_count; i++) {
+                char valore[MAX_PARAM_LEN];
+                printf("Inserisci valore per '%s': ", queries[scelta - 1].params[i]);
+                scanf("%s", valore);  // per semplicità usiamo scanf %s; puoi usare fgets se servono spazi
+
+                // Sostituisci <PARAM> con il valore
+                char *pos = strstr(final_sql, queries[scelta - 1].params[i]);
+                if (pos) {
+                    char segnaposto[MAX_PARAM_LEN + 2];
+                    snprintf(segnaposto, sizeof(segnaposto), "<%s>", queries[scelta - 1].params[i]);
+
+                    char nuova_query[MAX_SQL_LEN];
+                    char *inizio = final_sql;
+                    char *found;
+
+                    // Cerca e sostituisci tutte le occorrenze
+                    nuova_query[0] = '\0';
+                    while ((found = strstr(inizio, segnaposto)) != NULL) {
+                        strncat(nuova_query, inizio, found - inizio);
+                        strcat(nuova_query, valore);
+                        inizio = found + strlen(segnaposto);
+                    }
+                    strcat(nuova_query, inizio);
+                    strcpy(final_sql, nuova_query);
+                }
+            }
+        }
+
+        exec_select(conn, final_sql);
+
     }
 
     PQfinish(conn);
