@@ -175,3 +175,93 @@ int carica_query_da_file(const char *filename, Query queries[], int *query_count
 
     return 1;
 }
+
+int main() {
+    const char *dbname = "crociere";
+    const char *script_filename = "Crociere.sql";
+
+    const char *conninfo_root = "user=postgres host=localhost port=5432";
+    PGconn *conn = PQconnectdb(conninfo_root);
+    checkConn(conn);
+
+    if (!checkDatabaseExistence(conn, dbname)) {
+        printf("Il database '%s' non esiste. Creazione in corso...\n", dbname);
+        createDatabaseIfNotExists(conn, dbname);
+    }
+    PQfinish(conn);
+
+    char conninfo_db[256];
+    snprintf(conninfo_db, sizeof(conninfo_db), "user=postgres dbname=%s host=localhost port=5432", dbname);
+    conn = PQconnectdb(conninfo_db);
+    checkConn(conn);
+
+    // Esegui script SQL ignorando i commenti
+    if (!esegui_script_sql_senza_commenti(conn, script_filename)) {
+        fprintf(stderr, "Errore nell'esecuzione del file SQL.\n");
+        PQfinish(conn);
+        return 1;
+    }
+    printf("Script SQL eseguito correttamente.\n");
+
+    // Ora carichiamo il file con tutte le query per il menu (se vuoi continuare ad usarlo)
+    Query queries[MAX_QUERY_NUM];
+    int query_count = 0;
+    char *contenuto_sql = NULL;
+    if (!carica_query_da_file(script_filename, queries, &query_count, &contenuto_sql)) {
+        fprintf(stderr, "Impossibile caricare il file SQL.\n");
+        PQfinish(conn);
+        return 1;
+    }
+
+    // Menu interattivo come prima
+    int scelta;
+    while (1) {
+        printf("\n--- MENU QUERY ---\n");
+        for (int i = 0; i < query_count; i++) {
+            printf("%d) %s\n", i + 1, queries[i].descrizione);
+        }
+        printf("0) Esci\nScegli una query da eseguire: ");
+        scanf("%d", &scelta);
+        getchar();
+
+        if (scelta == 0) break;
+
+        if (scelta >= 1 && scelta <= query_count) {
+            char query_finale[MAX_QUERY_LEN];
+            strcpy(query_finale, queries[scelta - 1].query);
+
+            char *inizio_input = strstr(query_finale, "<");
+            char *fine_input = strstr(query_finale, ">");
+            if (inizio_input && fine_input && fine_input > inizio_input) {
+                char nome_campo[64];
+                strncpy(nome_campo, inizio_input + 1, fine_input - inizio_input - 1);
+                nome_campo[fine_input - inizio_input - 1] = '\0';
+
+                char valore_input[128];
+                printf("Inserisci valore per %s: ", nome_campo);
+                scanf(" %[^\n]", valore_input);
+                getchar();
+
+                char query_sostituita[MAX_QUERY_LEN];
+                *inizio_input = '\0';
+
+                query_sostituita[0] = '\0';
+                strncat(query_sostituita, query_finale, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, valore_input, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, "'", MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+                strncat(query_sostituita, fine_input + 1, MAX_QUERY_LEN - strlen(query_sostituita) - 1);
+
+                esegui_query(conn, query_sostituita);
+            } else {
+                esegui_query(conn, query_finale);
+            }
+        } else {
+            printf("Scelta non valida.\n");
+        }
+    }
+
+    free(contenuto_sql);
+    PQfinish(conn);
+    return 0;
+}
