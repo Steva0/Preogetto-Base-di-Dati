@@ -13,7 +13,7 @@ Il modello affronta anche aspetti legati alle **prestazioni del sistema**, comne
 
 # 2 Analisi dei Requisiti
 
-**Compagnie Marittime**
+## **Compagnie Marittime**
 
 Ogni compagnia è identificata da una partita IVA univoca e include le seguenti informazioni:
 - **Partita IVA** (PK)
@@ -23,7 +23,7 @@ Ogni compagnia è identificata da una partita IVA univoca e include le seguenti 
 
 Le **compagnie** possiedono una o più **crociere**.
 
-**Crociere**
+## **Crociere**
 
 Ogni crociera è identificata dal codice IMO e registra:
 - **Codice IMO** (PK)
@@ -38,7 +38,7 @@ Ogni crociera è identificata dal codice IMO e registra:
 
 Ogni **crociera** può avere più **tappe** intermedie e prevede **eventi** a bordo.
 
-**Porti**
+## **Porti**
 
 Ogni porto è identificato dalla città in cui si trova:
 - **Nome della città** (PK)
@@ -46,7 +46,7 @@ Ogni porto è identificato dalla città in cui si trova:
 
 Una **crociera** può prevedere soste in più **porti** (tappe).
 
-**Tappe**
+## **Tappe**
 
 Le tappe rappresentano le fermate della crociera nei porti e includono:
 - **Data e ora di arrivo**
@@ -54,7 +54,7 @@ Le tappe rappresentano le fermate della crociera nei porti e includono:
 
 Ogni **tappa** è collegata a un **porto** e a una specifica **crociera**.
 
-**Persone**
+## **Persone**
 
 Tutti gli individui a bordo (sia personale che ospiti) sono entità del tipo "Persona", identificata tramite:
 - **Codice Fiscale** (PK)
@@ -64,7 +64,7 @@ Tutti gli individui a bordo (sia personale che ospiti) sono entità del tipo "Pe
 
 Una **persona può essere un **ospite** o un membro dell’**equipaggio**.
 
-**Equipaggio**
+## **Equipaggio**
 
 L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associato a:
 - **ID equipaggio** (PK)
@@ -74,12 +74,12 @@ L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associ
 
 Un **membro dell’equipaggio** può essere specializzato in **animatore**.
 
-**Animatori**
+## **Animatori**
 
 Gli **animatori** sono una specializzazione dell’**equipaggio** e dispongono di una o più **abilità**:
 - **Abilità specifiche** (es. ballo, canto, giochi)
 
-**Eventi**
+## **Eventi**
 
 Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 - **Nome dell’evento** (PK)
@@ -103,7 +103,7 @@ Gli Eventi sono attività previste a bordo della crociera. Ogni evento può esse
 
 La generalizzazione tra Equipaggio e la specializzazione Animatore è modellata come parziale: non tutti i membri dell’equipaggio sono necessariamente animatori.
 
-Tabella ?? riassume le entità e relazioni individuate nella progettazione concettuale, riportando per ciascuna gli attributi rilevanti e l’identificatore scelto. Per le entità derivate da generalizzazione viene anche specificato il tipo di specializzazione utilizzato.
+Tabella 1 riassume le entità e relazioni individuate nella progettazione concettuale, riportando per ciascuna gli attributi rilevanti e l’identificatore scelto. Per le entità derivate da generalizzazione viene anche specificato il tipo di specializzazione utilizzato.
 
 Il presente schema E-R non permette di rappresentare direttametne il seguente vincolo:
 se una persona pe è animatore in due crociere cr' e cr'', allora cr' e cr'' appartengono alla stessa Classe:
@@ -113,17 +113,16 @@ se una persona pe è animatore in due crociere cr' e cr'', allora cr' e cr'' app
 # 4 Progettazione Logica
 In questa sezione viene illustrato il processo di “traduzione” dello schema concettuale in uno schema logico, con l’obiettivo di rappresentare i dati in modo preciso
 ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
-con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma
-ristrutturato, con una descrizione delle modifiche apportate.
+con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma ristrutturato, con una descrizione delle modifiche apportate.
 
 ## 4.1 Analisi delle ridondanze
 L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
 contando il numero di passeggeri attivi per quella crociera tramite la relazione PARTECIPANTE.
 Questo attributo viene modificato ogni volta che si aggiunge una nuova persona alla crociera (circa 400 persone nuove al giorno tra tutte le crociere) e viene visualizzato ogni ora del giorno per monitorare il numero di posti rimanenti. Questo si riassume nelle seguenti due operazioni:
-
+```plaintext
 - Operazione 1 (400 al giorno): memorizza una nuova prenotazione in relativa crociera.
 - Operazione 2 (24 al giorno): visualizza il numero di prenotazioni attuali in una crociera.
-
+```
 Assumendo i seguenti volumi nella base di dati:
 
 | Concetto | Costrutto | Volume|
@@ -148,9 +147,9 @@ la seguente analisi serve per stabilire se sia utile o meno tenere l’attributo
   |Crociera | E | 1 | L | × 24 |
 
 Assumendo costo doppio per gli accessi in scrittura:
-
-Costo Totale = 400x3x2 + 400 + 24 = 2824
-
+```math
+Costo Totale = 400 * 3 * 2 + 400 + 24 = 2824
+```
 **SENZA RIDONDANZA** Analizziamo il costo totale senza ridondanza.
 - Operazione 1:
   |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
@@ -164,50 +163,50 @@ Costo Totale = 400x3x2 + 400 + 24 = 2824
   |PARTECIPANTE | R | 5000 | L | × 24 |
 
 Assumendo costo doppio per gli accessi in scrittura:
-
-Costo Totale = 400x2x2 + 5001x24 = 121624
-
+```math
+Costo Totale = 400 * 2 * 2 + 5001 * 24 = 121624
+```
 L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando così il numero di accessi.
 
 ## 4.2 Eliminazioni delle Generalizzazioni
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
 
-**PERSONA**. La generalizzazione parziale PERSONA viene sostituita con la relazione IS-OSPITE (vedi Figura ??), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
+**PERSONA**. La generalizzazione parziale PERSONA viene sostituita con le relazioni `IS-OSPITE` e `IS-EQUIP` (vedi Figura 2), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
 Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGIERO).
 Separando le informazioni tramite relazioni specializzate, si garantisce che ciascuna entità contenga soltanto gli attributi rilevanti per il proprio ruolo.
 In linea con la metodologia adottata a lezione, l’identificatore di EQUIPAGGIO e di PASSEGGIERO coincide con quello della rispettiva PERSONA.
 Poiché la generalizzazione è parziale da entrambe le parti (non tutte le persone sono membri dell’equipaggio né passeggeri), l’eliminazione dell’entità padre PERSONA non è corretta. Essa viene mantenuta per rappresentare tutte le informazioni comuni (come Nome, Cognome, Data_Nascita), mentre le informazioni specifiche sono distribuite nelle entità figlie.
 
-**EQUIPAGGIO**. Analogamente, la generalizzazione parziale EQUIPAGGIO viene sostituita con la relazione IS-ANIM (vedi Figura ??).
+**EQUIPAGGIO**. Analogamente, la generalizzazione parziale EQUIPAGGIO viene sostituita con la relazione `IS-ANIM` (vedi Figura 2).
 Anche in questo caso, la ristrutturazione consente di evitare valori nulli, in quanto non tutti i membri dell’equipaggio svolgono il ruolo di Animatore.
 Essendo la generalizzazione parziale, l’eliminazione dell’entità padre EQUIPAGGIO risulterebbe nuovamente scorretta.
 
-Il diagramma E–R ristrutturato, riportato in Figura ??, riflette tali modifiche rispetto alla versione originale presentata in Figura ??.
+Il diagramma E–R ristrutturato, riportato in **Figura 2** riflette tali modifiche rispetto alla versione originale presentata in **Figura 1**.
 
 ## 4.3 Schema Relazionale
-Lo schema ristrutturato in Figura ?? contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
+Lo schema ristrutturato in Figura 2 contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
 
-- Crociera(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni, Porto_Partenza*, Porto_Finale*, Data_Ora_Partenza*, Durata*, PI_Compagnia)
+- **Crociera**(<ins>IMO</ins>, Nome_Nave, Min_Equipaggio, Max_Passeggeri, Num_Prenotazioni, Porto_Partenza*, Porto_Finale*, Data_Ora_Partenza*, Durata*, PI_Compagnia)
   - Crociera.PI_Compagnia -> Compagnia.PI
   - Crociera.Porto_Partenza -> Porto.Città
   - Crociera.Porto_Finale -> Porto.Città
-- Porto(<ins>Città</ins>, Numero_Massimo_Navi*)
-- Tappa(<ins>IMO</ins>, <ins>Città</ins>, <ins>Data_Ora_Partenza</ins>, Data_Ora_Arrivo)
+- **Porto**(<ins>Città</ins>, Numero_Massimo_Navi*)
+- **Tappa**(<ins>IMO</ins>, <ins>Città</ins>, <ins>Data_Ora_Partenza</ins>, Data_Ora_Arrivo)
   - Tappa.IMO -> Crociera.IMO
   - Tappa.Città -> Porto.Città
-- Compagnia(<ins>PI</ins>, Nome, Sede, Recapito_Telefonico*)
-- Persona(<ins>CF</ins>, Nome, Cognome, Sesso)
-- Ospite(<ins>CF</ins>, Costo*, IMO_Crociera)
+- **Compagnia**(<ins>PI</ins>, Nome, Sede, Recapito_Telefonico*)
+- **Persona**(<ins>CF</ins>, Nome, Cognome, Sesso)
+- **Ospite**(<ins>CF</ins>, Costo*, IMO_Crociera)
   - Ospite.CF -> Persona.CF
   - IMO_Crociera -> Crociera.IMO
-- Equipaggio(<ins>CF</ins>, IDequipaggio, Lingue_Parlate*, Stipendio*, Anni_Servizio*, IMO_Crociera*)
+- **Equipaggio**(<ins>CF</ins>, IDequipaggio, Lingue_Parlate*, Stipendio*, Anni_Servizio*, IMO_Crociera*)
   - Equipaggio.CF -> Persona.CF
   - IMO_Crociera -> Crociera.IMO
-- Animatore(<ins>CF</ins>, Abilità*)
+- **Animatore**(<ins>CF</ins>, Abilità*)
   - Animatore.CF -> Equipaggio.CF
-- Evento(<ins>Nome</ins>, <ins>Tipologia</ins>, <ins>IMO_Crociera</ins>, Num_Cons_Partecipanti*, Num_Min_Animatori*, Età_Consigliata*)
+- **Evento**(<ins>Nome</ins>, <ins>Tipologia</ins>, <ins>IMO_Crociera</ins>, Num_Cons_Partecipanti*, Num_Min_Animatori*, Età_Consigliata*)
   - Evento.IMO_Crociera -> Crociera.IMO
-- ORGANIZZA(<ins>CF_Animatore</ins>, <ins>Nome_Evento</ins>, <ins>Tipologia_Evento</ins>, <ins>IMO_Crociera_Evento</ins>)
+- **ORGANIZZA**(<ins>CF_Animatore</ins>, <ins>Nome_Evento</ins>, <ins>Tipologia_Evento</ins>, <ins>IMO_Crociera_Evento</ins>)
   - Organizza.CF_Animatore -> Animatore.CF
   - Organizza.Nome_Evento -> Evento.Nome
   - Organizza.Tipologia_evento -> Evento.Tipologia
@@ -288,16 +287,17 @@ Per il punto 1, è opportuno creare un indice B+ Tree sulla colonna Porto_Parten
 CREATE INDEX idx_porto_partenza ON Crociera (Porto_Partenza);
 ```
 Questo indice consente:
-- un accesso rapido alle tuple della tabella Crociera che partono da una certa città,
-- un’efficiente esecuzione del join con la tabella Porto usando l’equivalenza sulla città,
-- e una scansione ordinata utile all'ottimizzazione del GROUP BY, permettendo di aggregare le tuple con lo stesso valore di Porto_Partenza con complessità inferiore.
+1) Un accesso rapido alle tuple della tabella Crociera che partono da una certa città
+2) Un’efficiente esecuzione del join con la tabella Porto usando l’equivalenza sulla città,
+3) Una scansione ordinata utile all'ottimizzazione del GROUP BY, permettendo di aggregare le tuple con lo stesso valore di `Porto_Partenza` con complessità inferiore.
 
-Per quanto riguarda il punto 3, l’ordinamento viene effettuato su un attributo derivato (Numero_Crociere, alias di COUNT(c.IMO)), quindi non può essere direttamente indicizzato. Tuttavia, un ordinamento efficace viene facilitato dalla pre-aggregazione ottimizzata tramite l’indice sul campo di raggruppamento (Porto_Partenza).
+Per quanto riguarda il punto 3, l’ordinamento viene effettuato su un attributo derivato (`Numero_Crociere, alias di COUNT(c.IMO)`), quindi non può essere direttamente indicizzato. Tuttavia, un ordinamento efficace viene facilitato dalla pre-aggregazione ottimizzata tramite l’indice sul campo di raggruppamento (`Porto_Partenza`).
 
+```plaintext
 Nota: la colonna Città in Porto è chiave primaria, quindi PostgreSQL crea automaticamente un indice B+ Tree su di essa. Non è necessario creare un ulteriore indice su Porto(Città) per il join.
-
+```
 # 6 Applicazione Software
-Il file Query.c implementa un programma in linguaggio C che consente di connettersi a un database PostgreSQL contenente i dati relativi alla gestione delle crociere. Lo scopo principale del programma è eseguire e visualizzare i risultati di diverse query SQL predefinite, come descritto nella Sezione 5 del progetto.
+Il file **Query.c** implementa un programma in linguaggio C che consente di connettersi a un database PostgreSQL contenente i dati relativi alla gestione delle crociere. Lo scopo principale del programma è eseguire e visualizzare i risultati di diverse query SQL predefinite, come descritto nella Sezione 5 del progetto.
 All’avvio, il programma presenta un’interfaccia testuale interattiva che mostra un menu numerato con le interrogazioni disponibili. L’utente può selezionare la query desiderata digitando il numero corrispondente.
 
 Le query proposte coprono diversi aspetti gestionali, tra cui:
@@ -312,8 +312,10 @@ In particolare, la seconda query è stata resa parametrica: all’utente viene r
 Il codice gestisce anche l’inizializzazione del database, caricando uno script SQL che crea e popola le tabelle necessarie, e suddivide il file delle query in modo da consentire una facile selezione e gestione tramite menu. Le query disponibili non sono legate al codice, quindi possono essere aggiunte, modificate o eliminate dal file Crociere.sql e si modificherà quindi in automatico il menù a scelta.
 
 Note: in alcuni computer si può compilare direttamente con: 
+```bash
 - gcc -o query Query.c -lpq
-
+```
 In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve compilare con il codice:
-
+```bash
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
+```
