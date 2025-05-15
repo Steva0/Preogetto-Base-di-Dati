@@ -92,20 +92,20 @@ int main() {
     PGconn *conn;
     PGresult *res;
 
-    // Connessione a postgres senza database specifico per drop/create db
+    // Connessione a postgres senza db specifico (root) per drop/create db
     conn = PQconnectdb(conninfo_root);
     if (PQstatus(conn) != CONNECTION_OK) {
         fprintf(stderr, "Connessione fallita: %s", PQerrorMessage(conn));
         exit_nicely(conn);
     }
 
-    // Proviamo a creare il db "crociere" (ignora errore se già esiste)
+    // Drop e create database "crociere" (ignora errore se già esiste)
     exec_sql(conn, "DROP DATABASE IF EXISTS crociere;");
     exec_sql(conn, "CREATE DATABASE crociere;");
 
     PQfinish(conn);
 
-    // Ora connettiamo al db crociere
+    // Connessione al database "crociere"
     char conninfo_db[256];
     snprintf(conninfo_db, sizeof(conninfo_db), "user=postgres host=localhost port=5432 dbname=%s", dbname);
     conn = PQconnectdb(conninfo_db);
@@ -114,21 +114,14 @@ int main() {
         exit_nicely(conn);
     }
 
-    // Leggiamo tutto il file SQL
+    // Leggi l'intero file SQL in memoria
     char *sqlscript = read_file(script_filename);
     if (!sqlscript) {
         PQfinish(conn);
         return 1;
     }
 
-    // Dividiamo il file in linee per analizzare commenti con titolo query e separare le query
-    // Metodo semplice: assumiamo che ogni query da eseguire nel menu sia preceduta da un commento "-- Query X – titolo"
-    // Altrimenti, eseguiamo tutto all'inizio (create table, insert) e separiamo solo le query per il menu.
-
-    // Per semplicità: eseguiamo tutto tranne le query dal file all'inizio (dividendo il file al commento "-- Query 1" etc)
-    // poi salviamo le query in un array da menu.
-
-    // Troviamo l'inizio delle query:
+    // Trova la posizione in cui iniziano le query da menu (commento "-- Query 1")
     char *queries_start = strstr(sqlscript, "-- Query 1");
     if (!queries_start) {
         fprintf(stderr, "Non trovate query nel file\n");
@@ -137,7 +130,7 @@ int main() {
         return 1;
     }
 
-    // Eseguiamo la parte iniziale (da inizio file fino a queries_start)
+    // Esegui la parte iniziale dello script (creazione tabelle, insert, ecc.)
     size_t init_len = queries_start - sqlscript;
     char *init_part = malloc(init_len + 1);
     if (!init_part) {
@@ -149,7 +142,6 @@ int main() {
     strncpy(init_part, sqlscript, init_len);
     init_part[init_len] = '\0';
 
-    // Eseguiamo tutto il codice iniziale
     res = PQexec(conn, init_part);
     if (PQresultStatus(res) != PGRES_COMMAND_OK && PQresultStatus(res) != PGRES_TUPLES_OK) {
         fprintf(stderr, "Errore esecuzione iniziale script: %s\n%s\n", PQerrorMessage(conn), init_part);
@@ -162,60 +154,47 @@ int main() {
     PQclear(res);
     free(init_part);
 
-    // Ora estraiamo le query per il menu. Dato che le query sono commentate come:
-    // -- Query X – Titolo
-    // SELECT ...
-    // Quindi cerchiamo ogni commento -- Query e prendiamo la query successiva fino al prossimo commento --
-
+    // Estrazione delle query da menu
     Query queries[MAX_QUERIES];
     int qcount = 0;
 
     char *p = queries_start;
     while (qcount < MAX_QUERIES && p) {
-        // Cerchiamo commento
         char *comment_line_start = strstr(p, "-- Query");
         if (!comment_line_start) break;
 
-        // Trova la prima occorrenza di " - " nella riga commento e salta dopo di essa
+        // Salta al testo dopo " - " nel commento titolo, se presente
         char *pos = strstr(comment_line_start, " - ");
         if (pos) {
-            comment_line_start = pos + 3; // +3 per saltare " - "
+            comment_line_start = pos + 3;
         } else {
-            // Se non trovi " - ", continua da dopo "-- "
-            comment_line_start += 3;
-}
+            comment_line_start += 3; // dopo "-- "
+        }
 
-
-        // Leggiamo la riga commento fino a newline
+        // Legge titolo fino a newline
         char *line_end = strchr(comment_line_start, '\n');
         if (!line_end) break;
         size_t len = line_end - comment_line_start;
 
-        // Copiamo titolo, rimuovendo eventuali caratteri speciali
         char titlebuf[128];
         strncpy(titlebuf, comment_line_start, len);
         titlebuf[len] = '\0';
 
-        // Memorizziamo titolo query (esempio: "Query 1 – Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe")
-        // vogliamo solo la parte dopo il trattino lungo (–)
+        // Se il titolo contiene il trattino lungo (–), usa solo la parte dopo
         char *dash = strstr(titlebuf, "–");
         if (dash) {
-            // Spostiamo 2 caratteri avanti per saltare lo spazio dopo dash (unicode dash può essere più lungo)
-            dash += 2;
+            dash += 2; // salta spazio dopo dash lungo
             memmove(titlebuf, dash, strlen(dash) + 1);
         }
 
-        // Ora leggiamo la query vera: dalla fine della linea di commento fino al prossimo commento "--"
+        // Estrae la query dalla riga dopo il commento fino al prossimo commento "--"
         char *query_start = line_end + 1;
         char *next_comment = strstr(query_start, "\n--");
-        size_t query_len;
-        if (next_comment)
-            query_len = next_comment - query_start;
-        else
-            query_len = strlen(query_start);
+        size_t query_len = next_comment ? (size_t)(next_comment - query_start) : strlen(query_start);
 
-        // Copiamo la query rimuovendo spazi finali e nuove linee
-        while(query_len > 0 && (query_start[query_len-1] == '\n' || query_start[query_len-1] == ' ' || query_start[query_len-1] == '\r'))
+        // Rimuove spazi e newline finali
+        while (query_len > 0 &&
+              (query_start[query_len-1] == '\n' || query_start[query_len-1] == ' ' || query_start[query_len-1] == '\r'))
             query_len--;
 
         if (query_len > sizeof(queries[qcount].sql) - 1)
@@ -227,9 +206,8 @@ int main() {
         strncpy(queries[qcount].title, titlebuf, sizeof(queries[qcount].title));
         queries[qcount].title[sizeof(queries[qcount].title)-1] = '\0';
 
-        // Codice per estrarre i parametri <PARAM> dalla query SQL
+        // Cerca parametri <PARAM> nella query
         queries[qcount].param_count = 0;
-
         char *search_start = queries[qcount].sql;
         while (queries[qcount].param_count < MAX_PARAMS) {
             char *open = strchr(search_start, '<');
@@ -252,6 +230,7 @@ int main() {
 
     free(sqlscript);
 
+    // Loop menu per scelta ed esecuzione query
     printf("=== MENU QUERY CROCIERE ===\n");
     for (;;) {
         printf("\nScegli una query da eseguire:\n");
@@ -264,7 +243,6 @@ int main() {
         int scelta = -1;
         if (scanf("%d", &scelta) != 1) {
             printf("Input non valido\n");
-            // Puliamo input buffer
             int c; while ((c = getchar()) != '\n' && c != EOF);
             continue;
         }
