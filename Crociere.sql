@@ -18,7 +18,7 @@ CREATE TABLE Crociera (
     Num_Prenotazioni INT NOT NULL,
     Porto_Partenza VARCHAR(100),
     Porto_Finale VARCHAR(100),
-    Data_Ora_Partenza DATETIME,
+    Data_Ora_Partenza TIMESTAMP,
     Durata INT,
     PI_Compagnia CHAR(10),
     FOREIGN KEY (PI_Compagnia) REFERENCES Compagnia(PI),
@@ -29,8 +29,8 @@ CREATE TABLE Crociera (
 CREATE TABLE Tappa (
     IMO CHAR(10),
     Città VARCHAR(100),
-    Data_Ora_Partenza DATETIME,
-    Data_Ora_Arrivo DATETIME NOT NULL,
+    Data_Ora_Partenza TIMESTAMP,
+    Data_Ora_Arrivo TIMESTAMP NOT NULL,
     PRIMARY KEY (IMO, Città, Data_Ora_Partenza),
     FOREIGN KEY (IMO) REFERENCES Crociera(IMO),
     FOREIGN KEY (Città) REFERENCES Porto(Città)
