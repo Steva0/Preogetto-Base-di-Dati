@@ -308,3 +308,8 @@ Le query proposte coprono diversi aspetti gestionali, tra cui:
 In particolare, la seconda query è stata resa parametrica: all’utente viene richiesto di inserire il nome della città di partenza, che viene quindi utilizzato per personalizzare la query SQL in fase di esecuzione.
 
 Il codice gestisce anche l’inizializzazione del database, caricando uno script SQL che crea e popola le tabelle necessarie, e suddivide il file delle query in modo da consentire una facile selezione e gestione tramite menu. Le query disponibili non sono legate al codice, quindi possono essere aggiunte, modificate o eliminate dal file Crociere.sql e si modificherà quindi in automatico il menù a scelta.
+
+Note: in alcuni computer si può compilare direttamente con: 
+- gcc -o query Query.c -lpq
+In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve compilare con il codice:
+- gcc -o query Query.c -I/usr/include/postgresql -lpq
