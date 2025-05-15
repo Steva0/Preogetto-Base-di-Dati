@@ -104,8 +104,8 @@ Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 
 Ogni **evento** è gestito da uno o più **animatori** e può essere frequentato da più **ospiti**.
 
-![Grafico](img/Con_Generalizzazione.png)
-
+![Grafico1](img/Con_Generalizzazione.png)
+Grafico1
 
 # 3 Progettazione Concettuale
 La Figura 1 riporta il diagramma Entità–Relazione (E–R) che riassume i requisiti descritti nella sezione 2.
@@ -212,7 +212,8 @@ L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando c
 ## 4.2 Eliminazioni delle Generalizzazioni
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
 
-![Grafico](img/Senza_Generalizzazione.png)
+![Grafico2](img/Senza_Generalizzazione.png)
+Grafico2
 
 **PERSONA**. La generalizzazione parziale PERSONA viene sostituita con le relazioni `IS-OSPITE` e `IS-EQUIP` (vedi Figura 2), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
 Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGIERO).
