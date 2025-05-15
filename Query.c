@@ -12,54 +12,76 @@ void checkConn(PGconn *conn) {
 }
 
 int checkDatabaseExistence(PGconn *conn, const char *dbname) {
-    // Controlliamo se il database esiste provando a eseguire una query su di esso
-    PGresult *res = PQexec(conn, "SELECT 1;");
-    if (PQresultStatus(res) == PGRES_TUPLES_OK) {
-        PQclear(res);
-        return 1; // Il database esiste
-    } else {
-        PQclear(res);
-        return 0; // Il database non esiste
-    }
+    char conninfo[256];
+    snprintf(conninfo, sizeof(conninfo), "user=postgres dbname=%s host=localhost port=5432", dbname);
+    PGconn *testConn = PQconnectdb(conninfo);
+    int exists = (PQstatus(testConn) == CONNECTION_OK);
+    PQfinish(testConn);
+    return exists;
 }
 
 void createDatabaseIfNotExists(PGconn *conn, const char *dbname) {
-    // Proviamo a connetterci al database, se fallisce lo creiamo
     char query[256];
     snprintf(query, sizeof(query), "CREATE DATABASE %s;", dbname);
-    
+
     PGresult *res = PQexec(conn, query);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         fprintf(stderr, "Errore nella creazione del database: %s", PQerrorMessage(conn));
         PQclear(res);
+        PQfinish(conn);
         exit(1);
     }
-
     PQclear(res);
     printf("Database '%s' creato con successo.\n", dbname);
 }
 
-int checkScriptExecution() {
-    // Esegui il comando psql e cattura l'output
-    FILE *fp = popen("psql -U postgres -d crociere -f Crociere.sql", "r");
-    if (fp == NULL) {
-        fprintf(stderr, "Errore nell'aprire il comando psql.\n");
-        return 0;  // Errore nell'aprire il comando
+char* leggi_file_sql(const char* filename) {
+    FILE *file = fopen(filename, "rb");
+    if (!file) {
+        fprintf(stderr, "Errore nell'apertura del file %s\n", filename);
+        return NULL;
     }
 
-    // Leggi l'output del comando psql e verifica se ci sono errori
-    char buffer[256];
-    int success = 1;
-    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        if (strstr(buffer, "ERROR") != NULL) {
-            fprintf(stderr, "Errore nell'esecuzione dello script SQL: %s", buffer);
-            success = 0;  // C'è stato un errore
-            break;
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    rewind(file);
+
+    char *content = (char*)malloc(size + 1);
+    if (!content) {
+        fprintf(stderr, "Errore nell'allocazione della memoria\n");
+        fclose(file);
+        return NULL;
+    }
+
+    fread(content, 1, size, file);
+    content[size] = '\0';
+    fclose(file);
+
+    return content;
+}
+
+int esegui_script_sql_righe(PGconn *conn, const char *filename) {
+    char *script = leggi_file_sql(filename);
+    if (!script) return 0;
+
+    char *comando = strtok(script, ";");
+    while (comando != NULL) {
+        while (*comando == '\n' || *comando == ' ') comando++;  // Skip spazi iniziali
+        if (strlen(comando) > 0) {
+            PGresult *res = PQexec(conn, comando);
+            if (PQresultStatus(res) != PGRES_COMMAND_OK && PQresultStatus(res) != PGRES_TUPLES_OK) {
+                fprintf(stderr, "Errore nel comando SQL:\n%s\n%s\n", comando, PQerrorMessage(conn));
+                PQclear(res);
+                free(script);
+                return 0;
+            }
+            PQclear(res);
         }
+        comando = strtok(NULL, ";");
     }
 
-    fclose(fp);
-    return success;
+    free(script);
+    return 1;
 }
 
 void checkResult(PGresult *res, PGconn *conn) {
@@ -78,13 +100,11 @@ void esegui_query(PGconn *conn, const char *query) {
     int n_rows = PQntuples(res);
     int n_fields = PQnfields(res);
 
-    // Stampa intestazioni
     for (int i = 0; i < n_fields; i++) {
         printf("%-25s", PQfname(res, i));
     }
     printf("\n");
 
-    // Stampa dati
     for (int i = 0; i < n_rows; i++) {
         for (int j = 0; j < n_fields; j++) {
             printf("%-25s", PQgetvalue(res, i, j));
@@ -96,36 +116,32 @@ void esegui_query(PGconn *conn, const char *query) {
 }
 
 int main() {
-    const char *conninfo = "user=postgres host=localhost port=5432";
-    PGconn *conn = PQconnectdb(conninfo);
-    
-    if (PQstatus(conn) != CONNECTION_OK) {
-        fprintf(stderr, "Connessione al server di database fallita: %s\n", PQerrorMessage(conn));
-        PQfinish(conn);
-        return 1;
-    }
+    const char *dbname = "crociere";
+    const char *script_filename = "Crociere.sql";
 
-    // Controlla se il database esiste, se non esiste lo crea
-    if (!checkDatabaseExistence(conn, "crociere")) {
-        printf("Il database 'crociere' non esiste. Creazione in corso...\n");
-        createDatabaseIfNotExists(conn, "crociere");
-    }
-
-    // Dopo aver creato o verificato il database, prova a connetterti di nuovo
-    PQfinish(conn); // Chiudiamo la connessione al server di gestione per creare il database
-    conn = PQconnectdb("user=postgres dbname=crociere host=localhost port=5432");
+    const char *conninfo_root = "user=postgres host=localhost port=5432";
+    PGconn *conn = PQconnectdb(conninfo_root);
     checkConn(conn);
 
-    // Esegui lo script SQL per popolare il database
-    printf("Esecuzione dello script SQL per popolare il database...\n");
-    if (!checkScriptExecution()) {
+    if (!checkDatabaseExistence(conn, dbname)) {
+        printf("Il database '%s' non esiste. Creazione in corso...\n", dbname);
+        createDatabaseIfNotExists(conn, dbname);
+    }
+    PQfinish(conn);
+
+    char conninfo_db[256];
+    snprintf(conninfo_db, sizeof(conninfo_db), "user=postgres dbname=%s host=localhost port=5432", dbname);
+    conn = PQconnectdb(conninfo_db);
+    checkConn(conn);
+
+    printf("Esecuzione dello script SQL da file '%s'...\n", script_filename);
+    if (!esegui_script_sql_righe(conn, script_filename)) {
         fprintf(stderr, "Errore durante l'esecuzione dello script SQL.\n");
         PQfinish(conn);
         return 1;
     }
     printf("Script SQL eseguito correttamente.\n");
 
-    // Menu interattivo per l'esecuzione delle query 
     int scelta;
     while (1) {
         printf("\nMenu - Seleziona una query da eseguire:\n");
@@ -141,26 +157,25 @@ int main() {
         switch (scelta) {
             case 1:
                 esegui_query(conn,
-                    "SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe "
-                    "FROM Crociera C "
-                    "JOIN Tappa T ON C.IMO = T.IMO "
-                    "GROUP BY C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale "
-                    "HAVING COUNT(DISTINCT T.Città) > 3 "
-                    "ORDER BY Numero_Tappe DESC;"
+                    "SELECT c.imo, c.nome_nave, c.porto_partenza, c.porto_finale, COUNT(DISTINCT t.città) AS numero_tappe "
+                    "FROM crociera c "
+                    "JOIN tappa t ON c.imo = t.imo "
+                    "GROUP BY c.imo, c.nome_nave, c.porto_partenza, c.porto_finale "
+                    "HAVING COUNT(DISTINCT t.città) > 3 "
+                    "ORDER BY numero_tappe DESC;"
                 );
                 break;
             case 2: {
                 char citta[50];
                 printf("Inserisci la città di partenza: ");
-                scanf("%s", citta); // Usa %s se la città è una parola, oppure fgets() per nomi composti
-            
+                scanf("%s", citta);
+
                 char query[512];
                 snprintf(query, sizeof(query),
                     "SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni "
                     "FROM Crociera c "
-                    "WHERE c.Porto_Partenza = '%s';",
-                    citta);
-            
+                    "WHERE c.Porto_Partenza = '%s';", citta);
+
                 esegui_query(conn, query);
                 break;
             }
