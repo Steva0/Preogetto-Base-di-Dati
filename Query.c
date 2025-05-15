@@ -166,66 +166,56 @@ int main() {
 
     char *p = queries_start;
     while (qcount < MAX_QUERIES && p) {
-        Query queries[MAX_QUERIES];
-int qcount = 0;
+        // Cerchiamo commento
+        char *comment_line_start = strstr(p, "-- Query");
+        if (!comment_line_start) break;
 
-char *p = queries_start;
-while (qcount < MAX_QUERIES && p) {
-    // Cerchiamo commento
-    char *comment_line_start = strstr(p, "-- Query");
-    if (!comment_line_start) break;
+        // Saltiamo "-- "
+        comment_line_start += 3;
 
-    // Saltiamo "-- "
-    comment_line_start += 3;
+        // Leggiamo la riga commento fino a newline
+        char *line_end = strchr(comment_line_start, '\n');
+        if (!line_end) break;
+        size_t len = line_end - comment_line_start;
 
-    // Leggiamo la riga commento fino a newline
-    char *line_end = strchr(comment_line_start, '\n');
-    if (!line_end) break;
-    size_t len = line_end - comment_line_start;
+        // Copiamo titolo, rimuovendo eventuali caratteri speciali
+        char titlebuf[128];
+        strncpy(titlebuf, comment_line_start, len);
+        titlebuf[len] = '\0';
 
-    // Copiamo titolo, rimuovendo eventuali caratteri speciali
-    char titlebuf[128];
-    strncpy(titlebuf, comment_line_start, len);
-    titlebuf[len] = '\0';
+        // Memorizziamo titolo query (esempio: "Query 1 – Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe")
+        // vogliamo solo la parte dopo il trattino lungo (–)
+        char *dash = strstr(titlebuf, "–");
+        if (dash) {
+            // Spostiamo 2 caratteri avanti per saltare lo spazio dopo dash (unicode dash può essere più lungo)
+            dash += 2;
+            memmove(titlebuf, dash, strlen(dash) + 1);
+        }
 
-    // Trova trattino (lungo "–" o corto "-")
-    char *dash = strstr(titlebuf, "–");
-    if (!dash) dash = strchr(titlebuf, '-');
+        // Ora leggiamo la query vera: dalla fine della linea di commento fino al prossimo commento "--"
+        char *query_start = line_end + 1;
+        char *next_comment = strstr(query_start, "\n--");
+        size_t query_len;
+        if (next_comment)
+            query_len = next_comment - query_start;
+        else
+            query_len = strlen(query_start);
 
-    if (dash) {
-        dash++; // salta il trattino
-        // salta eventuali spazi subito dopo il trattino
-        while (*dash == ' ') dash++;
-        // sposta il testo dopo il trattino all'inizio di titlebuf
-        memmove(titlebuf, dash, strlen(dash) + 1);
-    }
+        // Copiamo la query rimuovendo spazi finali e nuove linee
+        while(query_len > 0 && (query_start[query_len-1] == '\n' || query_start[query_len-1] == ' ' || query_start[query_len-1] == '\r'))
+            query_len--;
 
-    // Ora leggiamo la query vera: dalla fine della linea di commento fino al prossimo commento "--"
-    char *query_start = line_end + 1;
-    char *next_comment = strstr(query_start, "\n--");
-    size_t query_len;
-    if (next_comment)
-        query_len = next_comment - query_start;
-    else
-        query_len = strlen(query_start);
+        if (query_len > sizeof(queries[qcount].sql) - 1)
+            query_len = sizeof(queries[qcount].sql) - 1;
 
-    // Copiamo la query rimuovendo spazi finali e nuove linee
-    while(query_len > 0 && (query_start[query_len-1] == '\n' || query_start[query_len-1] == ' ' || query_start[query_len-1] == '\r'))
-        query_len--;
+        strncpy(queries[qcount].sql, query_start, query_len);
+        queries[qcount].sql[query_len] = '\0';
 
-    if (query_len > sizeof(queries[qcount].sql) - 1)
-        query_len = sizeof(queries[qcount].sql) - 1;
+        strncpy(queries[qcount].title, titlebuf, sizeof(queries[qcount].title));
+        queries[qcount].title[sizeof(queries[qcount].title)-1] = '\0';
 
-    strncpy(queries[qcount].sql, query_start, query_len);
-    queries[qcount].sql[query_len] = '\0';
-
-    strncpy(queries[qcount].title, titlebuf, sizeof(queries[qcount].title));
-    queries[qcount].title[sizeof(queries[qcount].title)-1] = '\0';
-
-    qcount++;
-    p = next_comment;
-}
-
+        qcount++;
+        p = next_comment;
     }
 
     free(sqlscript);
