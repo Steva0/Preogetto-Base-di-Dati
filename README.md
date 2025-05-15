@@ -143,6 +143,7 @@ con l’eliminazione delle due generalizzazioni. Infine, viene presentato il dia
 | animatore  | membri dell’equipaggio che si occupano degli eventi | CF, Abilità                                                                                                                | CF                                     |
 | compagnia  | società che possiedono le navi da crociera          | P.I. compagnia, Nome, Sede, Recapito                                                                                       | P.I. compagnia                         |
 | evento     | eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, IMO crociera          | Nome evento, Tipo evento, IMO crociera |
+
 @ Tabella 1
 
 ## Tabella Relazioni
@@ -154,6 +155,7 @@ con l’eliminazione delle due generalizzazioni. Infine, viene presentato il dia
 | proprietà     | navi da crociera possedute da una compagnia         | crociera, compagnia           | -                                  |
 | disponibilità | eventi programmati per una crociera                 | crociera, evento              | -                                  |
 | organizza     | assegnazione di uno o più animatori a un evento     | evento, animatore             | -                                  |
+
 @ Tabella 2
 
 ## 4.1 Analisi delle ridondanze
