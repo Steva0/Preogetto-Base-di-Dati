@@ -36,7 +36,12 @@ Ogni crociera è identificata dal codice IMO e registra:
 - **Numero massimo di passeggeri**
 - **Tipologia** (es. mediterranea, fluviale, transatlantica)
 
-Ogni **crociera** può avere più **tappe** intermedie e prevede **eventi** a bordo.
+Ogni **crociera**:
+- È di proprietà di una compagnia
+- Parte da un porto e arriva in un altro
+- Può prevedere tappe intermedie
+- Ha a bordo ospiti e membri dell’equipaggio
+- Include eventi ricreativi gestiti da animatori
 
 ## **Porti**
 
@@ -64,10 +69,18 @@ Tutti gli individui a bordo (sia personale che ospiti) sono entità del tipo "Pe
 
 Una **persona** può essere un **ospite** o un membro dell’**equipaggio**.
 
+## **Ospiti** (Passeggeri)
+
+Gli ospiti sono persone che hanno prenotato una crociera:
+- **Codice Fiscale** (PK, FK da Persona)
+- **Costo della crociera**
+- **Crociera** (IMO) (FK)
+
 ## **Equipaggio**
 
 L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associato a:
-- **ID equipaggio** (PK)
+- **Codice Fiscale** (PK, FK da Persona)
+- **ID equipaggio**
 - **Stipendio**
 - **Anni di servizio**
 - **Lingue parlate**
@@ -77,6 +90,7 @@ Un **membro dell’equipaggio** può essere specializzato in **animatore**.
 ## **Animatori**
 
 Gli **animatori** sono una specializzazione dell’**equipaggio** e dispongono di una o più **abilità**:
+- **Codice Fiscale** (PK, FK da Equipaggio)
 - **Abilità specifiche** (es. ballo, canto, giochi)
 
 ## **Eventi**
@@ -117,6 +131,30 @@ se una persona pe è animatore in due crociere cr' e cr'', allora cr' e cr'' app
 In questa sezione viene illustrato il processo di “traduzione” dello schema concettuale in uno schema logico, con l’obiettivo di rappresentare i dati in modo preciso
 ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
 con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma ristrutturato, con una descrizione delle modifiche apportate.
+
+## Tabella Entità
+| **ENTITÀ** | **DESCRIZIONE**                                     | **ATTRIBUTI**                                                                                                              | **IDENTIFICATORE**                     |
+| ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| crociera   | mezzo di trasporto marittimo                        | IMO, Nome nave, Porto partenza, Porto finale, Data/Ora partenza, Durata, Min equipaggio, Max passeggeri, Persone prenotate | IMO                                    |
+| porto      | località in cui la crociera può attraccare          | Città, Numero massimo navi                                                                                                 | Città                                  |
+| passeggero | passeggeri ospiti della crociera                    | CF, Costo, IMO crociera                                                                                                    | CF                                     |
+| persona    | persone partecipanti alle crociere                  | CF, Nome, Cognome, Sesso                                                                                                   | CF                                     |
+| equipaggio | persone membri dell’equipaggio                      | CF, IDequipaggio, Lingue parlate, Stipendio, Anni di servizio, IMO crociera                                                | CF                                     |
+| animatore  | membri dell’equipaggio che si occupano degli eventi | CF, Abilità                                                                                                                | CF                                     |
+| compagnia  | società che possiedono le navi da crociera          | P.I. compagnia, Nome, Sede, Recapito                                                                                       | P.I. compagnia                         |
+| evento     | eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, IMO crociera          | Nome evento, Tipo evento, IMO crociera |
+@ Tabella 1
+
+## Tabella Relazioni
+| **RELAZIONE** | **DESCRIZIONE**                                     | **COMPONENTI**                | **ATTRIBUTI**                      |
+| ------------- | --------------------------------------------------- | ----------------------------- | ---------------------------------- |
+| tappa         | tappe portuali fatte da una nave                    | porto, crociera               | Data/Ora arrivo, Data/Ora partenza |
+| partecipante  | assegnazione di una persona (ospite) a una crociera | crociera, passeggero (ospite) | -                                  |
+| staff         | membri dell’equipaggio assegnati a una crociera     | crociera, equipaggio          | -                                  |
+| proprietà     | navi da crociera possedute da una compagnia         | crociera, compagnia           | -                                  |
+| disponibilità | eventi programmati per una crociera                 | crociera, evento              | -                                  |
+| organizza     | assegnazione di uno o più animatori a un evento     | evento, animatore             | -                                  |
+@ Tabella 2
 
 ## 4.1 Analisi delle ridondanze
 L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
