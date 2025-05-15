@@ -87,10 +87,9 @@ CREATE TABLE ORGANIZZA (
     IMO_Crociera_Evento CHAR(10),
     PRIMARY KEY (CF_Animatore, Nome_Evento, Tipologia_Evento, IMO_Crociera_Evento),
     FOREIGN KEY (CF_Animatore) REFERENCES Animatore(CF),
-    FOREIGN KEY (Nome_Evento) REFERENCES Evento(Nome),
-    FOREIGN KEY (Tipologia_Evento) REFERENCES Evento(Tipologia),
-    FOREIGN KEY (IMO_Crociera_Evento) REFERENCES Evento(IMO_Crociera)
+    FOREIGN KEY (Nome_Evento, Tipologia_Evento, IMO_Crociera_Evento) REFERENCES Evento(Nome, Tipologia, IMO_Crociera)
 );
+
 
 INSERT INTO Compagnia VALUES
 ('0123456789', 'MareBlu Cruises', 'Genova, Italia', '+390101234567'),
