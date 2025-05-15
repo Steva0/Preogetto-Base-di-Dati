@@ -122,10 +122,10 @@ con l’eliminazione delle due generalizzazioni. Infine, viene presentato il dia
 L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
 contando il numero di passeggeri attivi per quella crociera tramite la relazione PARTECIPANTE.
 Questo attributo viene modificato ogni volta che si aggiunge una nuova persona alla crociera (circa 400 persone nuove al giorno tra tutte le crociere) e viene visualizzato ogni ora del giorno per monitorare il numero di posti rimanenti. Questo si riassume nelle seguenti due operazioni:
-```plaintext
-- Operazione 1 (400 al giorno): memorizza una nuova prenotazione in relativa crociera.
-- Operazione 2 (24 al giorno): visualizza il numero di prenotazioni attuali in una crociera.
-```
+
+- `Operazione 1 (400 al giorno): memorizza una nuova prenotazione in relativa crociera.`
+- `Operazione 2 (24 al giorno): visualizza il numero di prenotazioni attuali in una crociera.`
+
 Assumendo i seguenti volumi nella base di dati:
 
 | Concetto | Costrutto | Volume|
