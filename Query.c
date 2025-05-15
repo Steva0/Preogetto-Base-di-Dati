@@ -86,13 +86,6 @@ void exec_select(PGconn *conn, const char *sql) {
     PQclear(res);
 }
 
-#define MAX_QUERIES 10
-
-typedef struct {
-    char title[128];
-    char sql[2048];
-} Query;
-
 int main() {
     PGconn *conn;
     PGresult *res;
