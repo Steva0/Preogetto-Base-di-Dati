@@ -750,6 +750,21 @@ INSERT INTO ORGANIZZA VALUES
 ('GRGFNC79M00C351V', 'Cena di Gala', 'Cucina', 'IMO0000015'),
 ('BNCLRA80C01H501W', 'Laboratorio di Pittura', 'Laboratori', 'IMO0000019'),
 ('RSSMRA81A02F205X', 'Spettacolo Comico', 'Teatro', 'IMO0000008'),
+('PLLMNL68D89A562K', 'Karaoke Night', 'Musica', 'IMO0000001'),
+  ('GRGFNC69M90C351L', 'Festa di Benvenuto', 'Intrattenimento', 'IMO0000001'),
+  ('BNCLRA70C91H501M', 'Serata Karaoke', 'Musica', 'IMO0000018'),
+  ('RSSMRA71A92F205N', 'Cena di Gala', 'Cucina', 'IMO0000002'),
+  ('VRDLGU72T93L219O', 'Quiz Night', 'Giochi', 'IMO0000003'),
+  ('PLLMNL73D94A562P', 'Serata Jazz', 'Musica', 'IMO0000005'),
+  ('GRGFNC74M95C351Q', 'Serata Latina', 'Balli', 'IMO0000003'),
+  ('BNCLRA75C96H501R', 'Spettacolo di Cabaret', 'Teatro', 'IMO0000016'),
+  ('RSSMRA76A97F205S', 'Laboratorio Creativo', 'Laboratori', 'IMO0000005'),
+  ('VRDLGU77T98L219T', 'Cena a Tema', 'Cucina', 'IMO0000020'),
+  ('PLLMNL78D99A562U', 'Laboratorio di Pittura', 'Laboratori', 'IMO0000009'),
+  ('GRGFNC79M00C351V', 'Serata Jazz', 'Musica', 'IMO0000015'),
+  ('BNCLRA80C01H501W', 'Serata Latina', 'Balli', 'IMO0000019'),
+  ('RSSMRA81A02F205X', 'Yoga al Tramonto', 'Benessere', 'IMO0000008'),
+  ('VRDLGU82T03L219Y', 'Torneo di Calcio Balilla', 'Sport', 'IMO0000007'),
 ('VRDLGU82T03L219Y', 'Torneo di Ping Pong', 'Sport', 'IMO0000007');
 
 
