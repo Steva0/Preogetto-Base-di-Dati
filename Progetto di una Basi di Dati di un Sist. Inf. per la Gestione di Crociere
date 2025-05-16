@@ -356,6 +356,13 @@ HAVING COUNT(DISTINCT T.Città) > 3
 ORDER BY Numero_Tappe DESC;
 ```
 Estratto dell’output:
+</div>
+<div align="center">
+<img src="img/q1.png" alt="Query1" width="450"/>
+Query1
+
+</div>
+
 
 **QUERY 2** Trovare per ogni città (porto), quante crociere partono da lì e la media del numero di prenotazioni.
 
@@ -367,6 +374,12 @@ GROUP BY p.Città
 ORDER BY Numero_Crociere DESC;
 ```
 Estratto dell’output:
+</div>
+<div align="center">
+<img src="img/q2.png" alt="Query2" width="450"/>
+Query2
+
+</div>
 
 **Query 3** Trovare le crociere che hanno una media del costo dei biglietti superiore a 500 euro
 ```sql
@@ -378,6 +391,12 @@ HAVING AVG(O.Costo) > 500
 ORDER BY Media_Costo DESC;
 ```
 Estratto dell’output:
+</div>
+<div align="center">
+<img src="img/q3.png" alt="Query3" width="450"/>
+Query3
+
+</div>
 
 **Query 4** Visualizzare gli animatori con più eventi organizzati, mostrando solo quelli con più di 2 eventi
 ```sql
@@ -400,6 +419,12 @@ WHERE Max_Passeggeri > 0
 ORDER BY Percentuale_Occupazione DESC;
 ```
 Estratto dell’output:
+</div>
+<div align="center">
+<img src="img/q5.png" alt="Query5" width="450"/>
+Query5
+
+</div>
 
 ## **5.2 Creazione degli indici**
 Si suppone di voler ottimizzare la Query 2, per la quale occorre considerare:
