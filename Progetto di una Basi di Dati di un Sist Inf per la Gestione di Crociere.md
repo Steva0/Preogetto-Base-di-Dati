@@ -1,10 +1,6 @@
-<div align="center">
 <img src="img/1pagina.png" alt="1Pagina"/>
 
-</div>
-
-<div align="justify">
-
+<br>
 <br>
 <br>
 <br>
@@ -116,13 +112,10 @@ Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 - **Numero consigliato di partecipanti**
 
 Ogni evento è gestito da uno o più animatori e può essere frequentato da più ospiti.
-</div>
-<div align="center">
-<img src="img/Con_Generalizzazione.png" alt="Grafico1" width="700"/>
-Grafico1
 
-</div>
-<div align="justify">
+<img src="img/Con_Generalizzazione.png" alt="Grafico1" width="700"/>
+(Grafico1)
+
 
 <br>
 <br>
@@ -146,8 +139,6 @@ In questa sezione viene illustrato il processo di “traduzione” dello schema 
 ed efficiente. Il primo passo consiste nell’analizzare le eventuali ridondanze nel modello, al fine di ottimizzare la struttura complessiva. Successivamente, si procede
 con l’eliminazione delle due generalizzazioni. Infine, viene presentato il diagramma ristrutturato, con una descrizione delle modifiche apportate.
 
-</div>
-<div align="center">
 
 | **Entità** | **Descrizione**                                     | **Attributi**                                                                                                              | **Identificatore**                     |
 | ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
@@ -161,10 +152,7 @@ con l’eliminazione delle due generalizzazioni. Infine, viene presentato il dia
 | Evento     | Eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, Imo crociera          | Nome evento, Tipo evento, Imo crociera |
 
 Tabella 1 (Entità)
-</div>
 
-</div>
-<div align="center">
 
 | **Relazione** | **Descrizione**                                     | **Componenti**                | **Attributi**                      |
 | ------------- | --------------------------------------------------- | ----------------------------- | ---------------------------------- |
@@ -177,8 +165,6 @@ Tabella 1 (Entità)
 
 Tabella 2 (Relazioni)
 
-</div>
-<div align="justify">
 
 <br>
 <br>
@@ -199,8 +185,6 @@ Questo attributo viene modificato ogni volta che si aggiunge una nuova persona a
 - Operazione 2 (24 al giorno): visualizza il numero di prenotazioni attuali in una crociera.
 
 Assumendo i seguenti volumi nella base di dati:
-</div>
-<div align="center">
 
 | Concetto | Costrutto | Volume|
 |----------|-----------|-------|
@@ -208,8 +192,6 @@ Assumendo i seguenti volumi nella base di dati:
 | PARTECIPANTE | R | 150000 |
 | PASSEGGERO | E | 150000 |
 
-</div>
-<div align="justify">
 
 La seguente analisi serve per stabilire se sia utile o meno tenere l’attributo ridondante Persone_Prenotate in CROCIERA.
 
@@ -218,27 +200,20 @@ La seguente analisi serve per stabilire se sia utile o meno tenere l’attributo
 Analizziamo prima il costo totale con ridondanza.
 
 - Operazione 1:
-</div>
-  <div align="center">
 
-  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
-  |---------|-----------|---------|------|-------------|
-  |PASSEGGERO | E | 1 | S | × 400 |
-  |PARTECIPANTE | R | 1 | S | × 400 |
-  |CROCIERA | E | 1 | L | × 400 |
-  |CROCIERA | E | 1 | S | × 400 |
-  </div>
-  <div align="justify">
+|Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+|---------|-----------|---------|------|-------------|
+|PASSEGGERO | E | 1 | S | × 400 |
+|PARTECIPANTE | R | 1 | S | × 400 |
+|CROCIERA | E | 1 | L | × 400 |
+|CROCIERA | E | 1 | S | × 400 |
   
 - Operazione 2:
-</div>
-  <div align="center">
 
-  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
-  |---------|-----------|---------|------|-------------|
-  |Crociera | E | 1 | L | × 24 |
-  </div>
-  <div align="justify">
+|Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+|---------|-----------|---------|------|-------------|
+|Crociera | E | 1 | L | × 24 |
+
 
 Assumendo costo doppio per gli accessi in scrittura:
 ```math
@@ -250,27 +225,18 @@ Costo Totale = 400 * 3 * 2 + 400 + 24 = 2824
 
 Analizziamo il costo totale senza ridondanza.
 - Operazione 1:
-</div>
-  <div align="center">
 
-  |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
-  |---------|-----------|---------|------|-------------|
-  |PASSEGGERO | E | 1 | S | × 400 |
-  |PARTECIPANTE | R | 1 | S | × 400 |
-  </div>
-  <div align="justify">
+|Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
+|---------|-----------|---------|------|-------------|
+|PASSEGGERO | E | 1 | S | × 400 |
+|PARTECIPANTE | R | 1 | S | × 400 |
 
 - Operazione 2 (con circa 150000/30 = 5000 passeggeri al giorno):
-</div>
-  <div align="center">
 
 |Concetto | Costrutto | Accessi | Tipo | Ripetizioni |
 |---------|-----------|---------|------|-------------|
 |CROCIERA | E | 1 | L | × 24 |
 |PARTECIPANTE | R | 5000 | L | × 24 |
-  </div>
-  <div align="justify">
-
 
 Assumendo costo doppio per gli accessi in scrittura:
 ```math
@@ -280,14 +246,14 @@ L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando c
 
 ## **4.2 Eliminazioni delle Generalizzazioni**
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
-</div>
 
 <div align="center">
-<img src="img/Senza_Generalizzazione.png" alt="Grafico2" width="450"/>
-Grafico2
+
+<img src="img/Senza_Generalizzazione.png" alt="Grafico2" width="400"/>
+
+(Grafico2)
 
 </div>
-<div align="justify">
 
 **PERSONA**. La generalizzazione parziale PERSONA viene sostituita con le relazioni **IS-OSPITE** e **IS-EQUIP** (vedi Figura 2), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
 Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGIERO).
@@ -349,15 +315,10 @@ HAVING COUNT(DISTINCT T.Città) > '<NUMERO TAPPE>'
 ORDER BY Numero_Tappe DESC;
 ```
 Estratto dell’output:
-</div>
-<div align="center">
 
 <img src="img/q1.png" alt="Query1" width="450"/>
 
-Query1
-
-</div>
-
+(Query1)
 
 **QUERY 2** Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente, ordinate in modo crescente per il numero IMO della crociera. Nella nostra query abbiamo usato la città di Genova.
 
@@ -367,14 +328,10 @@ FROM Crociera c
 WHERE c.Porto_Partenza = '<PORTO>';
 ```
 Estratto dell’output:
-</div>
-<div align="center">
 
 <img src="img/q2.png" alt="Query2" width="450"/>
 
-Query2
-
-</div>
+(Query2)
 
 **Query 3** Trovare le crociere che hanno una media del costo dei biglietti superiore ad un importo indicato. Vengono mostrare in ordine decrescente dalla più costosa fino al valore selezionato dall'utente. Nel nostro esempio abbiamo selezionato 500 euro.
 ```sql
@@ -386,14 +343,10 @@ HAVING AVG(O.Costo) > '<PREZZO>'
 ORDER BY Media_Costo DESC;
 ```
 Estratto dell’output:
-</div>
-<div align="center">
 
 <img src="img/q3.png" alt="Query3" width="450"/>
 
-Query3
-
-</div>
+(Query3)
 
 **Query 4** Visualizzare il numero di eventi organizzati per crociera e la media degli'eventi a cui ogni animatore deve partecipare, ordinati in modo decrescente dalla crociera con la più alta media di eventi che deve fare ogni animatore.
 ```sql
@@ -412,14 +365,10 @@ GROUP BY C.Nome_Nave, C.IMO
 ORDER BY Media_Eventi_Per_Animatore DESC;
 ```
 Estratto dell’output:
-</div>
-<div align="center">
 
 <img src="img/q4.png" alt="Query4" width="450"/>
 
-Query4
-
-</div>
+(Query4)
 
 **Query 5** Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacità massima (Num_Prenotazioni / Max_Passeggeri) e visualizzarle in ordine decrescente.
 ```sql
@@ -430,14 +379,10 @@ WHERE Max_Passeggeri > 0
 ORDER BY Percentuale_Occupazione DESC;
 ```
 Estratto dell’output:
-</div>
-<div align="center">
 
 <img src="img/q5.png" alt="Query5" width="450"/>
 
-Query5
-
-</div>
+(Query5)
 
 ## **5.2 Creazione degli indici**
 Si suppone di voler ottimizzare la Query 2, per la quale occorre considerare:
@@ -489,7 +434,4 @@ Membri del gruppo:
 
 - **Ghiraldin Mirco** 2102505
 - **Stevanin Michele** 2101741
-
-
-</div>
 
