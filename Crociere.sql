@@ -744,14 +744,21 @@ GROUP BY O.IMO_Crociera, C.Nome_Nave
 HAVING AVG(O.Costo) > 500
 ORDER BY Media_Costo DESC;
 
--- Query 4 - Visualizzare gli animatori con piu' eventi organizzati, mostrando solo quelli con piu' di 2 eventi
-SELECT A.CF, P.Nome, P.Cognome, COUNT(*) AS Num_Eventi
-FROM Animatore A
-JOIN Persona P ON A.CF = P.CF
-JOIN ORGANIZZA O ON A.CF = O.CF_Animatore
-GROUP BY A.CF, P.Nome, P.Cognome
-HAVING COUNT(*) > 2
-ORDER BY Num_Eventi DESC;
+-- Query 4 - Visualizzare il numero di Animatori e Media Eventi Organizzati per Crociera
+SELECT 
+    C.Nome_Nave,
+    C.IMO,
+    COUNT(DISTINCT A.CF) AS Num_Animatori,
+    ROUND(CAST(COUNT(O.CF_Animatore) AS DECIMAL) / NULLIF(COUNT(DISTINCT A.CF), 0), 2) AS Media_Eventi_Per_Animatore
+FROM Crociera C
+JOIN Evento E ON C.IMO = E.IMO_Crociera
+JOIN ORGANIZZA O ON E.Nome = O.Nome_Evento 
+                 AND E.Tipologia = O.Tipologia_Evento 
+                 AND E.IMO_Crociera = O.IMO_Crociera_Evento
+JOIN Animatore A ON A.CF = O.CF_Animatore
+GROUP BY C.Nome_Nave, C.IMO
+ORDER BY Media_Eventi_Per_Animatore DESC;
+
 
 -- Query 5 - Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacita' massima (Num_Prenotazioni / Max_Passeggeri)
 SELECT IMO, Nome_Nave,
