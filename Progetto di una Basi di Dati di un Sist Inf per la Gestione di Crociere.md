@@ -339,7 +339,7 @@ un indice creato specificamente per migliorare le prestazionidi una di queste in
 Di seguito vengono presentate e descritte le query con i relativi output generati e
 viene motivato l’utilizzo dell’indice proposto.
 
-**Query 1** Trovare le crociere che toccano più di un numero di porti diversi indicato dall'utente e indicarne la città di partenza, di arrivo e il numero di tappe. Ordinate in modo decrescente dalla crociera con il maggior numero di tappe. Nel nostro caso 2.
+**Query 1** Trovare le crociere che toccano più di un numero di porti diversi indicato dall'utente e indicarne la città di partenza, di arrivo e il numero di tappe. Ordinate in modo decrescente dalla crociera con il maggior numero di tappe. Nel nostro caso abbiamo selezionato 2.
 ```sql
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
