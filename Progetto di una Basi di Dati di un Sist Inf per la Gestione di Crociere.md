@@ -338,7 +338,7 @@ un indice creato specificamente per migliorare le prestazionidi una di queste in
 Di seguito vengono presentate e descritte le query con i relativi output generati e
 viene motivato l’utilizzo dell’indice proposto.
 
-**Query 1** Trovare le crociere che toccano più di un numero di porti diversi indicato dall'utente e indicarne la città di partenza, di arrivo e il numero di tappe. Ordinate in modo decrescente dalla crociera con il maggior numero di tappe.
+**Query 1** Trovare le crociere che toccano più di un numero di porti diversi indicato dall'utente e indicarne la città di partenza, di arrivo e il numero di tappe. Ordinate in modo decrescente dalla crociera con il maggior numero di tappe. Nel nostro caso 2.
 ```sql
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
@@ -469,7 +469,7 @@ Le query proposte coprono diversi aspetti gestionali, tra cui:
 4) Elenco degli animatori con un numero di eventi organizzati superiore a due.
 5) Calcolo, per ogni crociera, della percentuale di occupazione rispetto alla capacità massima disponibile.
 
-In particolare, la seconda query è stata resa parametrica: all’utente viene richiesto di inserire il nome della città di partenza, che viene quindi utilizzato per personalizzare la query SQL in fase di esecuzione.
+In particolare, alcune query sono state rese parametriche: all’utente viene richiesto di inserire il dato parametrico, che viene quindi utilizzato per personalizzare la query SQL in fase di esecuzione.
 
 Il codice gestisce anche l’inizializzazione del database, caricando uno script SQL che crea e popola le tabelle necessarie, e suddivide il file delle query in modo da consentire una facile selezione e gestione tramite menu. Le query disponibili non sono legate al codice, quindi possono essere aggiunte, modificate o eliminate dal file Crociere.sql e si modificherà quindi in automatico il menù a scelta.
 
