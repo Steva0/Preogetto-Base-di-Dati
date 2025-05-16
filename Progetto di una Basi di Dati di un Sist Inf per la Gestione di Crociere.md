@@ -358,14 +358,12 @@ Query1
 </div>
 
 
-**QUERY 2** Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente, ordinate in modo crescente per il numero IMO della crociera.
+**QUERY 2** Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente, ordinate in modo crescente per il numero IMO della crociera. Nella nostra query abbiamo usato la città di Genova.
 
 ```sql
-SELECT p.Città, COUNT(c.IMO) AS Numero_Crociere, AVG(c.Num_Prenotazioni) AS Media_Prenotazioni
-FROM Porto p
-JOIN Crociera c ON p.Città = c.Porto_Partenza
-GROUP BY p.Città
-ORDER BY Numero_Crociere DESC;
+SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
+FROM Crociera c
+WHERE c.Porto_Partenza = '<CITTA''>';
 ```
 Estratto dell’output:
 </div>
@@ -383,7 +381,7 @@ SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo
 FROM Ospite O
 JOIN Crociera C ON O.IMO_Crociera = C.IMO
 GROUP BY O.IMO_Crociera, C.Nome_Nave
-HAVING AVG(O.Costo) > 500
+HAVING AVG(O.Costo) > '<PREZZO>'
 ORDER BY Media_Costo DESC;
 ```
 Estratto dell’output:
@@ -485,8 +483,6 @@ In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve co
 ```
 
 --- 
-
-
 
 Membri del gruppo:
 
