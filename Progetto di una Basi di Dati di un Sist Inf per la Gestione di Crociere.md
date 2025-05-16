@@ -316,7 +316,7 @@ ORDER BY Numero_Tappe DESC;
 ```
 Estratto dell’output:
 
-<img src="img/q1.png" alt="Query1" width="450"/>
+<img src="img/q1.png" alt="Query1" width="400"/>
 
 (Query1)
 
@@ -344,7 +344,7 @@ ORDER BY Media_Costo DESC;
 ```
 Estratto dell’output:
 
-<img src="img/q3.png" alt="Query3" width="450"/>
+<img src="img/q3.png" alt="Query3" width="250"/>
 
 (Query3)
 
@@ -380,7 +380,7 @@ ORDER BY Percentuale_Occupazione DESC;
 ```
 Estratto dell’output:
 
-<img src="img/q5.png" alt="Query5" width="450"/>
+<img src="img/q5.png" alt="Query5" width="300"/>
 
 (Query5)
 
@@ -406,6 +406,7 @@ Nota: la colonna Città in Porto è chiave primaria, quindi PostgreSQL crea auto
 ```
 # **6 Applicazione Software**
 Il file **Query.c** implementa un programma in linguaggio C che consente di connettersi a un database PostgreSQL contenente i dati relativi alla gestione delle crociere. Lo scopo principale del programma è eseguire e visualizzare i risultati di diverse query SQL predefinite, come descritto nella Sezione 5 del progetto.
+
 All’avvio, il programma presenta un’interfaccia testuale interattiva che mostra un menu numerato con le interrogazioni disponibili. L’utente può selezionare la query desiderata digitando il numero corrispondente.
 
 Le query proposte coprono diversi aspetti gestionali, tra cui:
@@ -416,7 +417,6 @@ Le query proposte coprono diversi aspetti gestionali, tra cui:
 5) Calcolo, per ogni crociera, della percentuale di occupazione rispetto alla capacità massima disponibile.
 
 In particolare, alcune query sono state rese parametriche: all’utente viene richiesto di inserire il dato parametrico, che viene quindi utilizzato per personalizzare la query SQL in fase di esecuzione.
-
 Il codice gestisce anche l’inizializzazione del database, caricando uno script SQL che crea e popola le tabelle necessarie, e suddivide il file delle query in modo da consentire una facile selezione e gestione tramite menu. Le query disponibili non sono legate al codice, quindi possono essere aggiunte, modificate o eliminate dal file Crociere.sql e si modificherà quindi in automatico il menù a scelta.
 
 Note: in alcuni computer si può compilare direttamente con: 
@@ -427,11 +427,8 @@ In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve co
 ```bash
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
 ```
-
 --- 
-
 Membri del gruppo:
-
 - **Ghiraldin Mirco** 2102505
 - **Stevanin Michele** 2101741
-
+---
