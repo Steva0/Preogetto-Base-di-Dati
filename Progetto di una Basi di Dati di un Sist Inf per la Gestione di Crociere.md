@@ -281,6 +281,7 @@ L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando c
 ## **4.2 Eliminazioni delle Generalizzazioni**
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
 </div>
+
 <div align="center">
 <img src="img/Senza_Generalizzazione.png" alt="Grafico2" width="450"/>
 Grafico2
