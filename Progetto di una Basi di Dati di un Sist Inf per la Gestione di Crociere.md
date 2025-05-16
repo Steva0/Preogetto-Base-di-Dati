@@ -33,8 +33,6 @@ Ogni compagnia è identificata da una partita IVA univoca e include le seguenti 
 - **Sede**
 - **Recapito**
 
-Le compagnie possiedono una o più crociere.
-
 ## **Crociere**
 
 Ogni crociera è identificata dal codice IMO e registra:
@@ -98,6 +96,10 @@ L’equipaggio rappresenta il personale operativo a bordo. Ogni membro è associ
 
 Un membro dell’equipaggio può essere specializzato in animatore.
 
+<br>
+<br>
+<br>
+
 ## **Animatori**
 
 Gli animatori sono una specializzazione dell’equipaggio e dispongono di una o più abilità:
@@ -116,22 +118,12 @@ Durante le crociere vengono organizzati eventi, ciascuno identificato da:
 Ogni evento è gestito da uno o più animatori e può essere frequentato da più ospiti.
 </div>
 <div align="center">
-<img src="img/Con_Generalizzazione.png" alt="Grafico1" width="450"/>
+<img src="img/Con_Generalizzazione.png" alt="Grafico1" width="700"/>
 Grafico1
 
 </div>
 <div align="justify">
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 <br>
@@ -346,7 +338,7 @@ un indice creato specificamente per migliorare le prestazionidi una di queste in
 Di seguito vengono presentate e descritte le query con i relativi output generati e
 viene motivato l’utilizzo dell’indice proposto.
 
-**Query 1** Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe.
+**Query 1** Trovare le crociere che toccano più di 3 porti diversi e indicarne la città di partenza, di arrivo e il numero di tappe. Ordinate in modo decrescente dalla crociera con il maggior numero di tappe.
 ```sql
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
@@ -358,13 +350,15 @@ ORDER BY Numero_Tappe DESC;
 Estratto dell’output:
 </div>
 <div align="center">
+
 <img src="img/q1.png" alt="Query1" width="450"/>
+
 Query1
 
 </div>
 
 
-**QUERY 2** Trovare per ogni città (porto), quante crociere partono da lì e la media del numero di prenotazioni.
+**QUERY 2** Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente, ordinate in modo crescente per il numero IMO della crociera.
 
 ```sql
 SELECT p.Città, COUNT(c.IMO) AS Numero_Crociere, AVG(c.Num_Prenotazioni) AS Media_Prenotazioni
@@ -376,12 +370,14 @@ ORDER BY Numero_Crociere DESC;
 Estratto dell’output:
 </div>
 <div align="center">
+
 <img src="img/q2.png" alt="Query2" width="450"/>
+
 Query2
 
 </div>
 
-**Query 3** Trovare le crociere che hanno una media del costo dei biglietti superiore a 500 euro
+**Query 3** Trovare le crociere che hanno una media del costo dei biglietti superiore ad un importo indicato. Vengono mostrare in ordine decrescente dalla più costosa fino al valore selezionato dall'utente. Nel nostro esempio abbiamo selezionato 500 euro.
 ```sql
 SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo
 FROM Ospite O
@@ -393,12 +389,14 @@ ORDER BY Media_Costo DESC;
 Estratto dell’output:
 </div>
 <div align="center">
+
 <img src="img/q3.png" alt="Query3" width="450"/>
+
 Query3
 
 </div>
 
-**Query 4** Visualizzare il numero di Animatori e Media Eventi Organizzati per Crociera
+**Query 4** Visualizzare il numero di eventi organizzati per crociera e la media degli'eventi a cui ogni animatore deve partecipare, ordinati in modo decrescente dalla crociera con la più alta media di eventi che deve fare ogni animatore.
 ```sql
 SELECT 
     C.Nome_Nave,
@@ -417,12 +415,14 @@ ORDER BY Media_Eventi_Per_Animatore DESC;
 Estratto dell’output:
 </div>
 <div align="center">
+
 <img src="img/q4.png" alt="Query4" width="450"/>
+
 Query4
 
 </div>
 
-**Query 5** Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacità massima (Num_Prenotazioni / Max_Passeggeri)
+**Query 5** Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacità massima (Num_Prenotazioni / Max_Passeggeri) e visualizzarle in ordine decrescente.
 ```sql
 SELECT IMO, Nome_Nave,
     ROUND((Num_Prenotazioni * 100.0) / Max_Passeggeri, 2) AS Percentuale_Occupazione
@@ -433,7 +433,9 @@ ORDER BY Percentuale_Occupazione DESC;
 Estratto dell’output:
 </div>
 <div align="center">
+
 <img src="img/q5.png" alt="Query5" width="450"/>
+
 Query5
 
 </div>
@@ -482,12 +484,15 @@ In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve co
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
 ```
 
+--- 
+
+
+
 Membri del gruppo:
 
-```plaintext
 - **Ghiraldin Mirco** 2102505
 - **Stevanin Michele** 2101741
-```
+
 
 </div>
 

@@ -734,14 +734,14 @@ ORDER BY Numero_Tappe DESC;
 -- Query 2 - Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente
 SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
 FROM Crociera c
-WHERE c.Porto_Partenza = '<CITTÀ>';
+WHERE c.Porto_Partenza = '<CITTA''>';
 
--- Query 3 - Trovare le crociere che hanno una media del costo dei biglietti superiore a 500 euro
+-- Query 3 - Trovare le crociere che hanno una media del costo dei biglietti superiore a un importo dato
 SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo
 FROM Ospite O
 JOIN Crociera C ON O.IMO_Crociera = C.IMO
 GROUP BY O.IMO_Crociera, C.Nome_Nave
-HAVING AVG(O.Costo) > 500
+HAVING AVG(O.Costo) > '<PREZZO>'
 ORDER BY Media_Costo DESC;
 
 -- Query 4 - Visualizzare il numero di Animatori e Media Eventi Organizzati per Crociera
