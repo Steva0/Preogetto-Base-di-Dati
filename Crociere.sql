@@ -270,7 +270,6 @@ INSERT INTO Tappa VALUES
 ('IMO0000009', 'Dubrovnik', '2025-07-15 10:00:00', '2025-07-14 20:00:00'),
 ('IMO0000009', 'Spalato', '2025-07-16 11:00:00', '2025-07-15 20:00:00'),
 ('IMO0000010', 'Bari', '2025-07-21 12:00:00', '2025-07-20 22:00:00'),
-('IMO0000010', 'Brindisi', '2025-07-22 14:00:00', '2025-07-21 22:00:00'),
 ('IMO0000011', 'Cagliari', '2025-07-26 10:00:00', '2025-07-25 20:00:00'),
 ('IMO0000011', 'Ajaccio', '2025-07-27 12:00:00', '2025-07-26 20:00:00'),
 ('IMO0000012', 'Olbia', '2025-08-02 09:00:00', '2025-08-01 20:00:00'),
@@ -278,7 +277,6 @@ INSERT INTO Tappa VALUES
 ('IMO0000013', 'Ajaccio', '2025-08-11 10:00:00', '2025-08-10 20:00:00'),
 ('IMO0000013', 'Civitavecchia', '2025-08-12 12:00:00', '2025-08-11 20:00:00'),
 ('IMO0000014', 'Barcellona', '2025-08-16 09:00:00', '2025-08-15 20:00:00'),
-('IMO0000014', 'Marsiglia', '2025-08-17 11:00:00', '2025-08-16 20:00:00'),
 ('IMO0000015', 'Valencia', '2025-08-21 10:00:00', '2025-08-20 20:00:00'),
 ('IMO0000015', 'Palermo', '2025-08-22 12:00:00', '2025-08-21 20:00:00'),
 ('IMO0000016', 'Marsiglia', '2025-08-26 09:00:00', '2025-08-25 20:00:00'),
@@ -287,7 +285,6 @@ INSERT INTO Tappa VALUES
 ('IMO0000017', 'Barcellona', '2025-09-03 12:00:00', '2025-09-02 20:00:00'),
 ('IMO0000018', 'Napoli', '2025-09-06 09:00:00', '2025-09-05 20:00:00'),
 ('IMO0000018', 'Civitavecchia', '2025-09-07 11:00:00', '2025-09-06 20:00:00'),
-('IMO0000019', 'Rodi', '2025-09-11 10:00:00', '2025-09-10 20:00:00'),
 ('IMO0000019', 'Heraklion', '2025-09-12 12:00:00', '2025-09-11 20:00:00'),
 ('IMO0000020', 'Spalato', '2025-09-16 09:00:00', '2025-09-15 20:00:00'),
 ('IMO0000020', 'Kotor', '2025-09-17 11:00:00', '2025-09-16 20:00:00'),
@@ -298,7 +295,6 @@ INSERT INTO Tappa VALUES
 ('IMO0000004', 'Ajaccio', '2025-06-18 14:00:00', '2025-06-17 20:00:00'),
 ('IMO0000004', 'Cagliari', '2025-06-19 13:00:00', '2025-06-18 20:00:00'),
 ('IMO0000005', 'Dubrovnik', '2025-06-23 14:00:00', '2025-06-22 21:00:00'),
-('IMO0000006', 'Napoli', '2025-07-06 15:00:00', '2025-07-05 20:00:00'),
 ('IMO0000006', 'Cagliari', '2025-07-07 16:00:00', '2025-07-06 21:00:00'),
 ('IMO0000007', 'Barcellona', '2025-07-10 16:00:00', '2025-07-09 20:00:00'),
 ('IMO0000008', 'Brindisi', '2025-07-13 15:00:00', '2025-07-12 21:00:00'),
@@ -309,8 +305,6 @@ INSERT INTO Tappa VALUES
 ('IMO0000011', 'Livorno', '2025-07-28 13:00:00', '2025-07-27 20:00:00'),
 ('IMO0000011', 'Genova', '2025-07-29 12:00:00', '2025-07-28 20:00:00'),
 ('IMO0000012', 'Civitavecchia', '2025-08-04 13:00:00', '2025-08-03 20:00:00'),
-('IMO0000012', 'Napoli', '2025-08-05 12:00:00', '2025-08-04 20:00:00'),
-('IMO0000013', 'Palermo', '2025-08-13 13:00:00', '2025-08-12 21:00:00'),
 ('IMO0000013', 'Olbia', '2025-08-14 12:00:00', '2025-08-13 21:00:00'),
 ('IMO0000014', 'Valencia', '2025-08-18 13:00:00', '2025-08-17 20:00:00'),
 ('IMO0000015', 'Cagliari', '2025-08-23 13:00:00', '2025-08-22 20:00:00'),
@@ -322,8 +316,7 @@ INSERT INTO Tappa VALUES
 ('IMO0000019', 'Brindisi', '2025-09-13 13:00:00', '2025-09-12 20:00:00'),
 ('IMO0000020', 'Bari', '2025-09-18 13:00:00', '2025-09-17 20:00:00'),
 ('IMO0000020', 'Corfù', '2025-09-19 12:00:00', '2025-09-18 20:00:00'),
-('IMO0000021', 'Tallinn', '2025-09-23 14:00:00', '2025-09-22 20:00:00'),
-('IMO0000021', 'San Pietroburgo', '2025-09-24 13:00:00', '2025-09-23 20:00:00');
+('IMO0000021', 'Genova', '2025-09-24 13:00:00', '2025-09-23 20:00:00');
 
 
 INSERT INTO Persona VALUES
@@ -733,6 +726,7 @@ INSERT INTO Evento VALUES
 ('Laboratorio di Fotografia', 'Laboratori', 'IMO0000034', 50, 1, 14),
 ('Spettacolo di Illusionismo', 'Intrattenimento', 'IMO0000034', 130, 2, 12),
 ('Serata Jazz', 'Musica', 'IMO0000035', 110, 1, 18),
+('Torneo di Calcio Balilla', 'Sport', 'IMO0000007', 40, 1, 4),
 ('Cena di Gala', 'Cucina', 'IMO0000035', 200, 2, 18);
 
 INSERT INTO ORGANIZZA VALUES
@@ -751,37 +745,37 @@ INSERT INTO ORGANIZZA VALUES
 ('BNCLRA80C01H501W', 'Laboratorio di Pittura', 'Laboratori', 'IMO0000019'),
 ('RSSMRA81A02F205X', 'Spettacolo Comico', 'Teatro', 'IMO0000008'),
 ('PLLMNL68D89A562K', 'Karaoke Night', 'Musica', 'IMO0000001'),
-  ('GRGFNC69M90C351L', 'Festa di Benvenuto', 'Intrattenimento', 'IMO0000001'),
-  ('BNCLRA70C91H501M', 'Serata Karaoke', 'Musica', 'IMO0000018'),
-  ('RSSMRA71A92F205N', 'Cena di Gala', 'Cucina', 'IMO0000002'),
-  ('VRDLGU72T93L219O', 'Quiz Night', 'Giochi', 'IMO0000003'),
-  ('PLLMNL73D94A562P', 'Serata Jazz', 'Musica', 'IMO0000005'),
-  ('GRGFNC74M95C351Q', 'Serata Latina', 'Balli', 'IMO0000003'),
-  ('BNCLRA75C96H501R', 'Spettacolo di Cabaret', 'Teatro', 'IMO0000016'),
-  ('RSSMRA76A97F205S', 'Laboratorio Creativo', 'Laboratori', 'IMO0000005'),
-  ('VRDLGU77T98L219T', 'Cena a Tema', 'Cucina', 'IMO0000020'),
-  ('PLLMNL78D99A562U', 'Laboratorio di Pittura', 'Laboratori', 'IMO0000009'),
-  ('GRGFNC79M00C351V', 'Serata Jazz', 'Musica', 'IMO0000015'),
-  ('BNCLRA80C01H501W', 'Serata Latina', 'Balli', 'IMO0000019'),
-  ('RSSMRA81A02F205X', 'Yoga al Tramonto', 'Benessere', 'IMO0000008'),
-  ('VRDLGU82T03L219Y', 'Torneo di Calcio Balilla', 'Sport', 'IMO0000007'),
+('GRGFNC69M90C351L', 'Festa di Benvenuto', 'Intrattenimento', 'IMO0000001'),
+('BNCLRA70C91H501M', 'Serata Karaoke', 'Musica', 'IMO0000018'),
+('RSSMRA71A92F205N', 'Cena di Gala', 'Cucina', 'IMO0000002'),
+('VRDLGU72T93L219O', 'Quiz Night', 'Giochi', 'IMO0000003'),
+('PLLMNL73D94A562P', 'Serata Jazz', 'Musica', 'IMO0000005'),
+('GRGFNC74M95C351Q', 'Serata Latina', 'Balli', 'IMO0000003'),
+('BNCLRA75C96H501R', 'Spettacolo di Cabaret', 'Teatro', 'IMO0000016'),
+('RSSMRA76A97F205S', 'Laboratorio Creativo', 'Laboratori', 'IMO0000005'),
+('VRDLGU77T98L219T', 'Cena a Tema', 'Cucina', 'IMO0000020'),
+('PLLMNL78D99A562U', 'Laboratorio di Pittura', 'Laboratori', 'IMO0000009'),
+('GRGFNC79M00C351V', 'Serata Jazz', 'Musica', 'IMO0000015'),
+('BNCLRA80C01H501W', 'Serata Latina', 'Balli', 'IMO0000019'),
+('RSSMRA81A02F205X', 'Yoga al Tramonto', 'Benessere', 'IMO0000008'),
+('VRDLGU82T03L219Y', 'Torneo di Calcio Balilla', 'Sport', 'IMO0000007'),
 ('VRDLGU82T03L219Y', 'Torneo di Ping Pong', 'Sport', 'IMO0000007');
 
 
 CREATE INDEX idx_crociera_porto_partenza ON Crociera(Porto_Partenza);
 
--- Query 1 - Trovare le crociere che toccano piu' di 3 porti diversi e indicarne la citta' di partenza, di arrivo e il numero di tappe
+-- Query 1 - Trovare le crociere che toccano piu' di un numero di porti diversi indicati dall'utente e indicarne la citta' di partenza, di arrivo e il numero di tappe
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
 FROM Crociera C
 JOIN Tappa T ON C.IMO = T.IMO
 GROUP BY C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale
-HAVING COUNT(DISTINCT T.Città) > 3
+HAVING COUNT(DISTINCT T.Città) > '<NUMERO TAPPE>'
 ORDER BY Numero_Tappe DESC;
 
 -- Query 2 - Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente
 SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
 FROM Crociera c
-WHERE c.Porto_Partenza = '<CITTA''>';
+WHERE c.Porto_Partenza = '<PORTO>';
 
 -- Query 3 - Trovare le crociere che hanno una media del costo dei biglietti superiore a un importo dato
 SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo
