@@ -378,7 +378,7 @@ FROM Crociera
 WHERE Max_Passeggeri > 0
 ORDER BY Percentuale_Occupazione DESC;
 ```
-Estratto dell’output:
+Estratto delli primi 25 elemementi dell'output:
 
 <img src="img/q5.png" alt="Query5" width="300"/>
 
