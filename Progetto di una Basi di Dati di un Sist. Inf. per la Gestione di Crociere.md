@@ -17,7 +17,7 @@
 In questo elaborato viene presentato lo sviluppo di una base di dati relazionale pensata per **gestire le attività delle compagnie di crociere**. L’obiettivo è costruire un sistema informativo in grado di organizzare in modo chiaro ed efficiente tutte le informazioni legate alla gestione delle navi, del personale e delle attività a bordo.
 Il progetto copre l’intero ciclo di vita di una crociera: si parte dall’identificazione delle compagnie organizzatrici (tramite partita IVA), per arrivare alla gestione delle singole crociere, ciascuna con il proprio itinerario, i porti di partenza e arrivo, le date, le tappe intermedie e altri dettagli tecnici. 
 A bordo interagiscono diverse figure: passeggeri, membri dell’equipaggio e animatori, rappresentati nel modello tramite un sistema di generalizzazioni e specializzazioni che permette di descrivere con flessibilità i diversi ruoli.
-Il modello affronta anche aspetti legati alle prestazioni del sistema, comne ad esempio l’analisi della ridondanza relativa al numero di passeggeri prenotati. Il progetto è stato sviluppato seguendo un approccio modulare, ispirato alle metodologie viste durante il corso, con l’obiettivo di garantire integrità, coerenza e adattabilità in contesti reali di gestione delle crociere.
+Il modello affronta anche aspetti legati alle prestazioni del sistema, come ad esempio l’analisi della ridondanza relativa al numero di passeggeri prenotati. Il progetto è stato sviluppato seguendo un approccio modulare, ispirato alle metodologie viste durante il corso, con l’obiettivo di garantire integrità, coerenza e adattabilità in contesti reali di gestione delle crociere.
 
 # **2 Analisi dei Requisiti**
 
@@ -129,7 +129,7 @@ Le persone imbarcate sono suddivise in Equipaggio mediante una generalizzazione 
 Gli Eventi sono attività previste a bordo della crociera. Ogni evento può essere gestito da uno o più animatori (tramite la relazione Gestione). Gli eventi sono identificati in modo univoco dalla combinazione tra nome e tipologia e presentano attributi come età consigliata e limiti sulla partecipazione.
 La generalizzazione tra Equipaggio e la specializzazione Animatore è modellata come parziale: non tutti i membri dell’equipaggio sono necessariamente animatori.
 Tabella 1 riassume le entità e relazioni individuate nella progettazione concettuale, riportando per ciascuna gli attributi rilevanti e l’identificatore scelto. Per le entità derivate da generalizzazione viene anche specificato il tipo di specializzazione utilizzato.
-Il presente schema E-R non permette di rappresentare direttametne il seguente vincolo:
+Il presente schema E-R non permette di rappresentare direttamente il seguente vincolo:
 se una persona pe è animatore in due crociere cr' e cr'', allora cr' e cr'' appartengono alla stessa Classe:
 ```math
 (cr', pe) ∈ Animatore ∧ (cr'', pe) ∈ Animatore ⇒ (cr'.Classe = cr''.Classe)
@@ -142,14 +142,14 @@ con l’eliminazione delle due generalizzazioni. Infine, viene presentato il dia
 
 | **Entità** | **Descrizione**                                     | **Attributi**                                                                                                              | **Identificatore**                     |
 | ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| Crociera   | Mezzo di trasporto marittimo                        | Imo, Nome nave, Porto partenza, Porto finale, Data/ora partenza, Durata, Min equipaggio, Max passeggeri, Persone prenotate | Imo                                    |
+| Crociera   | Mezzo di trasporto marittimo                        | IMO, Nome nave, Porto partenza, Porto finale, Data/ora partenza, Durata, Min equipaggio, Max passeggeri, Persone prenotate | IMO                                    |
 | Porto      | Località in cui la crociera può attraccare          | Città, Numero massimo navi                                                                                                 | Città                                  |
 | Persona    | Persone partecipanti alle crociere                  | Codice fiscale (CF), Nome, Cognome, Sesso                                                                                  | CF                                     |
-| Passeggero | Passeggeri ospiti della crociera                    | Codice fiscale (CF), Costo, Imo crociera                                                                                   | CF                                     |
-| Equipaggio | Persone membri dell’equipaggio                      | Codice fiscale (CF), Id equipaggio, Lingue parlate, Stipendio, Anni di servizio, Imo crociera                              | CF                                     |
+| Passeggero | Passeggeri ospiti della crociera                    | Codice fiscale (CF), Costo, IMO crociera                                                                                   | CF                                     |
+| Equipaggio | Persone membri dell’equipaggio                      | Codice fiscale (CF), Id equipaggio, Lingue parlate, Stipendio, Anni di servizio, IMO crociera                              | CF                                     |
 | Animatore  | Membri dell’equipaggio che si occupano degli eventi | Codice fiscale (CF), Abilità                                                                                               | CF                                     |
 | Compagnia  | Società che possiedono le navi da crociera          | Partita IVA (P.I. compagnia), Nome, Sede, Recapito                                                                         | P.I. compagnia                         |
-| Evento     | Eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, Imo crociera          | Nome evento, Tipo evento, Imo crociera |
+| Evento     | Eventi ricreativi svolti a bordo delle crociere     | Nome evento, Tipo evento, Età consigliata, Numero minimo animatori, Numero consigliato partecipanti, IMO crociera          | Nome evento, Tipo evento, IMO crociera |
 
 Tabella 1 (Entità)
 
@@ -177,7 +177,7 @@ Tabella 2 (Relazioni)
 
 
 ## **4.1 Analisi delle ridondanze**
-L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera presenta una ridondanza. Questo valore può essere infatti ottenuto
+L’attributo Persone_Prenotate in CROCIERA, che memorizza il numero di persone prenotate in quella crociera, presenta una ridondanza. Questo valore può essere infatti ottenuto
 contando il numero di passeggeri attivi per quella crociera tramite la relazione PARTECIPANTE.
 Questo attributo viene modificato ogni volta che si aggiunge una nuova persona alla crociera (circa 400 persone nuove al giorno tra tutte le crociere) e viene visualizzato ogni ora del giorno per monitorare il numero di posti rimanenti. Questo si riassume nelle seguenti due operazioni:
 
@@ -256,9 +256,9 @@ Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una rist
 </div>
 
 **PERSONA**. La generalizzazione parziale PERSONA viene sostituita con le relazioni **IS-OSPITE** e **IS-EQUIP** (vedi Figura 2), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
-Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGIERO).
+Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGERO).
 Separando le informazioni tramite relazioni specializzate, si garantisce che ciascuna entità contenga soltanto gli attributi rilevanti per il proprio ruolo.
-In linea con la metodologia adottata a lezione, l’identificatore di EQUIPAGGIO e di PASSEGGIERO coincide con quello della rispettiva PERSONA.
+In linea con la metodologia adottata a lezione, l’identificatore di EQUIPAGGIO e di PASSEGGERO coincide con quello della rispettiva PERSONA.
 Poiché la generalizzazione è parziale da entrambe le parti (non tutte le persone sono membri dell’equipaggio né passeggeri), l’eliminazione dell’entità padre PERSONA non è corretta. Essa viene mantenuta per rappresentare tutte le informazioni comuni (come Nome, Cognome, Data_Nascita), mentre le informazioni specifiche sono distribuite nelle entità figlie.
 
 **EQUIPAGGIO**. Analogamente, la generalizzazione parziale EQUIPAGGIO viene sostituita con **IS-ANIM** (vedi Figura 2).
@@ -299,7 +299,7 @@ Lo schema ristrutturato in Figura 2 contiene solamente costrutti mappabili in co
 # **5 Implementazione in PostgreSQL e Definizione delle Query**
 Il file Crociere.sql contiene il codice SQL necessario per la creazione e il popolamento delle tabelle del database. 
 Questo file include inoltre una serie di query per l’estrazione dei dati e 
-un indice creato specificamente per migliorare le prestazionidi una di queste interrogazioni.
+un indice creato specificamente per migliorare le prestazioni di una di queste interrogazioni.
 
 ## **5.1 Definizione delle Query**
 Di seguito vengono presentate e descritte le query con i relativi output generati e
@@ -348,7 +348,7 @@ Estratto dell’output:
 
 (Query3)
 
-**Query 4** Visualizzare il numero di eventi organizzati per crociera e la media degli'eventi a cui ogni animatore deve partecipare, ordinati in modo decrescente dalla crociera con la più alta media di eventi che deve fare ogni animatore.
+**Query 4** Visualizzare il numero di eventi organizzati per crociera e la media degli eventi a cui ogni animatore deve partecipare, ordinati in modo decrescente dalla crociera con la più alta media di eventi che deve fare ogni animatore.
 ```sql
 SELECT 
     C.Nome_Nave,
@@ -378,7 +378,7 @@ FROM Crociera
 WHERE Max_Passeggeri > 0
 ORDER BY Percentuale_Occupazione DESC;
 ```
-Estratto delli primi 25 elemementi dell'output:
+Estratto dei primi 25 elemementi dell'output:
 
 <img src="img/q5.png" alt="Query5" width="300"/>
 
