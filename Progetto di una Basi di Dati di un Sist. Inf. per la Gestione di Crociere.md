@@ -405,21 +405,19 @@ Per quanto riguarda il punto 3, l’ordinamento viene effettuato su un attributo
 Nota: la colonna Città in Porto è chiave primaria, quindi PostgreSQL crea automaticamente un indice B+ Tree su di essa. Non è necessario creare un ulteriore indice su Porto(Città) per il join.
 ```
 # **6 Applicazione Software**
-Il file **Query.c** implementa un programma in linguaggio C che consente di connettersi a un database PostgreSQL contenente i dati relativi alla gestione delle crociere. Lo scopo principale del programma è eseguire e visualizzare i risultati di diverse query SQL predefinite, come descritto nella Sezione 5 del progetto.
 
-All’avvio, il programma presenta un’interfaccia testuale interattiva che mostra un menu numerato con le interrogazioni disponibili. L’utente può selezionare la query desiderata digitando il numero corrispondente.
+Il file **Query.c** implementa un programma in linguaggio C che consente di connettersi a un database PostgreSQL contenente i dati relativi alla gestione delle crociere. La connessione avviene in locale, e per semplificare la portabilità è stata configurata senza password, a condizione che il sistema sia impostato per l’autenticazione locale tramite modalità peer o trust.
+Lo scopo principale del programma è eseguire e visualizzare i risultati di diverse query SQL predefinite, come descritto nella Sezione 5 del progetto.
+All’avvio, il programma presenta un’interfaccia testuale interattiva con un menu numerato che elenca le interrogazioni disponibili. L’utente può selezionare la query desiderata digitando il numero corrispondente.
 
-Le query proposte coprono diversi aspetti gestionali, tra cui:
-1) Identificazione delle crociere che toccano più di tre porti diversi, con indicazione delle città di partenza, di arrivo e del numero di tappe.
-2) Visualizzazione delle crociere in partenza da una città specifica fornita dall’utente.
-3) Individuazione delle crociere con costo medio dei biglietti superiore a 500 euro.
-4) Elenco degli animatori con un numero di eventi organizzati superiore a due.
-5) Calcolo, per ogni crociera, della percentuale di occupazione rispetto alla capacità massima disponibile.
+Un aspetto centrale del programma è la sua modularità e flessibilità. Le query non sono scritte direttamente nel codice sorgente, ma vengono lette da un file esterno (Crociere.sql) insieme ai rispettivi titoli. Questo consente di modificare, aggiungere o rimuovere query SQL semplicemente aggiornando il file .sql, senza dover ricompilare il programma: il menu si aggiornerà automaticamente.
+Il programma supporta anche le query parametriche, in cui i parametri vengono indicati nel file SQL con una sintassi come <PORTO>. Quando l’utente seleziona una query di questo tipo, il programma richiede interattivamente i valori da sostituire per ciascun parametro. Ogni query può contenere fino a un massimo di 25 parametri.
+Inoltre, Query.c gestisce anche l’inizializzazione del database: all’avvio viene eseguito uno script SQL che crea e popola automaticamente tutte le tabelle necessarie.
+In sintesi, le interrogazioni SQL sono completamente separate dal codice sorgente e gestite esternamente: è quindi possibile modificarle dinamicamente aggiornando il file Crociere.sql, con effetto immediato sul menu delle scelte del programma.
 
-In particolare, alcune query sono state rese parametriche: all’utente viene richiesto di inserire il dato parametrico, che viene quindi utilizzato per personalizzare la query SQL in fase di esecuzione.
-Il codice gestisce anche l’inizializzazione del database, caricando uno script SQL che crea e popola le tabelle necessarie, e suddivide il file delle query in modo da consentire una facile selezione e gestione tramite menu. Le query disponibili non sono legate al codice, quindi possono essere aggiunte, modificate o eliminate dal file Crociere.sql e si modificherà quindi in automatico il menù a scelta.
-
-Note: in alcuni computer si può compilare direttamente con: 
+---
+Note:
+In alcuni computer si può compilare direttamente con: 
 ```bash
 - gcc -o query Query.c -lpq
 ```
@@ -427,7 +425,10 @@ In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve co
 ```bash
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
 ```
---- 
+
+Questo dipende se le variabili di sistema contengono già il percorso della libreria specificata o meno.
+
+---
 Membri del gruppo:
 - **Ghiraldin Mirco** 2102505
 - **Stevanin Michele** 2101741
