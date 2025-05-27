@@ -421,16 +421,16 @@ In sintesi, le interrogazioni SQL sono completamente separate dal codice sorgent
 
 Per facilitare la portabilità del programma è stato aggiunto un file config.txt esterno in cui è richiesto di inserire nome utente e password di postgreSQL che verrà utilizzato dal codice c.
 
-In alcuni computer si può compilare direttamente con: 
-```bash
-- gcc -o query Query.c -lpq
-```
-In altri non riesce a linkare automaticamente il pacchetto di postgresql quindi serve compilare con il codice:
+Nei computer con sistema operativo linux è necessario linkare il pacchetto di postgresql quindi serve compilare con il comando:
 ```bash
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
 ```
+Nei computer con sistema operativo windows è necessario invece usare il comando: 
+```bash
+- gcc -o query.exe Query.c -IC:/PostgreSQL/include -LC:/PostgreSQL/lib -lpq
+```
 
-Questo dipende se le variabili di sistema contengono già il percorso della libreria specificata o meno.
+Bisogna aggiungere -I e -lpq per indicare al compilatore dove trovare gli header di PostgreSQL e per linkare la libreria client libpq necessaria alle funzioni di connessione e gestione del database.
 
 ---
 
