@@ -426,9 +426,7 @@ Nota: la colonna Città in Porto è chiave primaria, quindi PostgreSQL crea auto
 Il file **Query.c** implementa un programma in linguaggio C che consente di connettersi a un database PostgreSQL contenente i dati relativi alla gestione delle crociere. La connessione avviene in locale, e per semplificare la portabilità è stata configurata senza password, a condizione che il sistema sia impostato per l’autenticazione locale tramite modalità peer o trust.
 Lo scopo principale del programma è eseguire e visualizzare i risultati di diverse query SQL predefinite, come descritto nella Sezione 5 del progetto.
 All’avvio, il programma presenta un’interfaccia testuale interattiva con un menu numerato che elenca le interrogazioni disponibili. L’utente può selezionare la query desiderata digitando il numero corrispondente.
-
 Un aspetto centrale del programma è la sua modularità e flessibilità. Le query non sono scritte direttamente nel codice sorgente, ma vengono lette da un file esterno (Crociere.sql) insieme ai rispettivi titoli. Questo consente di modificare, aggiungere o rimuovere query SQL semplicemente aggiornando il file .sql, senza dover ricompilare il programma: il menu si aggiornerà automaticamente.
-
 Il programma supporta anche le query parametriche, in cui i parametri vengono indicati nel file SQL con una sintassi come &lt;PORTO&gt;. Quando l’utente seleziona una query di questo tipo, il programma richiede interattivamente i valori da sostituire per ciascun parametro. Ogni query può contenere fino a un massimo di 25 parametri.
 Inoltre, Query.c gestisce anche l’inizializzazione del database: all’avvio viene eseguito uno script SQL che crea e popola automaticamente tutte le tabelle necessarie.
 In sintesi, le interrogazioni SQL sono completamente separate dal codice sorgente e gestite esternamente: è quindi possibile modificarle dinamicamente aggiornando il file Crociere.sql, con effetto immediato sul menu delle scelte del programma.
@@ -446,14 +444,4 @@ Nei computer con sistema operativo windows è necessario invece usare il comando
 ```bash
 - gcc -o query.exe Query.c -IC:/PostgreSQL/include -LC:/PostgreSQL/lib -lpq
 ```
-
 Bisogna aggiungere -I e -lpq per indicare al compilatore dove trovare gli header di PostgreSQL e per linkare la libreria client libpq necessaria alle funzioni di connessione e gestione del database.
-
----
-
-### Membri del gruppo:
-
-- **Ghiraldin Mirco** 2102505
-- **Stevanin Michele** 2101741
-
----
