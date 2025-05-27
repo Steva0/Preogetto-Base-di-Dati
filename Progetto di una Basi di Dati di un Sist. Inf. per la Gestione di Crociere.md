@@ -416,7 +416,7 @@ Inoltre, Query.c gestisce anche l’inizializzazione del database: all’avvio v
 In sintesi, le interrogazioni SQL sono completamente separate dal codice sorgente e gestite esternamente: è quindi possibile modificarle dinamicamente aggiornando il file Crociere.sql, con effetto immediato sul menu delle scelte del programma.
 
 ---
-Note:
+**Note:**
 
 Per facilitare la portabilità del programma è stato aggiunto un file config.txt esterno in cui è richiesto di inserire nome utente e password di postgreSQL che verrà utilizzato dal codice c.
 
@@ -424,15 +424,9 @@ In alcuni computer si può compilare direttamente con:
 ```bash
 - gcc -o query Query.c -lpq
 ```
-In altri non riesce a linkare da solo il pacchetto di postgresql quindi serve compilare con il codice:
+In altri non riesce a linkare automaticamente il pacchetto di postgresql quindi serve compilare con il codice:
 ```bash
 - gcc -o query Query.c -I/usr/include/postgresql -lpq
 ```
 
 Questo dipende se le variabili di sistema contengono già il percorso della libreria specificata o meno.
-
----
-Membri del gruppo:
-- **Ghiraldin Mirco** 2102505
-- **Stevanin Michele** 2101741
----
