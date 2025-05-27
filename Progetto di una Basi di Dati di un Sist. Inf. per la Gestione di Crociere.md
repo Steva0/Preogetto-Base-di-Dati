@@ -397,7 +397,7 @@ ORDER BY Numero_Tappe DESC, Media_Costo ASC;
 ```
 Estratto dell’output:
 
-<img src="img/q6.png" alt="Query6" width="450"/>
+<img src="img/q6.png" alt="Query6" width="400"/>
 
 (Query6)
 
