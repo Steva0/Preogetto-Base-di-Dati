@@ -247,14 +247,6 @@ L’analisi suggerisce quindi di tenere l’attributo ridondante, ottimizzando c
 ## **4.2 Eliminazioni delle Generalizzazioni**
 Le generalizzazioni descritte in Sezione 3 vengono eliminate attraverso una ristrutturazione dello schema concettuale, con l’obiettivo di semplificare la successiva implementazione del modello relazionale e ridurre la presenza di valori nulli. Le modifiche vengono applicate come segue:
 
-<div align="center">
-
-<img src="img/Senza_Generalizzazione.png" alt="Grafico2" width="400"/>
-
-(Grafico2)
-
-</div>
-
 **PERSONA**. La generalizzazione parziale PERSONA viene sostituita con le relazioni **IS-OSPITE** e **IS-EQUIP** (vedi Figura 2), che collega alcuni individui alla relativa specializzazione: EQUIPAGGIO o PASSEGGIERO.
 Tale scelta consente di evitare la presenza di valori nulli che si verificherebbero mantenendo un’unica entità PERSONA con tutti gli attributi specifici delle due categorie (ad esempio, Stipendio, Anni_Di_Servizio, Lingue_Parlate per EQUIPAGGIO, Costo per PASSEGGERO).
 Separando le informazioni tramite relazioni specializzate, si garantisce che ciascuna entità contenga soltanto gli attributi rilevanti per il proprio ruolo.
@@ -266,6 +258,14 @@ Anche in questo caso, la ristrutturazione consente di evitare valori nulli, in q
 Essendo la generalizzazione parziale, l’eliminazione dell’entità padre EQUIPAGGIO risulterebbe nuovamente scorretta.
 
 Il diagramma E–R ristrutturato, riportato in **Figura 2** riflette tali modifiche rispetto alla versione originale presentata in **Figura 1**.
+
+<div align="center">
+
+<img src="img/Senza_Generalizzazione.png" alt="Grafico2" width="700"/>
+
+(Grafico2)
+
+</div>
 
 ## **4.3 Schema Relazionale**
 Lo schema ristrutturato in Figura 2 contiene solamente costrutti mappabili in corrispettivi dello schema relazionale, detto anche schema logico. Lo schema logico è rappresentato a seguire, dove l’asterisco dopo il nome degli attributi indica quelli che ammettono valori nulli.
@@ -316,7 +316,7 @@ ORDER BY Numero_Tappe DESC;
 ```
 Estratto dell’output:
 
-<img src="img/q1.png" alt="Query1" width="400"/>
+<img src="img/q1.png" alt="Query1" width="500"/>
 
 (Query1)
 
@@ -329,7 +329,7 @@ WHERE c.Porto_Partenza = '<PORTO>';
 ```
 Estratto dell’output:
 
-<img src="img/q2.png" alt="Query2" width="450"/>
+<img src="img/q2.png" alt="Query2" width="400"/>
 
 (Query2)
 
@@ -344,7 +344,7 @@ ORDER BY Media_Costo DESC;
 ```
 Estratto dell’output:
 
-<img src="img/q3.png" alt="Query3" width="250"/>
+<img src="img/q3.png" alt="Query3" width="400"/>
 
 (Query3)
 
@@ -411,6 +411,7 @@ Lo scopo principale del programma è eseguire e visualizzare i risultati di dive
 All’avvio, il programma presenta un’interfaccia testuale interattiva con un menu numerato che elenca le interrogazioni disponibili. L’utente può selezionare la query desiderata digitando il numero corrispondente.
 
 Un aspetto centrale del programma è la sua modularità e flessibilità. Le query non sono scritte direttamente nel codice sorgente, ma vengono lette da un file esterno (Crociere.sql) insieme ai rispettivi titoli. Questo consente di modificare, aggiungere o rimuovere query SQL semplicemente aggiornando il file .sql, senza dover ricompilare il programma: il menu si aggiornerà automaticamente.
+
 Il programma supporta anche le query parametriche, in cui i parametri vengono indicati nel file SQL con una sintassi come <PORTO>. Quando l’utente seleziona una query di questo tipo, il programma richiede interattivamente i valori da sostituire per ciascun parametro. Ogni query può contenere fino a un massimo di 25 parametri.
 Inoltre, Query.c gestisce anche l’inizializzazione del database: all’avvio viene eseguito uno script SQL che crea e popola automaticamente tutte le tabelle necessarie.
 In sintesi, le interrogazioni SQL sono completamente separate dal codice sorgente e gestite esternamente: è quindi possibile modificarle dinamicamente aggiornando il file Crociere.sql, con effetto immediato sul menu delle scelte del programma.
@@ -430,3 +431,12 @@ In altri non riesce a linkare automaticamente il pacchetto di postgresql quindi 
 ```
 
 Questo dipende se le variabili di sistema contengono già il percorso della libreria specificata o meno.
+
+---
+
+### Membri del gruppo:
+
+- **Ghiraldin Mirco** 2102505
+- **Stevanin Michele** 2101741
+
+---
