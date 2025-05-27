@@ -18,12 +18,38 @@ typedef struct {
 
 const char *dbname = "crociere";
 const char *script_filename = "Crociere.sql";
-const char *conninfo_root = "user=postgres host=localhost port=5432";
+
+char user[64] = "";
+char password[64] = "";
+
 
 void exit_nicely(PGconn *conn) {
     PQfinish(conn);
     exit(1);
 }
+
+int read_config(char* user, size_t ulen, char* password, size_t plen) {
+    FILE* file = fopen("config.txt", "r");
+    if (!file) {
+        perror("Impossibile aprire config.txt");
+        return 0;
+    }
+
+    char line[128];
+    while (fgets(line, sizeof(line), file)) {
+        if (strncmp(line, "user=", 5) == 0) {
+            strncpy(user, line + 5, ulen);
+            user[strcspn(user, "\r\n")] = '\0'; // Rimuovi newline
+        } else if (strncmp(line, "password=", 9) == 0) {
+            strncpy(password, line + 9, plen);
+            password[strcspn(password, "\r\n")] = '\0';
+        }
+    }
+
+    fclose(file);
+    return strlen(user) > 0 && strlen(password) > 0;
+}
+
 
 // Legge l'intero contenuto di un file in una stringa (malloc, da free dopo)
 char* read_file(const char *filename) {
@@ -93,6 +119,15 @@ int main() {
     PGconn *conn;
     PGresult *res;
 
+    if (!read_config(user, sizeof(user), password, sizeof(password))) {
+        fprintf(stderr, "Errore nella lettura del file config.txt\n");
+    return 1;
+    }
+
+    char conninfo_root[256];
+    snprintf(conninfo_root, sizeof(conninfo_root),
+            "user=%s password=%s host=localhost port=5432", user, password);
+
     // Connessione a postgres senza db specifico (root) per drop/create db
     conn = PQconnectdb(conninfo_root);
     if (PQstatus(conn) != CONNECTION_OK) {
@@ -108,7 +143,9 @@ int main() {
 
     // Connessione al database "crociere"
     char conninfo_db[256];
-    snprintf(conninfo_db, sizeof(conninfo_db), "user=postgres host=localhost port=5432 dbname=%s", dbname);
+    snprintf(conninfo_db, sizeof(conninfo_db),
+         "user=%s password=%s host=localhost port=5432 dbname=%s",
+         user, password, dbname);
     conn = PQconnectdb(conninfo_db);
     if (PQstatus(conn) != CONNECTION_OK) {
         fprintf(stderr, "Connessione fallita al db crociere: %s", PQerrorMessage(conn));

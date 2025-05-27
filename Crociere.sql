@@ -775,7 +775,7 @@ ORDER BY Numero_Tappe DESC;
 -- Query 2 - Visualizzare tutte le crociere in partenza da una citta' inserita dall'utente
 SELECT c.IMO, c.Nome_Nave, c.Num_Prenotazioni
 FROM Crociera c
-WHERE c.Porto_Partenza = '<PORTO>';
+WHERE c.Porto_Partenza ILIKE '<PORTO>';
 
 -- Query 3 - Trovare le crociere che hanno una media del costo dei biglietti superiore a un importo dato
 SELECT O.IMO_Crociera, C.Nome_Nave, AVG(O.Costo) AS Media_Costo

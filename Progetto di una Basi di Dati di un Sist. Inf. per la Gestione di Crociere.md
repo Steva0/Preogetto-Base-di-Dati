@@ -417,6 +417,9 @@ In sintesi, le interrogazioni SQL sono completamente separate dal codice sorgent
 
 ---
 Note:
+
+Per facilitare la portabilità del programma è stato aggiunto un file config.txt esterno in cui è richiesto di inserire nome utente e password di postgreSQL che verrà utilizzato dal codice c.
+
 In alcuni computer si può compilare direttamente con: 
 ```bash
 - gcc -o query Query.c -lpq
