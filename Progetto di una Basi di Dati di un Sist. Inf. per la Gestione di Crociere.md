@@ -384,6 +384,23 @@ Estratto dei primi 25 elemementi dell'output:
 
 (Query5)
 
+**Query 6** Trovare le crociere che hanno un numero minimo di tappe e una media del costo degli ospiti inferiore a un certo importo. Nel nostro esempio abbiamo selezionato 4 porti e 600 euro.
+```sql
+SELECT C.IMO, C.Nome_Nave, COUNT(DISTINCT T.Città) AS Numero_Tappe, AVG(O.Costo) AS Media_Costo
+FROM Crociera C
+JOIN Tappa T ON C.IMO = T.IMO
+JOIN Ospite O ON C.IMO = O.IMO_Crociera
+GROUP BY C.IMO, C.Nome_Nave
+HAVING COUNT(DISTINCT T.Città) >= '<NUM_MIN_TAPPE>'
+   AND AVG(O.Costo) <= '<MAX_COSTO>'
+ORDER BY Numero_Tappe DESC, Media_Costo ASC;
+```
+Estratto dell’output:
+
+<img src="img/q6.png" alt="Query6" width="450"/>
+
+(Query6)
+
 ## **5.2 Creazione degli indici**
 Si suppone di voler ottimizzare la Query 2, per la quale occorre considerare:
 1) Condizione di Join: p.Città = c.Porto_Partenza
