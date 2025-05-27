@@ -412,7 +412,7 @@ All’avvio, il programma presenta un’interfaccia testuale interattiva con un 
 
 Un aspetto centrale del programma è la sua modularità e flessibilità. Le query non sono scritte direttamente nel codice sorgente, ma vengono lette da un file esterno (Crociere.sql) insieme ai rispettivi titoli. Questo consente di modificare, aggiungere o rimuovere query SQL semplicemente aggiornando il file .sql, senza dover ricompilare il programma: il menu si aggiornerà automaticamente.
 
-Il programma supporta anche le query parametriche, in cui i parametri vengono indicati nel file SQL con una sintassi come <PORTO>. Quando l’utente seleziona una query di questo tipo, il programma richiede interattivamente i valori da sostituire per ciascun parametro. Ogni query può contenere fino a un massimo di 25 parametri.
+Il programma supporta anche le query parametriche, in cui i parametri vengono indicati nel file SQL con una sintassi come &lt;PORTO&gt;. Quando l’utente seleziona una query di questo tipo, il programma richiede interattivamente i valori da sostituire per ciascun parametro. Ogni query può contenere fino a un massimo di 25 parametri.
 Inoltre, Query.c gestisce anche l’inizializzazione del database: all’avvio viene eseguito uno script SQL che crea e popola automaticamente tutte le tabelle necessarie.
 In sintesi, le interrogazioni SQL sono completamente separate dal codice sorgente e gestite esternamente: è quindi possibile modificarle dinamicamente aggiornando il file Crociere.sql, con effetto immediato sul menu delle scelte del programma.
 
