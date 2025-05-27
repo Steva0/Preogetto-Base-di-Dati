@@ -370,19 +370,18 @@ Estratto dell’output:
 
 (Query4)
 
-**Query 5** Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacità massima (Num_Prenotazioni / Max_Passeggeri) e visualizzarle in ordine decrescente.
+**Query 5** Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacità massima (Num_Prenotazioni / Max_Passeggeri) sopra una soglia percentuale specificata dall'utente e visualizzarle in ordine decrescente. Nel nostro caso abbiamo selezionato 0.
 ```sql
 SELECT IMO, Nome_Nave,
     ROUND((Num_Prenotazioni * 100.0) / Max_Passeggeri, 2) AS Percentuale_Occupazione
 FROM Crociera
 WHERE Max_Passeggeri > 0
+  AND (Num_Prenotazioni * 100.0) / Max_Passeggeri > '<PERCENTUALE_MINIMA>'
 ORDER BY Percentuale_Occupazione DESC;
 ```
 Estratto dei primi 25 elemementi dell'output:
 
 <img src="img/q5.png" alt="Query5" width="300"/>
-
-(Query5)
 
 **Query 6** Trovare le crociere che hanno un numero minimo di tappe e una media del costo degli ospiti inferiore a un certo importo. Nel nostro esempio abbiamo selezionato 4 porti e 600 euro.
 ```sql

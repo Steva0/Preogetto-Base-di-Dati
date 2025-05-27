@@ -762,7 +762,7 @@ INSERT INTO ORGANIZZA VALUES
 ('VRDLGU82T03L219Y', 'Torneo di Ping Pong', 'Sport', 'IMO0000007');
 
 
-CREATE INDEX idx_crociera_porto_partenza ON Crociera(Porto_Partenza);
+CREATE INDEX idx_crociera_porto_partenza ON Crociera(Porto_Partenza) USING HASH;
 
 -- Query 1 - Trovare le crociere che toccano piu' di un numero di porti diversi indicati dall'utente
 SELECT C.IMO, C.Nome_Nave, C.Porto_Partenza, C.Porto_Finale, COUNT(DISTINCT T.Città) AS Numero_Tappe
@@ -801,13 +801,13 @@ GROUP BY C.Nome_Nave, C.IMO
 ORDER BY Media_Eventi_Per_Animatore DESC;
 
 
--- Query 5 - Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacita' massima (Num_Prenotazioni / Max_Passeggeri)
+-- Query 5 - Trovare, per ogni crociera, la percentuale di occupazione rispetto alla capacita' massima (Num_Prenotazioni / Max_Passeggeri) 
 SELECT IMO, Nome_Nave,
-       ROUND((Num_Prenotazioni * 100.0) / Max_Passeggeri, 2) AS Percentuale_Occupazione
+    ROUND((Num_Prenotazioni * 100.0) / Max_Passeggeri, 2) AS Percentuale_Occupazione
 FROM Crociera
 WHERE Max_Passeggeri > 0
+  AND (Num_Prenotazioni * 100.0) / Max_Passeggeri > '<PERCENTUALE_MINIMA>'
 ORDER BY Percentuale_Occupazione DESC;
-
 
 -- Query 6 - Trovare le crociere che hanno un numero minimo di tappe e una media del costo degli ospiti inferiore a un certo importo
 SELECT C.IMO, C.Nome_Nave, COUNT(DISTINCT T.Città) AS Numero_Tappe, AVG(O.Costo) AS Media_Costo
