@@ -244,20 +244,27 @@ int main() {
         strncpy(queries[qcount].title, titlebuf, sizeof(queries[qcount].title));
         queries[qcount].title[sizeof(queries[qcount].title)-1] = '\0';
 
-        // Cerca parametri <PARAM> nella query
+        // Cerca parametri <PARAM> nella query solo se preceduti da apostrofo '
         queries[qcount].param_count = 0;
         char *search_start = queries[qcount].sql;
         while (queries[qcount].param_count < MAX_PARAMS) {
             char *open = strchr(search_start, '<');
             if (!open) break;
+
+            // Controlla che sia preceduto da apostrofo '
+            if (open == queries[qcount].sql || *(open - 1) != '\'') {
+            search_start = open + 1;
+            continue;
+            }
+
             char *close = strchr(open, '>');
             if (!close) break;
 
             size_t plen = close - open - 1;
             if (plen > 0 && plen < MAX_PARAM_LEN) {
-                strncpy(queries[qcount].params[queries[qcount].param_count], open + 1, plen);
-                queries[qcount].params[queries[qcount].param_count][plen] = '\0';
-                queries[qcount].param_count++;
+            strncpy(queries[qcount].params[queries[qcount].param_count], open + 1, plen);
+            queries[qcount].params[queries[qcount].param_count][plen] = '\0';
+            queries[qcount].param_count++;
             }
             search_start = close + 1;
         }
